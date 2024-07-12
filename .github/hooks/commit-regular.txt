@@ -1,0 +1,1 @@
+(feat|refactor|fix|chore): .{1,50}(\n.{1,72})?$

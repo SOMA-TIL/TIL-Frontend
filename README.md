@@ -20,6 +20,12 @@
 git clone https://github.com/SOMA-TIL/TIL-Frontend.git
 ```
 
+## git hook 설정 적용
+```bash
+# 로컬에서 커밋 컨벤션 검증 적용
+sh .github/hooks/cp-hook-folder.sh
+```
+
 ### 의존성 설치
 
 프로젝트 디렉토리에 들어가서 의존성을 설치한다.
