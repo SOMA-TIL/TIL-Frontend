@@ -8,10 +8,11 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
     'plugin:import/typescript',
+    'plugin:prettier/recommended',
+    'plugin:@typescript-eslint/recommended',
     'airbnb',
     'airbnb/hooks',
     'prettier',
-    'plugin:prettier/recommended',
   ],
   plugins: ['react', 'react-hooks', 'jsx-a11y', 'import', 'prettier', '@typescript-eslint'],
   rules: {
@@ -20,21 +21,19 @@ module.exports = {
     'react/prop-types': 'off',
     'import/order': ['error', { groups: [['builtin', 'external', 'internal']] }],
     'import/newline-after-import': 'error',
-    'import/no-named-as-default': 'error',
+    'import/no-named-as-default': 'warn',
+    'import/extensions': ['warn', 'ignorePackages', { ts: 'never', tsx: 'never' }],
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/no-unused-vars': ['error'],
     'no-unused-vars': 'off',
-    'no-param-reassign': [
-      'error',
-      {
-        props: true,
-        ignorePropertyModificationsFor: ['state'],
-      },
-    ],
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
   },
   settings: {
     react: {
       version: 'detect',
+    },
+    'import/resolver': {
+      typescript: {},
     },
   },
   parserOptions: {
@@ -52,7 +51,7 @@ module.exports = {
   overrides: [
     {
       files: ['*.js'],
-      excludedFiles: ['.eslintrc.js', 'babel.config.js'],
+      excludedFiles: ['.eslintrc.js'],
     },
     {
       files: ['build/**'],

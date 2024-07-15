@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", ".eslintrc.js", "babel.config.js"],
+  "include": ["src", ".eslintrc.js"],
   "exclude": ["node_modules", "build"]
 }

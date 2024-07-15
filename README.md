@@ -21,6 +21,7 @@ git clone https://github.com/SOMA-TIL/TIL-Frontend.git
 ```
 
 ## git hook 설정 적용
+
 ```bash
 # 로컬에서 커밋 컨벤션 검증 적용
 sh .github/hooks/cp-hook-folder.sh
