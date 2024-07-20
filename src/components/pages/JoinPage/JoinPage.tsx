@@ -1,5 +1,5 @@
 import React, { useState, FormEvent } from 'react';
-import { join, JoinData } from '../../../services/api/joinService';
+import { join, JoinData } from '../../../services/api/userService';
 import './JoinPage.css';
 
 const JoinPage: React.FC = () => {

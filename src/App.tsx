@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import JoinPage from './components/pages/JoinPage/JoinPage';
 import './App.css';
+import LoginPage from './components/pages/LoginPage/LoginPage';
 
 const App: React.FC = () => (
   <Router>
@@ -14,11 +15,15 @@ const App: React.FC = () => (
           <li>
             <Link to="/join">Join</Link>
           </li>
+          <li>
+            <Link to="/login">Login</Link>
+          </li>
         </ul>
       </nav>
       <Routes>
         <Route path="/join" element={<JoinPage />} />
         <Route path="/" element={<div>메인페이지</div>} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   </Router>
