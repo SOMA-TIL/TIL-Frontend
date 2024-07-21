@@ -52,6 +52,7 @@ cd TIL-Frontend
 yarn install
 ```
 #### 3. 개발 서버 실행
+| ❗️주의❗️ 서버 실행 전 [.env.template](./.env.template) 파일을 참고하여 .env 파일을 생성하고 환경 변수를 설정해야 함  
 개발 서버 실행한다. 
 ```
 yarn start
