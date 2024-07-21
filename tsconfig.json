@@ -16,6 +16,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", ".eslintrc.js"],
-  "exclude": ["node_modules", "build"]
+  "include": ["src", ".eslintrc.js", "craco.config.js"],
+  "exclude": ["node_modules", "build"],
+  "extends": "./tsconfig.paths.json"
 }

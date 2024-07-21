@@ -1,5 +1,5 @@
-import apiClient from './axios';
-import { ApiResponse } from '../../types/api';
+import apiClient from '@services/api/axios';
+import { ApiResponse } from '@type/api';
 
 export interface JoinData {
   email: string;

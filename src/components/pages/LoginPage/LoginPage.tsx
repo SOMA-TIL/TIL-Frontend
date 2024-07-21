@@ -1,10 +1,11 @@
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login, LoginData } from '../../../services/api/userService';
-import { Token } from '../../../types/auth';
-import { setCookie } from '../../../services/cookie';
-import { alertError } from '../../../utils/errorHandler';
-import useAuthStore from '../../../store/useAuthStore';
+
+import { LoginData, login } from '@services/api/userService';
+import { setCookie } from '@services/cookie';
+import useAuthStore from '@store/useAuthStore';
+import { alertError } from '@utils/errorHandler';
+import { Token } from '@type/auth';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
