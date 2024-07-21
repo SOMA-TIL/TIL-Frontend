@@ -1,9 +1,9 @@
 version: '3.8'
 services:
-  frontend:
+  til-front:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     volumes:
       - .:/app
       - /app/node_modules
