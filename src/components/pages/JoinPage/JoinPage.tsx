@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { JoinData, join } from '@services/api/userService';
 import { alertError } from '@utils/errorHandler';
+import { showAlertPopup } from '@utils/showPopup';
 import './JoinPage.css';
 
 const JoinPage: React.FC = () => {
@@ -17,8 +18,7 @@ const JoinPage: React.FC = () => {
 
     try {
       await join(joinData);
-      // eslint-disable-next-line no-alert
-      alert('회원가입 성공');
+      showAlertPopup('회원가입 성공');
       navigate('/');
     } catch (err) {
       alertError(err);
