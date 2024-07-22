@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-import JoinPage from './components/pages/JoinPage/JoinPage';
+
+import JoinPage from '@components/pages/JoinPage/JoinPage';
+import LoginPage from '@components/pages/LoginPage/LoginPage';
 import './App.css';
-import LoginPage from './components/pages/LoginPage/LoginPage';
 
 const App: React.FC = () => (
   <Router>
