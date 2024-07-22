@@ -7,6 +7,8 @@ import useAuthStore from '@store/useAuthStore';
 import { alertError } from '@utils/errorHandler';
 import { showAlertPopup } from '@utils/showPopup';
 import { Token } from '@type/auth';
+import { UserInfo } from '@type/user';
+import useUserInfoStore from '@store/useUserInfoStore';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,9 +21,12 @@ const LoginPage: React.FC = () => {
 
     try {
       const response = await login(loginData);
-      const { accessToken, refreshToken } = response.result as Token;
-      useAuthStore.getState().setAccessToken(accessToken);
-      setCookie('refreshToken', refreshToken);
+      const { token, user } = response.result as { token: Token; user: UserInfo };
+
+      useAuthStore.getState().setAccessToken(token.accessToken);
+      useUserInfoStore.getState().setNickname(user.nickname);
+      setCookie('refreshToken', token.refreshToken);
+
       showAlertPopup('로그인 성공');
       navigate('/');
     } catch (err: unknown) {
