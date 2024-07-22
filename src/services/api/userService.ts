@@ -7,7 +7,7 @@ export interface JoinData {
   nickname: string;
 }
 
-export const join = async (data: JoinData) => {
+export const join = async (data: JoinData): Promise<ApiResponse> => {
   const response = await apiClient.post('/user/join', data);
   return response.data;
 };

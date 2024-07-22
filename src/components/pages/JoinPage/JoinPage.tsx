@@ -1,26 +1,27 @@
 import React, { useState, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { JoinData, join } from '@services/api/userService';
+import { alertError } from '@utils/errorHandler';
 import './JoinPage.css';
 
 const JoinPage: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-
     const joinData: JoinData = { email, password, nickname };
 
     try {
       await join(joinData);
-      setSuccess(true);
+      // eslint-disable-next-line no-alert
+      alert('회원가입 성공');
+      navigate('/');
     } catch (err) {
-      setError('Join failed. Please try again.');
+      alertError(err);
     }
   };
 
@@ -60,8 +61,6 @@ const JoinPage: React.FC = () => {
         </div>
         <button type="submit">Signup</button>
       </form>
-      {error && <p className="error">{error}</p>}
-      {success && <p className="success">Signup successful!</p>}
     </div>
   );
 };
