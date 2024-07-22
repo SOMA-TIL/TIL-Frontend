@@ -5,6 +5,7 @@ import { LoginData, login } from '@services/api/userService';
 import { setCookie } from '@services/cookie';
 import useAuthStore from '@store/useAuthStore';
 import { alertError } from '@utils/errorHandler';
+import { showAlertPopup } from '@utils/showPopup';
 import { Token } from '@type/auth';
 
 const LoginPage: React.FC = () => {
@@ -21,8 +22,7 @@ const LoginPage: React.FC = () => {
       const { accessToken, refreshToken } = response.result as Token;
       useAuthStore.getState().setAccessToken(accessToken);
       setCookie('refreshToken', refreshToken);
-      // eslint-disable-next-line no-alert
-      alert('로그인 성공');
+      showAlertPopup('로그인 성공');
       navigate('/');
     } catch (err: unknown) {
       alertError(err);
