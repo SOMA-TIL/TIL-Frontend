@@ -30,10 +30,10 @@ git clone https://github.com/SOMA-TIL/TIL-Frontend.git
 
 ```
 # 포어그라운드 모드에서 실행
-docker-compose -f docker-compose-local.yml up
+docker-compose up
 
 # 백그라운드 모드에서 실행
-docker-compose up  -f docker-compose-local.yml -d
+docker-compose up -d
 ```
 
 http://localhost:3000 에 접속한다.
