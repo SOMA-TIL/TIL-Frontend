@@ -23,16 +23,13 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64 -f Dockerfile.dev -t ${{ secrets.DOCKER_USERNAME }}/til-front:latest --push .
+          docker buildx build --platform linux/amd64 -f Dockerfile.dev -t ${{ secrets.DOCKER_USERNAME }}/til-front:latest --push .
 
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@v0.1.5
         with:
