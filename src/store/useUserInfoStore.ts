@@ -1,5 +1,4 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import storeSupport from '@store/support';
 
 interface UserInfo {
   nickname: string;
@@ -7,12 +6,13 @@ interface UserInfo {
   getNickname: () => string;
 }
 
-const useUserInfoStore = create<UserInfo>()(
-  devtools((set, get) => ({
+const useUserInfoStore = storeSupport<UserInfo>(
+  (set, get) => ({
     nickname: '',
     setNickname: (nickname) => set({ nickname }),
     getNickname: () => get().nickname,
-  })),
+  }),
+  'USER_INFO_STORE',
 );
 
 export default useUserInfoStore;

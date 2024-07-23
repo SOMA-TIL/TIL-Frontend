@@ -1,5 +1,4 @@
-import { create } from 'zustand';
-import { devtools } from 'zustand/middleware';
+import storeSupport from '@store/support';
 
 interface AccessTokenInfo {
   accessToken: string;
@@ -8,13 +7,14 @@ interface AccessTokenInfo {
   deleteTokens: () => void;
 }
 
-const useAuthStore = create<AccessTokenInfo>()(
-  devtools((set, get) => ({
+const useAuthStore = storeSupport<AccessTokenInfo>(
+  (set, get) => ({
     accessToken: '',
     setAccessToken: (accessToken) => set({ accessToken }),
     getAccessToken: () => get().accessToken,
     deleteTokens: () => set({ accessToken: '' }),
-  })),
+  }),
+  'AUTH_STORE',
 );
 
 export default useAuthStore;
