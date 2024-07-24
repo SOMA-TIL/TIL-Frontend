@@ -1,0 +1,33 @@
+.Header {
+  display: flex;
+
+  background-color: white;
+
+  border-bottom: 1px solid rgb(226, 226, 226);
+
+  width: 100%;
+  height: 90px;
+
+  padding: 10px 0px;
+
+  box-shadow: rgba(100, 100, 100, 0.2) 0px 0px 29px 0px;
+}
+
+.Header > .LogoButton {
+  background-color: transparent;
+
+  padding: 0px;
+  margin-top: 10px;
+
+  font-size: 12px;
+  text-align: center;
+  color: black;
+}
+
+.Header > .LogoButton:hover {
+  background-color: transparent;
+}
+
+.Header > .LogoButton > img {
+  height: 100%;
+}
