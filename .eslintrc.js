@@ -29,6 +29,7 @@ module.exports = {
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
     'jsx-a11y/label-has-associated-control': ['error', { assert: 'either', depth: 3 }],
     'import/no-extraneous-dependencies': 'off',
+    'react/require-default-props': 'off',
     'react/function-component-definition': [
       'error',
       { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
