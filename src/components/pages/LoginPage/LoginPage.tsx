@@ -1,14 +1,15 @@
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { REFRESH_TOKEN } from '@constants/auth';
 import { LoginData, login } from '@services/api/userService';
 import { setCookie } from '@services/cookie';
 import useAuthStore from '@store/useAuthStore';
+import useUserInfoStore from '@store/useUserInfoStore';
 import { alertError } from '@utils/errorHandler';
 import { showAlertPopup } from '@utils/showPopup';
 import { Token } from '@type/auth';
 import { UserInfo } from '@type/user';
-import useUserInfoStore from '@store/useUserInfoStore';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ const LoginPage: React.FC = () => {
 
       useAuthStore.getState().setAccessToken(token.accessToken);
       useUserInfoStore.getState().setNickname(user.nickname);
-      setCookie('refreshToken', token.refreshToken);
+      setCookie(REFRESH_TOKEN, token.refreshToken);
 
       showAlertPopup('로그인 성공');
       navigate('/');
