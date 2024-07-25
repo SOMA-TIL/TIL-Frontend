@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { formatBearerToken, REFRESH_TOKEN } from '@constants/auth';
 import { getCookie, removeCookie, setCookie } from '@services/cookie';
 import useAuthStore from '@store/useAuthStore';
 import { ApiResponse } from '@type/api';
@@ -18,7 +19,7 @@ apiClient.interceptors.request.use(
   (config) => {
     const newConfig = { ...config };
     const accessToken = useAuthStore.getState().getAccessToken();
-    newConfig.headers.Authorization = accessToken ? `Bearer ${accessToken}` : ''; // 헤더에 토큰 추가
+    newConfig.headers.Authorization = accessToken ? formatBearerToken(accessToken) : ''; // 헤더에 토큰 추가
 
     return newConfig;
   },
@@ -56,7 +57,7 @@ apiClient.interceptors.response.use(
           failedQueue.push({ resolve, reject }); // 대기 중인 요청에 추가
         })
           .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`; // 새로운 토큰으로 헤더 업데이트
+            originalRequest.headers.Authorization = formatBearerToken(token as string); // 새로운 토큰으로 헤더 업데이트
             return apiClient(originalRequest); // 요청을 다시 시도
           })
           .catch((err) => Promise.reject(err)); // 에러 발생 시 거부
@@ -71,15 +72,15 @@ apiClient.interceptors.response.use(
             const { token } = response.result as { token: Token };
 
             useAuthStore.getState().setAccessToken(token.accessToken);
-            setCookie('refreshToken', token.refreshToken);
+            setCookie(REFRESH_TOKEN, token.refreshToken);
 
-            apiClient.defaults.headers.common.Authorization = `Bearer ${token.accessToken}`; // 기본 헤더 업데이트
-            originalRequest.headers.Authorization = `Bearer ${token.accessToken}`; // 요청 헤더 업데이트
+            apiClient.defaults.headers.common.Authorization = formatBearerToken(token.accessToken); // 기본 헤더 업데이트
+            originalRequest.headers.Authorization = formatBearerToken(token.accessToken); // 요청 헤더 업데이트
             processQueue(null, token.accessToken); // 대기 중인 요청 처리
             resolve(apiClient(originalRequest)); // 원래 요청 재시도
           })
           .catch((err) => {
-            removeCookie('refreshToken');
+            removeCookie(REFRESH_TOKEN);
             processQueue(err, null); // 에러 발생 시 대기 중인 요청 모두 거부
             reject(err); // 에러 반환
           })
@@ -96,10 +97,10 @@ apiClient.interceptors.response.use(
 // 리프레시 토큰을 사용해 새로운 액세스 토큰을 요청하는 함수
 const refreshToken = async (): Promise<ApiResponse> => {
   try {
-    const refreshToken = getCookie('refreshToken');
+    const refreshToken = getCookie(REFRESH_TOKEN);
     const response = await axios.get(`${process.env.REACT_APP_TIL_API_URL}/auth/reissue`, {
       headers: {
-        Authorization: `Bearer ${refreshToken}`,
+        Authorization: formatBearerToken(refreshToken),
         'Content-Type': 'application/json',
       },
     });
