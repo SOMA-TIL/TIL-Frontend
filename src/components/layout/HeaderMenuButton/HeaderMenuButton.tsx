@@ -5,13 +5,17 @@ import './HeaderMenuButton.css';
 interface HeaderMenuButtonProps {
   title: string;
   path: string;
+  onClick?: () => void;
 }
 
-const HeaderMenuButton: React.FC<HeaderMenuButtonProps> = ({ title, path }) => {
+const HeaderMenuButton: React.FC<HeaderMenuButtonProps> = ({ title, path, onClick }) => {
   const navigate = useNavigate();
 
   const handleHeaderMenuButton = () => {
-    navigate(path);
+    if (onClick) {
+      return onClick();
+    }
+    return navigate(path);
   };
 
   return (
