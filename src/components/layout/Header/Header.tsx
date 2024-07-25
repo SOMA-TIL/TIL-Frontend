@@ -1,15 +1,27 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import HeaderMenuButton from '@components/layout/HeaderMenuButton/HeaderMenuButton';
-
+import useAuthStore from '@store/useAuthStore';
 import './Header.css';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, logout, checkAuthentication } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
 
   const handleHomeButton = () => {
     navigate('/');
   };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
   return (
     <header className="Header">
       <button type="button" className="LogoButton" onClick={handleHomeButton}>
@@ -17,8 +29,19 @@ const Header: React.FC = () => {
       </button>
       <HeaderMenuButton title="기술 학습" path="/problem" />
       <HeaderMenuButton title="기술 면접" path="/interview" />
-      <HeaderMenuButton title="로그인" path="/login" />
-      <HeaderMenuButton title="회원가입" path="/join" />
+
+      {!isAuthenticated && (
+        <>
+          <HeaderMenuButton title="로그인" path="/login" />
+          <HeaderMenuButton title="회원가입" path="/join" />
+        </>
+      )}
+      {isAuthenticated && (
+        <>
+          <HeaderMenuButton title="마이페이지" path="/mypage" />
+          <HeaderMenuButton title="로그아웃" path="/logout" onClick={handleLogout} />
+        </>
+      )}
     </header>
   );
 };
