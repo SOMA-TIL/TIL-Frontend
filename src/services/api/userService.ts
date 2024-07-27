@@ -21,3 +21,8 @@ export const login = async (data: LoginData): Promise<ApiResponse> => {
   const response = await apiClient.post('/user/login', data);
   return response.data;
 };
+
+export const logout = async (): Promise<ApiResponse> => {
+  const response = await apiClient.get('/user/logout');
+  return response.data;
+};

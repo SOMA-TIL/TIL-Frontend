@@ -11,7 +11,7 @@ interface AccessTokenInfo {
   getAccessToken: () => string;
   deleteAccessToken: () => void;
   login: (token: Token) => void;
-  logout: () => void;
+  reset: () => void;
 }
 
 const useAuthStore = storeSupport<AccessTokenInfo>(
@@ -29,7 +29,7 @@ const useAuthStore = storeSupport<AccessTokenInfo>(
       get().setAccessToken(token.accessToken);
       set({ isAuthenticated: true });
     },
-    logout: () => {
+    reset: () => {
       removeCookie(REFRESH_TOKEN);
       get().deleteAccessToken();
       set({ isAuthenticated: false });
