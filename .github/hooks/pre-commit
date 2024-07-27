@@ -1,0 +1,13 @@
+#!/bin/sh
+
+yarn format
+if [ $? -ne 0 ]; then
+  echo "format failed. Please check the error message."
+  exit 1
+fi
+
+yarn lint
+if [ $? -ne 0 ]; then
+  echo "lint failed. Please check the error message."
+  exit 1
+fi
