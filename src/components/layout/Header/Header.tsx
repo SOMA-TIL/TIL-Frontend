@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import HeaderMenuButton from '@components/layout/HeaderMenuButton/HeaderMenuButton';
+import { logout } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
+import { logoutClearStores } from '@store/clear';
 import './Header.css';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, logout, checkAuthentication } = useAuthStore();
+  const { isAuthenticated, checkAuthentication } = useAuthStore();
 
   useEffect(() => {
     checkAuthentication();
@@ -17,9 +19,10 @@ const Header: React.FC = () => {
     navigate('/');
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+  const handleLogout = async () => {
+    await logout();
+    logoutClearStores();
+    window.location.reload();
   };
 
   return (

@@ -4,6 +4,7 @@ interface UserInfo {
   nickname: string;
   setNickname: (nickname: string) => void;
   getNickname: () => string;
+  reset: () => void;
 }
 
 const useUserInfoStore = storeSupport<UserInfo>(
@@ -11,6 +12,7 @@ const useUserInfoStore = storeSupport<UserInfo>(
     nickname: '',
     setNickname: (nickname) => set({ nickname }),
     getNickname: () => get().nickname,
+    reset: () => set({ nickname: '' }),
   }),
   'USER_INFO_STORE',
 );
