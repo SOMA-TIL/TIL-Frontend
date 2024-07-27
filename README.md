@@ -81,8 +81,5 @@ http://localhost:3000 에 접속한다.
 ---
 
 ### git hook 설정 적용
-
-```bash
-# 로컬에서 커밋 컨벤션 검증 적용
-sh .github/hooks/cp-hook-folder.sh
-```
+- `yarn start` 명령어에 git hook 관련 설정을 최신화할 수 있도록 `yarn run copy-hooks`를 먼저 실행하도록 구성됨  
+  (별도 설정없이 자동 적용 가능)

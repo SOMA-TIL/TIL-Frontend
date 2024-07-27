@@ -24,13 +24,14 @@
     "zustand": "^4.5.4"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "yarn run copy-hooks && craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "format": "prettier --write . ",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "clean-install": "rm -rf node_modules && yarn cache clean && yarn install"
+    "clean-install": "rm -rf node_modules && yarn cache clean && yarn install",
+    "copy-hooks": "sh .github/hooks/cp-hook-folder.sh"
   },
   "eslintConfig": {
     "extends": [
