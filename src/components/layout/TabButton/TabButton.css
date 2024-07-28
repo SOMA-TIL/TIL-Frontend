@@ -1,0 +1,20 @@
+.TabButton {
+  color: black;
+  background-color: rgb(226, 226, 226);
+  border-radius: 10px 10px 0px 0px;
+}
+
+.selected {
+  background-color: rgb(200, 200, 200);
+}
+
+.TabButton:hover {
+  color: blue;
+  background-color: rgb(226, 226, 226);
+}
+
+.selected:hover {
+  color: black;
+  background-color: rgb(200, 200, 200);
+  cursor: default;
+}

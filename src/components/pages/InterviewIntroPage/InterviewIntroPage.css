@@ -1,0 +1,45 @@
+.InterviewOrganization {
+  background-color: rgb(200, 200, 200);
+
+  height: 500px;
+}
+
+.InterviewOrganization > h1 {
+  margin: 0 0 10px 10px;
+}
+
+.InterviewOrganization > p {
+  margin: 0 0 10px 10px;
+}
+
+.InterviewOrganization > select {
+  width: 200px;
+  margin: 0 10px 10px 10px;
+}
+
+.InterviewOrganization > button {
+  margin: 0 0 0 10px;
+}
+
+.InterviewOrganization > .ContentList {
+  display: flex;
+  margin: 0 0 10px 10px;
+}
+
+.InterviewOrganization > .ContentList > button {
+  margin: 0 10px 0 0;
+  color: black;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.InterviewOrganization > .ContentList > button:hover {
+  color: red;
+  background-color: white;
+}
+
+.InterviewHistory {
+  background-color: rgb(200, 200, 200);
+
+  height: 500px;
+}
