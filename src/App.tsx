@@ -16,12 +16,10 @@ const App: React.FC = () => (
       <Route path="/" element={<div>메인페이지</div>} />
       <Route path="/problem" element={<div>기술학습</div>} />
 
-      {/* 인증 여부 상관 없이 접속 가능한 페이지: 개발 단계동안만 임시로 올려두는 페이지 */}
-      <Route path="/interview" element={<InterviewIntroPage />} />
-
       {/* 인증이 필요한 페이지 정의 */}
       <Route element={<PrivateRoute />}>
         <Route path="/mypage" element={<div>마이페이지</div>} />
+        <Route path="/interview" element={<InterviewIntroPage />} />
       </Route>
       {/* 인증을 하지 않아야만 접속 가능한 페이지 정의 */}
       <Route element={<PrivateRoute authentication={false} />}>
