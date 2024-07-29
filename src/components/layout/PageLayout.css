@@ -3,9 +3,3 @@
   flex-direction: column;
   min-height: 100vh;
 }
-
-.PageLayout > main {
-  padding: 20px 0px;
-
-  flex: 1;
-}
