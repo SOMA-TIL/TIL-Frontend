@@ -1,4 +1,5 @@
 import Header from '@components/layout/Header/Header';
+import Main from '@components/layout/Main/Main';
 import Footer from '@components/layout/Footer/Footer';
 
 import './PageLayout.css';
@@ -9,7 +10,7 @@ const PageLayout = (props: { children: React.ReactNode }) => {
   return (
     <div className="PageLayout">
       <Header />
-      <main>{children}</main>
+      <Main>{children}</Main>
       <Footer />
     </div>
   );
