@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   return (
     <header className="Header">
       <button type="button" className="LogoButton" onClick={handleHomeButton}>
-        <img src="/TIL_logo.png" alt="TIL_logo" />
+        <img src="images/TIL_logo.png" alt="TIL_logo" />
       </button>
       <HeaderMenuButton title="기술 학습" path="/problem" />
       <HeaderMenuButton title="기술 면접" path="/interview" />
