@@ -9,9 +9,15 @@
   <body>
     <div id="root"></div>
     <style>
-      body {
+      * {
         margin: 0;
         padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* 전체 화면 높이를 사용 */
       }
     </style>
   </body>
