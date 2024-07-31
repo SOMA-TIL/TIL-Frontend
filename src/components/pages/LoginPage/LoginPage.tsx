@@ -4,6 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { LoginData, login } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
 import useUserInfoStore from '@store/useUserInfoStore';
+import { HalfWidthDiv } from '@styles/DivStyle';
+import { PRIMARY_PURPLE } from '@styles/pallete';
+import { DISPLAY_HEIGHT_WITHOUT_HEADER } from '@styles/length';
+import Form, { FormTitle } from '@styles/FormStyle';
+import { Button } from '@styles/ButtonStyle';
+import { Input } from '@styles/InputStyle';
+
 import { alertError } from '@utils/errorHandler';
 import { showAlertPopup } from '@utils/showPopup';
 import { Token } from '@type/auth';
@@ -34,26 +41,32 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <h2>로그인</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="이메일 주소"
-          required
-        />
-        <input
-          type="password" // 비밀번호 필드로 변경
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="비밀번호"
-          required
-        />
-        <button type="submit">로그인</button>
-      </form>
-    </div>
+    <>
+      <HalfWidthDiv bgColor={PRIMARY_PURPLE} height={DISPLAY_HEIGHT_WITHOUT_HEADER}>
+        <img src="/images/ad.png" alt="TIL ad" style={{ width: '700px' }} />
+      </HalfWidthDiv>
+
+      <HalfWidthDiv>
+        <Form onSubmit={handleSubmit} style={{}}>
+          <FormTitle>로그인</FormTitle>
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="이메일 주소"
+            required
+          />
+          <Input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="비밀번호"
+            required
+          />
+          <Button type="submit">로그인</Button>
+        </Form>
+      </HalfWidthDiv>
+    </>
   );
 };
 

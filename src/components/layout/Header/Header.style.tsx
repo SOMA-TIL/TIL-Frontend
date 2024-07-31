@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { BLACK, LIGHT_GREY } from '@styles/pallete';
+import { HEADER_HEIGHT } from '@styles/length';
 
 const HeaderArea = styled.header`
   display: flex;
@@ -10,7 +11,7 @@ const HeaderArea = styled.header`
   border-bottom: 1px solid ${LIGHT_GREY};
 
   width: 100%;
-  height: 90px;
+  height: ${HEADER_HEIGHT};
 
   box-shadow: rgba(100, 100, 100, 0.2) 0px 0px 29px 0px;
 `;
