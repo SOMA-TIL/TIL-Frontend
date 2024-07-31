@@ -1,9 +1,9 @@
-import './Main.css';
+import MainArea from './Main.style';
 
 const Main = (props: { children: React.ReactNode }) => {
   const { children } = props;
 
-  return <main className="Main">{children}</main>;
+  return <MainArea>{children}</MainArea>;
 };
 
 export default Main;
