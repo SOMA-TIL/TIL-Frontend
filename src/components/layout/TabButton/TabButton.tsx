@@ -1,4 +1,4 @@
-import './TabButton.css';
+import Tab from './TabButton.style';
 
 interface TabButtonProps {
   text: string;
@@ -8,14 +8,9 @@ interface TabButtonProps {
 }
 
 const TabButton: React.FC<TabButtonProps> = ({ name, text, selected, onClick }) => (
-  <button
-    type="button"
-    name={name}
-    onClick={onClick}
-    className={`TabButton ${selected === name ? 'selected' : ''}`}
-  >
+  <Tab name={name} onClick={onClick} isSelected={selected === name}>
     {text}
-  </button>
+  </Tab>
 );
 
 export default TabButton;

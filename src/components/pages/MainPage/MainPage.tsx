@@ -1,13 +1,10 @@
 import React from 'react';
+import { Banner, MainPageLayout } from './MainPage.style';
 
 const MainPage: React.FC = () => (
-  <div style={{ position: 'absolute', height: '100%', width: '100%' }}>
-    <img
-      src="images/banner.png"
-      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-      alt="banner"
-    />
-  </div>
+  <MainPageLayout>
+    <Banner src="images/banner.png" alt="banner" />
+  </MainPageLayout>
 );
 
 export default MainPage;

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import './HeaderMenuButton.css';
+import { MenuItem } from './Header.style';
 
 interface HeaderMenuButtonProps {
   title: string;
@@ -8,7 +8,7 @@ interface HeaderMenuButtonProps {
   onClick?: () => void;
 }
 
-const HeaderMenuButton: React.FC<HeaderMenuButtonProps> = ({ title, path, onClick }) => {
+const HeaderMenuItem: React.FC<HeaderMenuButtonProps> = ({ title, path, onClick }) => {
   const navigate = useNavigate();
 
   const handleHeaderMenuButton = () => {
@@ -18,11 +18,7 @@ const HeaderMenuButton: React.FC<HeaderMenuButtonProps> = ({ title, path, onClic
     return navigate(path);
   };
 
-  return (
-    <button type="button" className="HeaderMenuButton" onClick={handleHeaderMenuButton}>
-      {title}
-    </button>
-  );
+  return <MenuItem onClick={handleHeaderMenuButton}>{title}</MenuItem>;
 };
 
-export default HeaderMenuButton;
+export default HeaderMenuItem;

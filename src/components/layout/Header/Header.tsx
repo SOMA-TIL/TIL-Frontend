@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import HeaderMenuButton from '@components/layout/HeaderMenuButton/HeaderMenuButton';
+import HeaderMenuItem from '@components/layout/Header/HeaderMenuItem';
 import { logout } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
 import { logoutClearStores } from '@store/clear';
-import './Header.css';
+import HeaderArea, { Logo } from './Header.style';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -26,26 +26,27 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="Header">
-      <button type="button" className="LogoButton" onClick={handleHomeButton}>
+    <HeaderArea>
+      <Logo onClick={handleHomeButton}>
         <img src="images/TIL_logo.png" alt="TIL_logo" />
-      </button>
-      <HeaderMenuButton title="기술 학습" path="/problem" />
-      <HeaderMenuButton title="기술 면접" path="/interview" />
+      </Logo>
+
+      <HeaderMenuItem title="기술 학습" path="/problem" />
+      <HeaderMenuItem title="기술 면접" path="/interview" />
 
       {!isAuthenticated && (
         <>
-          <HeaderMenuButton title="로그인" path="/login" />
-          <HeaderMenuButton title="회원가입" path="/join" />
+          <HeaderMenuItem title="로그인" path="/login" />
+          <HeaderMenuItem title="회원가입" path="/join" />
         </>
       )}
       {isAuthenticated && (
         <>
-          <HeaderMenuButton title="마이페이지" path="/mypage" />
-          <HeaderMenuButton title="로그아웃" path="/logout" onClick={handleLogout} />
+          <HeaderMenuItem title="마이페이지" path="/mypage" />
+          <HeaderMenuItem title="로그아웃" path="/logout" onClick={handleLogout} />
         </>
       )}
-    </header>
+    </HeaderArea>
   );
 };
 
