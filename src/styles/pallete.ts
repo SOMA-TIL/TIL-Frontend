@@ -7,5 +7,6 @@ export const WHITE = '#FFFFFF';
 export const BLACK = '#111111';
 export const GREY = '#999999';
 export const LIGHT_GREY = '#DDDDDD';
+export const LIGHT_GREY2 = '#CCCCCC';
 
 export const BLUE = '#0589f5';
