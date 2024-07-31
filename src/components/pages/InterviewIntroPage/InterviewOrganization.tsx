@@ -1,69 +1,135 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useState, useEffect, useRef } from 'react';
 
-import SelectBox from '@components/layout/SelectBox/SelectBox';
+import { getCategoryList } from '@services/api/categoryService';
+import SelectBox, { Option } from '@components/layout/SelectBox/SelectBox';
 
-interface Content {
-  category: string;
-  topic: string;
-}
+import { Category } from '@type/category';
 
 const InterviewOrganization = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [selectedTopic, setSelectedTopic] = useState<string>('');
-  const [selectedContentList, setSelectedContentList] = useState<Content[]>([]);
+  const categoryList = useRef<Category[]>([]);
+  const nameList = useRef<Option[]>([]);
 
-  const categoryList = [
-    { value: '', name: '-- 카테고리 선택 --' },
-    { value: '네트워크', name: '네트워크' },
-    { value: '데이터베이스', name: '데이터베이스' },
-  ];
+  const [topicList, setTopicList] = useState<Option[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category>({ name: '', topic: '' });
+  const [selectedCategoryList, setSelectedCategoryList] = useState<Category[]>([]);
 
-  const topicList = [
-    { value: '', name: '-- 주제 선택 --' },
-    { value: 'HTTP', name: 'HTTP' },
-    { value: 'JPA', name: 'JPA' },
-  ];
+  useEffect(() => {
+    const promise = getCategoryList();
+    const getData = () => {
+      promise
+        .then((data) => {
+          const result = data.result?.categoryList as Category[];
+          categoryList.current = result;
+        })
+        .then(() => {
+          const uniqueNameList = categoryList.current
+            .map((category) => {
+              const option: Option = {
+                name: category.name,
+                value: category.name,
+              };
+              return option;
+            })
+            .filter(
+              (item, i) =>
+                categoryList.current.findIndex((item2) => item.name === item2.name) === i,
+            );
 
-  const handleCategoryChange = (e: ChangeEvent) => {
+          nameList.current = uniqueNameList;
+        })
+        .then(() => {
+          setSelectedCategory({
+            name: nameList.current[0].name,
+            topic: '',
+          });
+
+          return nameList.current[0].name;
+        })
+        .then((curName) => {
+          const uniqueTopicList = categoryList.current
+            .filter((category) => curName === category.name)
+            .map((category) => {
+              const option: Option = {
+                name: category.topic,
+                value: category.topic,
+              };
+              return option;
+            });
+
+          setTopicList(uniqueTopicList);
+
+          return { curName, uniqueTopicList };
+        })
+        .then(({ curName, uniqueTopicList }) => {
+          setSelectedCategory({
+            name: curName,
+            topic: uniqueTopicList[0].name,
+          });
+        });
+    };
+    getData();
+  }, []);
+
+  const handleNameChange = (e: ChangeEvent) => {
     const { value } = e.target as HTMLOptionElement;
-    setSelectedCategory(value);
-    // todo: 첫번째 SelectBox 값에 따라서 두번째 Topic SelectBox를 변경한다.
+
+    const uniqueTopicList = categoryList.current
+      .filter((category) => value === category.name)
+      .map((category) => {
+        const option: Option = {
+          name: category.topic,
+          value: category.topic,
+        };
+        return option;
+      });
+
+    setTopicList(uniqueTopicList);
+
+    setSelectedCategory({
+      name: value,
+      topic: uniqueTopicList[0].name,
+    });
   };
 
   const handleTopicChange = (e: ChangeEvent) => {
     const { value } = e.target as HTMLOptionElement;
-    setSelectedTopic(value);
+    setSelectedCategory({
+      ...selectedCategory,
+      topic: value,
+    });
   };
 
-  const handleContentAddButton = () => {
-    const newContent: Content = {
-      category: selectedCategory,
-      topic: selectedTopic,
-    };
+  const handleCategoryAddButton = () => {
+    const newCategory: Category = { ...selectedCategory };
 
-    if (!newContent.category || !newContent.topic) return;
+    if (!newCategory.name || !newCategory.topic) return;
 
     if (
-      !selectedContentList.find((content) => JSON.stringify(content) === JSON.stringify(newContent))
+      !selectedCategoryList.find(
+        (category) => JSON.stringify(category) === JSON.stringify(newCategory),
+      )
     )
-      setSelectedContentList([...selectedContentList, newContent]);
+      setSelectedCategoryList([...selectedCategoryList, newCategory]);
   };
 
-  const handleContentDeleteButton = (e: React.MouseEvent) => {
+  const handleCategoryDeleteButton = (e: React.MouseEvent) => {
     const { innerText } = e.target as HTMLButtonElement;
     const temp = innerText.split(' - ');
-    const deleteContent: Content = { category: temp[0], topic: temp[1] };
+    const deleteCategory: Category = { name: temp[0], topic: temp[1] };
 
-    setSelectedContentList(
-      selectedContentList.filter(
-        (content) => JSON.stringify(content) !== JSON.stringify(deleteContent),
+    setSelectedCategoryList(
+      selectedCategoryList.filter(
+        (category) => JSON.stringify(category) !== JSON.stringify(deleteCategory),
       ),
     );
   };
 
   const handleInterviewStartButton = () => {
-    // todo: selectedContentList 정보를 서버에 전달해서 모의 면접을 시작한다.
-    // console.log(selectedContentList);
+    // console.log(selectedCategoryList);
+    // todo: selectedCategoryList 정보를 서버에 전달해서 모의 면접을 시작한다.
+    // 모의 면접을 생성하는 POST API
+    // 이후 해당 면접 화면으로 이동
+    // PGR 패턴
   };
 
   return (
@@ -73,24 +139,30 @@ const InterviewOrganization = () => {
       <p>기술 카테고리를 선택하여 면접 내용을 직접 구성합니다.</p>
 
       <SelectBox
-        optionList={categoryList}
-        value={selectedCategory}
-        onChange={handleCategoryChange}
+        optionList={nameList.current}
+        value={selectedCategory.name}
+        onChange={handleNameChange}
       />
-      <SelectBox optionList={topicList} value={selectedTopic} onChange={handleTopicChange} />
+      <SelectBox
+        optionList={topicList}
+        value={selectedCategory.topic}
+        onChange={handleTopicChange}
+      />
 
-      <button type="button" onClick={handleContentAddButton}>
+      <button type="button" onClick={handleCategoryAddButton}>
         추가하기
       </button>
 
       <br />
       <br />
+      <br />
+
       <h1>현재 면접 구성</h1>
       <p>모의 기술 면접에서 다음과 같은 내용들이 질문으로 나올 수 있습니다.</p>
-      <div className="ContentList">
-        {selectedContentList.map((content) => (
-          <button type="button" onClick={handleContentDeleteButton}>
-            {content.category} - {content.topic}
+      <div className="CategoryList">
+        {selectedCategoryList.map((category) => (
+          <button type="button" onClick={handleCategoryDeleteButton}>
+            {category.name} - {category.topic}
           </button>
         ))}
       </div>
