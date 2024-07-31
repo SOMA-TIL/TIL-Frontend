@@ -1,9 +1,9 @@
-interface OptionInterface {
+export interface Option {
   value: string;
   name: string;
 }
 interface SelectBoxProps {
-  optionList: OptionInterface[];
+  optionList: Option[];
   value: string;
   onChange: React.ChangeEventHandler;
 }

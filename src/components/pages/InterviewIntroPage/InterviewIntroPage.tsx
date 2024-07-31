@@ -6,7 +6,7 @@ import InterviewHistory from '@components/pages/InterviewIntroPage/InterviewHist
 
 import './InterviewIntroPage.css';
 
-interface contentInterface {
+interface Content {
   [key: string]: React.ReactElement;
 }
 
@@ -18,14 +18,14 @@ const InterviewIntroPage = () => {
     setSelectedTab(name);
   };
 
-  const contents: contentInterface = {
+  const contents: Content = {
     // 전환할 탭에서 보여줄 콘텐츠 컴포넌트 목록
     InterviewOrganization: <InterviewOrganization />,
     InterviewHistory: <InterviewHistory />,
   };
 
   return (
-    <div>
+    <div className="InterviewIntroPage">
       <div>
         <TabButton
           name="InterviewOrganization"
