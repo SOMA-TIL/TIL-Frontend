@@ -4,6 +4,7 @@ import { getCategoryList } from '@services/api/categoryService';
 import SelectBox, { Option } from '@components/layout/SelectBox/SelectBox';
 
 import { Category } from '@type/category';
+import { showAlertPopup } from '@utils/showPopup';
 
 const InterviewOrganization = () => {
   const categoryList = useRef<Category[]>([]);
@@ -38,12 +39,14 @@ const InterviewOrganization = () => {
           nameList.current = uniqueNameList;
         })
         .then(() => {
+          const curName = nameList.current.length ? nameList.current[0].name : '';
+
           setSelectedCategory({
-            name: nameList.current[0].name,
+            name: curName,
             topic: '',
           });
 
-          return nameList.current[0].name;
+          return curName;
         })
         .then((curName) => {
           const uniqueTopicList = categoryList.current
@@ -61,11 +64,14 @@ const InterviewOrganization = () => {
           return { curName, uniqueTopicList };
         })
         .then(({ curName, uniqueTopicList }) => {
+          const curTopic = uniqueTopicList.length ? uniqueTopicList[0].name : '';
+
           setSelectedCategory({
             name: curName,
-            topic: uniqueTopicList[0].name,
+            topic: curTopic,
           });
-        });
+        })
+        .catch((error) => showAlertPopup(error.message));
     };
     getData();
   }, []);
@@ -85,9 +91,11 @@ const InterviewOrganization = () => {
 
     setTopicList(uniqueTopicList);
 
+    const curTopic = uniqueTopicList.length ? uniqueTopicList[0].name : '';
+
     setSelectedCategory({
       name: value,
-      topic: uniqueTopicList[0].name,
+      topic: curTopic,
     });
   };
 
