@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import HeaderMenuItem from '@components/layout/Header/HeaderMenuItem';
+import HeaderMenuItem, { HeaderLogoutButton } from '@components/layout/Header/HeaderMenuItem';
 import { logout } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
 import { logoutClearStores } from '@store/clear';
-import HeaderArea, { Logo } from './Header.style';
+import HeaderArea, { Hr, Logo, Section } from './Header.style';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -27,25 +27,32 @@ const Header: React.FC = () => {
 
   return (
     <HeaderArea>
-      <Logo onClick={handleHomeButton}>
-        <img src="images/TIL_logo.png" alt="TIL_logo" />
-      </Logo>
+      <Section pos="left">
+        <Logo onClick={handleHomeButton}>
+          <img src="images/TIL_logo.png" alt="TIL_logo" />
+        </Logo>
+      </Section>
 
-      <HeaderMenuItem title="기술 학습" path="/problem" />
-      <HeaderMenuItem title="기술 면접" path="/interview" />
+      <Section pos="center">
+        <HeaderMenuItem title="기술 학습" path="/problem" />
+        <HeaderMenuItem title="모의 기술 면접" path="/interview" />
+      </Section>
 
-      {!isAuthenticated && (
-        <>
-          <HeaderMenuItem title="로그인" path="/login" />
-          <HeaderMenuItem title="회원가입" path="/join" />
-        </>
-      )}
-      {isAuthenticated && (
-        <>
-          <HeaderMenuItem title="마이페이지" path="/mypage" />
-          <HeaderMenuItem title="로그아웃" path="/logout" onClick={handleLogout} />
-        </>
-      )}
+      <Section pos="right">
+        {!isAuthenticated && (
+          <>
+            <HeaderMenuItem title="로그인" path="/login" />
+            <HeaderMenuItem title="회원가입" path="/join" />
+          </>
+        )}
+        {isAuthenticated && (
+          <>
+            <HeaderMenuItem title="마이페이지" path="/mypage" />
+            <Hr />
+            <HeaderLogoutButton title="로그아웃" path="/logout" onClick={handleLogout} />
+          </>
+        )}
+      </Section>
     </HeaderArea>
   );
 };
