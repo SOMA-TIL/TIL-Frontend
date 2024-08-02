@@ -34,6 +34,7 @@ module.exports = {
       'error',
       { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
     ],
+    'react/jsx-props-no-spreading': 'off',
   },
   settings: {
     react: {
