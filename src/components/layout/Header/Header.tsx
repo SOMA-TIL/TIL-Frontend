@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     await logout();
     logoutClearStores();
-    window.location.reload();
+    window.location.replace('/');
   };
 
   return (
