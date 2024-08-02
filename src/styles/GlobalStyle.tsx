@@ -13,6 +13,10 @@ const GlobalStyle = createGlobalStyle`
     min-height: 100vh;
     min-width: 1400px;
   }
+
+  button {
+    border: none;
+  }
 `;
 
 export default GlobalStyle;
