@@ -4,11 +4,17 @@ import { ApiResponse } from '@type/api';
 export interface JoinData {
   email: string;
   password: string;
+  confirmPassword: string;
   nickname: string;
 }
 
 export const join = async (data: JoinData): Promise<ApiResponse> => {
   const response = await apiClient.post('/user/join', data);
+  return response.data;
+};
+
+export const checkNickname = async (nickname: string): Promise<ApiResponse> => {
+  const response = await apiClient.get(`/user/check-nickname/${nickname}`);
   return response.data;
 };
 
