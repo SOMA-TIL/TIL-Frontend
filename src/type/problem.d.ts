@@ -1,4 +1,4 @@
-export interface Problem {
+export interface ProblemListInfo {
   id: number;
   title: string;
   level: number;
