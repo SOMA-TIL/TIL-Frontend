@@ -1,11 +1,34 @@
 // SearchBar.tsx
 import React from 'react';
-import { SearchBarContainer, SearchInput } from './ProblemListPage.style';
+import { SearchBarContainer, SearchInput, Select, SearchButton } from './SearchBar.style';
 
-// todo: 검색어를 입력받는 SearchBar 컴포넌트를 구현 예정.
 const SearchBar: React.FC = () => (
   <SearchBarContainer>
     <SearchInput type="text" placeholder="검색어를 입력해주세요" />
+    <Select>
+      <option value="">상태 선택</option>
+      <option value="perfect">Perfect</option>
+      <option value="incomplete">Incomplete</option>
+    </Select>
+    <Select>
+      <option value="">난이도 선택</option>
+      <option value="1">Lv.1</option>
+      <option value="2">Lv.2</option>
+      <option value="3">Lv.3</option>
+    </Select>
+    <Select>
+      <option value="">기술 카테고리 선택</option>
+      <option value="network">네트워크</option>
+      <option value="os">운영체제</option>
+      <option value="db">데이터베이스</option>
+    </Select>
+    <Select>
+      <option value="">상태 주제 선택</option>
+      <option value="http">HTTP</option>
+      <option value="tcp">TCP/IP</option>
+      <option value="paging">페이징</option>
+    </Select>
+    <SearchButton>검색하기</SearchButton>
   </SearchBarContainer>
 );
 

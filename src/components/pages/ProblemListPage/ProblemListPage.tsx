@@ -1,23 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import { getProblemList } from '@services/api/problemService';
-import { Problem } from '@type/problem';
-import { ProblemPageContainer, ProblemsList, ProblemItem } from './ProblemListPage.style';
+import { ProblemListInfo } from '@type/problem';
+import { Pagination, Table } from 'antd';
+import { ColumnsType } from 'antd/es/table';
+
+import { ProblemPageContainer, SubTitle } from './ProblemListPage.style';
 import SearchBar from './SearchBar';
 
+const columns: ColumnsType<ProblemListInfo> = [
+  {
+    title: '상태',
+    key: 'status',
+    render: () => <span>Perfect</span>,
+  },
+  {
+    title: '제목',
+    dataIndex: 'title',
+    key: 'title',
+  },
+  {
+    title: '카테고리',
+    dataIndex: 'categoryName',
+    key: 'categoryName',
+    render: (text) => <span>{text || 'None'}</span>,
+  },
+  {
+    title: '난이도',
+    dataIndex: 'level',
+    key: 'level',
+    render: (level) => <span>Lv.{level}</span>,
+  },
+  {
+    title: '완료한 사람',
+    dataIndex: 'solved',
+    key: 'solved',
+    render: (solved) => <span>{solved}명</span>,
+  },
+  {
+    title: '정답률',
+    dataIndex: 'percentage',
+    key: 'percentage',
+    render: (percentage) => <span>{percentage}%</span>,
+  },
+];
+
 const ProblemListPage: React.FC = () => {
-  const [problemList, setProblemList] = useState<Problem[]>([]);
+  const [problemList, setProblemList] = useState<ProblemListInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProblems = async () => {
+    const fetchProblemList = async () => {
       try {
         const response = await getProblemList();
-        if (response.status.code === 'SUCCESS_GET_PROBLEM_LIST' && response.result) {
-          setProblemList(response.result.items);
-        } else {
-          setError(`Failed to fetch problems. Status code: ${response.status.code}`);
-        }
+        setProblemList(response.result?.items || []);
       } catch (err) {
         setError('An error occurred while fetching problems.');
       } finally {
@@ -25,30 +61,28 @@ const ProblemListPage: React.FC = () => {
       }
     };
 
-    fetchProblems();
+    fetchProblemList();
   }, []);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+  if (error) {
+    return <div>{error}</div>;
+  }
   return (
-    // todo: ProblemListPage 컴포넌트 스타일링 구현 예정 & 입력 시 상세화면 이동 추가 예정
+    // todo: 검색, 페이징, 상세화면 라우팅 가능 추가 예정
     <ProblemPageContainer>
+      <SubTitle>기술학습</SubTitle>
       <SearchBar />
-      <h1>기술학습</h1>
-      <ProblemsList>
-        {problemList &&
-          problemList.map((problem) => (
-            <ProblemItem key={problem.id}>
-              <span>Perfect</span>
-              <span className="title">{problem.title}</span>
-              <span className="category">{problem.categoryName || '네트워크'}</span>
-              <span className="level">Lv.{problem.level}</span>
-              <span className="solved">{problem.solved}명</span>
-              <span className="percentage">{problem.percentage}%</span>
-            </ProblemItem>
-          ))}
-      </ProblemsList>
+      {problemList.length === 0 ? (
+        <div>문제가 없습니다.</div>
+      ) : (
+        <>
+          <Table columns={columns} dataSource={problemList} rowKey="id" pagination={false} />
+          <Pagination align="center" defaultCurrent={1} total={50} />
+        </>
+      )}
     </ProblemPageContainer>
   );
 };

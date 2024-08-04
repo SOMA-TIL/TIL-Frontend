@@ -1,9 +1,9 @@
 import apiClient from '@services/api/axios';
 import { ApiResponse } from '@type/api';
-import { Problem } from '@type/problem';
+import { ProblemListInfo } from '@type/problem';
 
 export interface ProblemListData {
-  items: Problem[];
+  items: ProblemListInfo[];
   pageInfo: {
     page: number;
     size: number;
