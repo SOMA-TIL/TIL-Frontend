@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getProblemList } from '@services/api/problemService';
 import { ProblemListInfo } from '@type/problem';
 import { Pagination, Table } from 'antd';
@@ -48,6 +49,7 @@ const ProblemListPage: React.FC = () => {
   const [problemList, setProblemList] = useState<ProblemListInfo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProblemList = async () => {
@@ -64,6 +66,9 @@ const ProblemListPage: React.FC = () => {
     fetchProblemList();
   }, []);
 
+  const onRowClick = (record: ProblemListInfo) => {
+    navigate(`/problem/${record.id}`);
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -71,7 +76,7 @@ const ProblemListPage: React.FC = () => {
     return <div>{error}</div>;
   }
   return (
-    // todo: 검색, 페이징, 상세화면 라우팅 가능 추가 예정
+    // todo: 검색, 페이징 기능 추가 예정
     <ProblemPageContainer>
       <SubTitle>기술학습</SubTitle>
       <SearchBar />
@@ -79,7 +84,15 @@ const ProblemListPage: React.FC = () => {
         <div>문제가 없습니다.</div>
       ) : (
         <>
-          <Table columns={columns} dataSource={problemList} rowKey="id" pagination={false} />
+          <Table
+            columns={columns}
+            dataSource={problemList}
+            rowKey="id"
+            pagination={false}
+            onRow={(record) => ({
+              onClick: () => onRowClick(record),
+            })}
+          />
           <Pagination align="center" defaultCurrent={1} total={50} />
         </>
       )}
