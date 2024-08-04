@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getProblemDetail, solveProblem } from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
 import { Tabs, Modal } from 'antd';
+import { showAlertPopup } from '@utils/showPopup';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,
@@ -33,7 +34,7 @@ const ProblemDetailPage: React.FC = () => {
   useEffect(() => {
     const fetchProblemDetail = async () => {
       try {
-        const response = await getProblemDetail(id!);
+        const response = await getProblemDetail(id ?? '');
         setProblemDetail(response.result?.problemInfo || null);
       } catch (err) {
         setError('An error occurred while fetching problem info.');
@@ -47,13 +48,12 @@ const ProblemDetailPage: React.FC = () => {
 
   const handleSubmit = async () => {
     if (answer.trim() === '') {
-      alert('답변을 입력해주세요.');
+      showAlertPopup('답변을 입력해주세요.');
       return;
     }
 
     try {
-      const response = await solveProblem(id!, answer);
-      console.log('API Response:', response);
+      const response = await solveProblem(id ?? '', answer);
       setResult(`Status: ${response.result?.problemResult?.status}`);
       setIsModalVisible(true);
     } catch (err) {
