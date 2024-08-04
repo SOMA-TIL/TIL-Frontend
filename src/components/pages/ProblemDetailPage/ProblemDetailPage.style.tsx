@@ -65,10 +65,22 @@ export const BottomBar = styled.div`
   width: 100%;
 `;
 
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+`;
+
 export const CustomButton = styled(Button)`
   width: 150px;
   height: 50px;
   font-size: 14px;
+`;
+
+export const CustomLoginButton = styled(Button)`
+  width: 150px;
+  height: 50px;
+  font-size: 14px;
+  margin-left: auto;
 `;
 
 export const TextDiv = styled.div`
