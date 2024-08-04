@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getProblemDetail, solveProblem } from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
 import { Tabs, Modal } from 'antd';
 import { showAlertPopup } from '@utils/showPopup';
+import useAuthStore from '@store/useAuthStore';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,
@@ -16,8 +17,10 @@ import {
   QuestionSection,
   AnswerSection,
   CustomButton,
+  CustomLoginButton,
   StyledTextArea,
   TextDiv,
+  ButtonGroup,
 } from './ProblemDetailPage.style';
 
 const { TabPane } = Tabs;
@@ -30,6 +33,12 @@ const ProblemDetailPage: React.FC = () => {
   const [answer, setAnswer] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { isAuthenticated, checkAuthentication } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
 
   useEffect(() => {
     const fetchProblemDetail = async () => {
@@ -70,6 +79,10 @@ const ProblemDetailPage: React.FC = () => {
     setAnswer('');
   };
 
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -104,20 +117,31 @@ const ProblemDetailPage: React.FC = () => {
                   onChange={(e) => setAnswer(e.target.value)}
                   rows={25}
                   placeholder="답변을 입력하세요."
+                  disabled={!isAuthenticated}
                 />
               </TextDiv>
             </TabPane>
-            <TabPane tab="내 답변 기록" key="2">
+            <TabPane tab="내 답변 기록" key="2" disabled={!isAuthenticated}>
               <div>내 답변 기록</div>
             </TabPane>
           </Tabs>
         </AnswerSection>
       </ContentContainer>
       <BottomBar>
-        <CustomButton>질문하기</CustomButton>
-        <CustomButton>다른 사람의 답변</CustomButton>
-        <CustomButton onClick={handleReset}>답변 초기화</CustomButton>
-        <CustomButton onClick={handleSubmit}>제출</CustomButton>
+        {!isAuthenticated ? (
+          <CustomLoginButton onClick={handleLoginRedirect}>로그인하기</CustomLoginButton>
+        ) : (
+          <>
+            <ButtonGroup>
+              <CustomButton>질문하기</CustomButton>
+              <CustomButton>다른 사람의 답변</CustomButton>
+            </ButtonGroup>
+            <ButtonGroup>
+              <CustomButton onClick={handleReset}>답변 초기화</CustomButton>
+              <CustomButton onClick={handleSubmit}>제출</CustomButton>
+            </ButtonGroup>
+          </>
+        )}
       </BottomBar>
       <Modal
         title="채점 결과"
