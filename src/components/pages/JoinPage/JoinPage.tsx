@@ -2,9 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
+import { useToast } from '@components/common/notification/ToastProvider';
+import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
 import { JoinData, checkNickname, join } from '@services/api/userService';
-import { alertError, getErrorMessage } from '@utils/errorHandler';
-import { showAlertPopup } from '@utils/showPopup';
+import { getErrorMessage } from '@utils/errorHandler';
 import { HalfWidthDiv } from '@styles/DivStyle';
 import { PRIMARY_PURPLE } from '@styles/pallete';
 import { DISPLAY_HEIGHT_WITHOUT_HEADER } from '@styles/length';
@@ -20,6 +21,7 @@ import { EMAIL, NICKNAME, PASSWORD, CONFIRM_PASSWORD } from '@utils/userInfo';
 
 const JoinPage: React.FC = () => {
   const navigate = useNavigate();
+  const { notify } = useToast();
   const {
     register,
     trigger,
@@ -30,10 +32,20 @@ const JoinPage: React.FC = () => {
   const onSubmit: SubmitHandler<JoinData> = async (data: JoinData) => {
     try {
       await join(data);
-      showAlertPopup('회원가입 성공');
+      notify({
+        message: '회원가입 성공',
+        description: '로그인 페이지로 이동합니다.',
+        type: TOAST_TYPE.SUCCESS,
+        placement: TOAST_POS.TOP_RIGHT,
+      });
       navigate('/login');
     } catch (err) {
-      alertError(err);
+      notify({
+        message: '회원가입 실패',
+        description: getErrorMessage(err),
+        type: TOAST_TYPE.ERROR,
+        placement: TOAST_POS.BOTTOM_RIGHT,
+      });
     }
   };
 
