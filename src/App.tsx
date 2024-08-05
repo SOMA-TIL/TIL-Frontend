@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
+import { ToastProvider } from '@components/common/notification/ToastProvider';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import MainPage from '@components/pages/MainPage/MainPage';
 import JoinPage from '@components/pages/JoinPage/JoinPage';
@@ -13,7 +14,7 @@ import GlobalStyle from '@styles/GlobalStyle';
 import PrivateRoute from './route';
 
 const App: React.FC = () => (
-  <>
+  <ToastProvider>
     <GlobalStyle />
     <BasicPageLayout>
       <Routes>
@@ -33,7 +34,7 @@ const App: React.FC = () => (
         </Route>
       </Routes>
     </BasicPageLayout>
-  </>
+  </ToastProvider>
 );
 
 export default App;
