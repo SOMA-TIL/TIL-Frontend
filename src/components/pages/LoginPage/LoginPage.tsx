@@ -1,6 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { LoginData, login } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
 import useUserInfoStore from '@store/useUserInfoStore';
@@ -41,7 +42,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <>
+    <BasicPageLayout>
       <HalfWidthDiv bgColor={PRIMARY_PURPLE} height={DISPLAY_HEIGHT_WITHOUT_HEADER}>
         <img src="/images/ad.png" alt="TIL ad" style={{ width: '700px' }} />
       </HalfWidthDiv>
@@ -66,7 +67,7 @@ const LoginPage: React.FC = () => {
           <Button type="submit">로그인</Button>
         </Form>
       </HalfWidthDiv>
-    </>
+    </BasicPageLayout>
   );
 };
 

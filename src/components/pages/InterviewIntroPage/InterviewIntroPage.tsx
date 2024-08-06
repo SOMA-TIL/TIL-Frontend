@@ -3,6 +3,7 @@ import { useState } from 'react';
 import TabButton from '@components/layout/TabButton/TabButton';
 import InterviewOrganization from '@components/pages/InterviewIntroPage/InterviewOrganization';
 import InterviewHistory from '@components/pages/InterviewIntroPage/InterviewHistory';
+import BasicPageLayout from '@components/layout/BasicPageLayout';
 
 import './InterviewIntroPage.css';
 
@@ -25,23 +26,25 @@ const InterviewIntroPage = () => {
   };
 
   return (
-    <div className="InterviewIntroPage">
-      <div>
-        <TabButton
-          name="InterviewOrganization"
-          text="모의 면접 구성하기"
-          selected={selectedTab}
-          onClick={handleClickTabButton}
-        />
-        <TabButton
-          name="InterviewHistory"
-          text="내 모의 면접 기록"
-          selected={selectedTab}
-          onClick={handleClickTabButton}
-        />
+    <BasicPageLayout>
+      <div className="InterviewIntroPage">
+        <div>
+          <TabButton
+            name="InterviewOrganization"
+            text="모의 면접 구성하기"
+            selected={selectedTab}
+            onClick={handleClickTabButton}
+          />
+          <TabButton
+            name="InterviewHistory"
+            text="내 모의 면접 기록"
+            selected={selectedTab}
+            onClick={handleClickTabButton}
+          />
+        </div>
+        {contents[selectedTab]}
       </div>
-      {contents[selectedTab]}
-    </div>
+    </BasicPageLayout>
   );
 };
 

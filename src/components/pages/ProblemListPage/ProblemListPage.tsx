@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { getProblemList } from '@services/api/problemService';
 import { ProblemListInfo } from '@type/problem';
 import { Pagination, Table } from 'antd';
@@ -76,27 +78,29 @@ const ProblemListPage: React.FC = () => {
     return <div>{error}</div>;
   }
   return (
-    // todo: 검색, 페이징 기능 추가 예정
-    <ProblemPageContainer>
-      <SubTitle>기술학습</SubTitle>
-      <SearchBar />
-      {problemList.length === 0 ? (
-        <div>문제가 없습니다.</div>
-      ) : (
-        <>
-          <Table
-            columns={columns}
-            dataSource={problemList}
-            rowKey="id"
-            pagination={false}
-            onRow={(record) => ({
-              onClick: () => onRowClick(record),
-            })}
-          />
-          <Pagination align="center" defaultCurrent={1} total={50} />
-        </>
-      )}
-    </ProblemPageContainer>
+    <BasicPageLayout>
+      {/* todo: 검색, 페이징 기능 추가 예정 */}
+      <ProblemPageContainer>
+        <SubTitle>기술학습</SubTitle>
+        <SearchBar />
+        {problemList.length === 0 ? (
+          <div>문제가 없습니다.</div>
+        ) : (
+          <>
+            <Table
+              columns={columns}
+              dataSource={problemList}
+              rowKey="id"
+              pagination={false}
+              onRow={(record) => ({
+                onClick: () => onRowClick(record),
+              })}
+            />
+            <Pagination align="center" defaultCurrent={1} total={50} />
+          </>
+        )}
+      </ProblemPageContainer>
+    </BasicPageLayout>
   );
 };
 
