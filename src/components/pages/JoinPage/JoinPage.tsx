@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
+import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { useToast } from '@components/common/notification/ToastProvider';
 import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
 import { JoinData, checkNickname, join } from '@services/api/userService';
@@ -59,7 +60,7 @@ const JoinPage: React.FC = () => {
   };
 
   return (
-    <>
+    <BasicPageLayout>
       <HalfWidthDiv bgColor={PRIMARY_PURPLE} height={DISPLAY_HEIGHT_WITHOUT_HEADER}>
         <img src="/images/ad.png" alt="TIL ad" style={{ width: '700px' }} />
       </HalfWidthDiv>
@@ -134,7 +135,7 @@ const JoinPage: React.FC = () => {
           <Button type="submit">회원가입</Button>
         </Form>
       </HalfWidthDiv>
-    </>
+    </BasicPageLayout>
   );
 };
 

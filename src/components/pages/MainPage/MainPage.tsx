@@ -1,10 +1,14 @@
 import React from 'react';
-import { Banner, MainPageLayout } from './MainPage.style';
+
+import BasicPageLayout from '@components/layout/BasicPageLayout';
+import { Banner, BannerContainer } from './MainPage.style';
 
 const MainPage: React.FC = () => (
-  <MainPageLayout>
-    <Banner src="images/banner.png" alt="banner" />
-  </MainPageLayout>
+  <BasicPageLayout showFooter>
+    <BannerContainer>
+      <Banner src="images/banner.png" alt="banner" />
+    </BannerContainer>
+  </BasicPageLayout>
 );
 
 export default MainPage;
