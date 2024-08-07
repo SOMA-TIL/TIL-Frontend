@@ -19,7 +19,6 @@ export interface ProblemDetailData {
 export interface SolveProblemData {
   problemResult: {
     status: string;
-    solution: string;
   };
 }
 
