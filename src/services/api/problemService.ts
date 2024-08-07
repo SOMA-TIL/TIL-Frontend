@@ -3,11 +3,11 @@ import { ApiResponse } from '@type/api';
 import { ProblemListInfo, ProblemDetailInfo } from '@type/problem';
 
 export interface ProblemListData {
-  items: ProblemListInfo[];
+  problemList: ProblemListInfo[];
   pageInfo: {
-    page: number;
-    size: number;
-    totalElements: number;
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
     totalPages: number;
   };
 }
