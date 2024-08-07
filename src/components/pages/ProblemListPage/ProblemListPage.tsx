@@ -14,7 +14,7 @@ const columns: ColumnsType<ProblemListInfo> = [
   {
     title: '상태',
     key: 'status',
-    render: () => <span>Perfect</span>,
+    render: () => <span>Pass</span>,
   },
   {
     title: '제목',
@@ -23,9 +23,9 @@ const columns: ColumnsType<ProblemListInfo> = [
   },
   {
     title: '카테고리',
-    dataIndex: 'categoryName',
-    key: 'categoryName',
-    render: (text) => <span>{text || 'None'}</span>,
+    dataIndex: 'categoryList',
+    key: 'categoryList',
+    render: () => <span>None</span>,
   },
   {
     title: '난이도',
@@ -57,7 +57,7 @@ const ProblemListPage: React.FC = () => {
     const fetchProblemList = async () => {
       try {
         const response = await getProblemList();
-        setProblemList(response.result?.items || []);
+        setProblemList(response.result?.problemList || []);
       } catch (err) {
         setError('An error occurred while fetching problems.');
       } finally {

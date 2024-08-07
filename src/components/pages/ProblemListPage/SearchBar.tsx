@@ -7,7 +7,8 @@ const SearchBar: React.FC = () => (
     <SearchInput type="text" placeholder="검색어를 입력해주세요" />
     <Select>
       <option value="">상태 선택</option>
-      <option value="perfect">Perfect</option>
+      <option value="pass">Pass</option>
+      <option value="fail">Fail</option>
       <option value="incomplete">Incomplete</option>
     </Select>
     <Select>
@@ -21,12 +22,6 @@ const SearchBar: React.FC = () => (
       <option value="network">네트워크</option>
       <option value="os">운영체제</option>
       <option value="db">데이터베이스</option>
-    </Select>
-    <Select>
-      <option value="">상태 주제 선택</option>
-      <option value="http">HTTP</option>
-      <option value="tcp">TCP/IP</option>
-      <option value="paging">페이징</option>
     </Select>
     <SearchButton>검색하기</SearchButton>
   </SearchBarContainer>
