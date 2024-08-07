@@ -10,10 +10,7 @@ export interface ProblemDetailInfo {
   title: string;
   question: string;
   solution: string;
-  point: number;
+  grading: string;
   level: number;
-  solved: number;
-  percentage: number;
-  categoryName: string | null;
-  topic: string | null;
+  categoryList: Category[];
 }

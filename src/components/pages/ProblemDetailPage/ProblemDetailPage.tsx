@@ -95,16 +95,13 @@ const ProblemDetailPage: React.FC = () => {
   return (
     <BasicPageLayout>
       {/* todo: 사이드바 사이즈 조절 가능허도록 수정 예정, 내 답변 기록 데이터 추가 예정 (API 필요), */}
-      스타일 수정 예정
       <ProblemDetailContainer>
         <ProblemInfoBar>
           <Title>{problemDetail && problemDetail.title}</Title>
-          <Category>
-            {problemDetail?.categoryName || '네트워크'} | {problemDetail?.topic || 'HTTP'}
-          </Category>
+          <Category>{problemDetail?.categoryList || 'None'}</Category>
           <ProblemInfo>난이도: {problemDetail?.level}</ProblemInfo>
-          <ProblemInfo>완료한 사람: {problemDetail?.solved}명</ProblemInfo>
-          <ProblemInfo>정답률: {problemDetail?.percentage}%</ProblemInfo>
+          <ProblemInfo>완료한 사람: 0명</ProblemInfo>
+          <ProblemInfo>정답률: 0%</ProblemInfo>
         </ProblemInfoBar>
         <ContentContainer>
           <QuestionSection>
@@ -151,7 +148,7 @@ const ProblemDetailPage: React.FC = () => {
           visible={isModalVisible}
           footer={[
             <CustomButton key="back" onClick={handleModalClose}>
-              내 답변 보러가기
+              피드백 보러가기
             </CustomButton>,
           ]}
           onCancel={handleModalClose}
