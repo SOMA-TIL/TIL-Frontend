@@ -1,17 +1,14 @@
-import { ChangeEvent, useState, useEffect, useRef } from 'react';
+import { ChangeEvent, useState, useEffect } from 'react';
 
 import { getCategoryList } from '@services/api/categoryService';
-import SelectBox, { Option } from '@components/layout/SelectBox/SelectBox';
+import SelectBox from '@components/layout/SelectBox/SelectBox';
 
 import { Category } from '@type/category';
 import { showAlertPopup } from '@utils/showPopup';
 
 const InterviewOrganization = () => {
-  const categoryList = useRef<Category[]>([]);
-  const nameList = useRef<Option[]>([]);
-
-  const [topicList, setTopicList] = useState<Option[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<Category>({ name: '', topic: '' });
+  const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category>({ id: -1, tag: '' });
   const [selectedCategoryList, setSelectedCategoryList] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -20,110 +17,40 @@ const InterviewOrganization = () => {
       promise
         .then((data) => {
           const result = data.result?.categoryList as Category[];
-          categoryList.current = result;
+          setCategoryList(result);
+          return result;
         })
-        .then(() => {
-          const uniqueNameList = categoryList.current
-            .map((category) => {
-              const option: Option = {
-                name: category.name,
-                value: category.name,
-              };
-              return option;
-            })
-            .filter(
-              (item, i) =>
-                categoryList.current.findIndex((item2) => item.name === item2.name) === i,
-            );
-
-          nameList.current = uniqueNameList;
-        })
-        .then(() => {
-          const curName = nameList.current.length ? nameList.current[0].name : '';
-
-          setSelectedCategory({
-            name: curName,
-            topic: '',
-          });
-
-          return curName;
-        })
-        .then((curName) => {
-          const uniqueTopicList = categoryList.current
-            .filter((category) => curName === category.name)
-            .map((category) => {
-              const option: Option = {
-                name: category.topic,
-                value: category.topic,
-              };
-              return option;
-            });
-
-          setTopicList(uniqueTopicList);
-
-          return { curName, uniqueTopicList };
-        })
-        .then(({ curName, uniqueTopicList }) => {
-          const curTopic = uniqueTopicList.length ? uniqueTopicList[0].name : '';
-
-          setSelectedCategory({
-            name: curName,
-            topic: curTopic,
-          });
+        .then((result) => {
+          setSelectedCategory(result[0]);
         })
         .catch((error) => showAlertPopup(error.message));
     };
     getData();
   }, []);
 
-  const handleNameChange = (e: ChangeEvent) => {
-    const { value } = e.target as HTMLOptionElement;
-
-    const uniqueTopicList = categoryList.current
-      .filter((category) => value === category.name)
-      .map((category) => {
-        const option: Option = {
-          name: category.topic,
-          value: category.topic,
-        };
-        return option;
-      });
-
-    setTopicList(uniqueTopicList);
-
-    const curTopic = uniqueTopicList.length ? uniqueTopicList[0].name : '';
-
-    setSelectedCategory({
-      name: value,
-      topic: curTopic,
-    });
-  };
-
-  const handleTopicChange = (e: ChangeEvent) => {
-    const { value } = e.target as HTMLOptionElement;
-    setSelectedCategory({
-      ...selectedCategory,
-      topic: value,
-    });
+  const handleCategoryChange = (e: ChangeEvent) => {
+    const { selectedOptions } = e.target as HTMLSelectElement;
+    setSelectedCategory({ id: Number(selectedOptions[0].value), tag: selectedOptions[0].text });
   };
 
   const handleCategoryAddButton = () => {
-    const newCategory: Category = { ...selectedCategory };
+    const newCategory: Category = { id: selectedCategory.id, tag: selectedCategory.tag };
 
-    if (!newCategory.name || !newCategory.topic) return;
+    if (newCategory.id === -1 || !newCategory.tag) return;
 
     if (
-      !selectedCategoryList.find(
+      selectedCategoryList.find(
         (category) => JSON.stringify(category) === JSON.stringify(newCategory),
       )
     )
-      setSelectedCategoryList([...selectedCategoryList, newCategory]);
+      return;
+
+    setSelectedCategoryList([...selectedCategoryList, newCategory]);
   };
 
   const handleCategoryDeleteButton = (e: React.MouseEvent) => {
-    const { innerText } = e.target as HTMLButtonElement;
-    const temp = innerText.split(' - ');
-    const deleteCategory: Category = { name: temp[0], topic: temp[1] };
+    const { value, innerText } = e.target as HTMLButtonElement;
+    const deleteCategory: Category = { id: Number(value), tag: innerText };
 
     setSelectedCategoryList(
       selectedCategoryList.filter(
@@ -133,8 +60,8 @@ const InterviewOrganization = () => {
   };
 
   const handleInterviewStartButton = () => {
-    // console.log(selectedCategoryList);
     // todo: selectedCategoryList 정보를 서버에 전달해서 모의 면접을 시작한다.
+    // const selectedCategoryIdList: number[] = selectedCategoryList.map((category) => category.id);
     // 모의 면접을 생성하는 POST API
     // 이후 해당 면접 화면으로 이동
     // PGR 패턴
@@ -147,14 +74,12 @@ const InterviewOrganization = () => {
       <p>기술 카테고리를 선택하여 면접 내용을 직접 구성합니다.</p>
 
       <SelectBox
-        optionList={nameList.current}
-        value={selectedCategory.name}
-        onChange={handleNameChange}
-      />
-      <SelectBox
-        optionList={topicList}
-        value={selectedCategory.topic}
-        onChange={handleTopicChange}
+        optionList={categoryList.map((category) => ({
+          name: category.tag,
+          value: String(category.id),
+        }))}
+        value={String(selectedCategory.id)}
+        onChange={handleCategoryChange}
       />
 
       <button type="button" onClick={handleCategoryAddButton}>
@@ -169,8 +94,8 @@ const InterviewOrganization = () => {
       <p>모의 기술 면접에서 다음과 같은 내용들이 질문으로 나올 수 있습니다.</p>
       <div className="CategoryList">
         {selectedCategoryList.map((category) => (
-          <button type="button" onClick={handleCategoryDeleteButton}>
-            {category.name} - {category.topic}
+          <button type="button" value={category.id} onClick={handleCategoryDeleteButton}>
+            {category.tag}
           </button>
         ))}
       </div>
