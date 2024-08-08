@@ -6,7 +6,7 @@ import { Banner, BannerContainer } from './MainPage.style';
 const MainPage: React.FC = () => (
   <BasicPageLayout showFooter>
     <BannerContainer>
-      <Banner src="images/banner.png" alt="banner" />
+      <Banner src="/images/banner.png" alt="banner" />
     </BannerContainer>
   </BasicPageLayout>
 );
