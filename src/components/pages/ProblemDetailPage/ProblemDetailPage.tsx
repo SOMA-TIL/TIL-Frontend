@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+import { Tabs, Modal } from 'antd';
+import { useToast } from '@components/common/notification/ToastProvider';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
+import { TOAST_TYPE } from '@constants/toast';
 import { getProblemDetail, solveProblem, toggleFavorite } from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
-import { Tabs, Modal } from 'antd';
 import { showAlertPopup } from '@utils/showPopup';
+import { getErrorMessage } from '@utils/errorHandler';
 import useAuthStore from '@store/useAuthStore';
 import {
   ProblemDetailContainer,
@@ -28,27 +32,37 @@ import {
 const { TabPane } = Tabs;
 
 const ProblemDetailPage: React.FC = () => {
+  const { notify } = useToast();
+  const navigate = useNavigate();
+
   const { id } = useParams<{ id: string }>();
-  const [problemDetail, setProblemDetail] = useState<ProblemDetailInfo | null>(null);
+  const [problemDetail, setProblemDetail] = useState<ProblemDetailInfo>({} as ProblemDetailInfo);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>();
   const [answer, setAnswer] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { isAuthenticated, checkAuthentication } = useAuthStore();
-  const navigate = useNavigate();
 
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
 
   useEffect(() => {
+    if (!id) {
+      setError('문제 정보를 가져오는 중 오류가 발생했습니다.');
+      return;
+    }
+
     const fetchProblemDetail = async () => {
       try {
-        const response = await getProblemDetail(id ?? '');
-        setProblemDetail(response.result?.problemInfo || null);
+        const response = await getProblemDetail(id);
+        if (!response.result || !response.result.problemInfo) {
+          throw new Error('문제 정보를 가져오는 중 오류가 발생했습니다.');
+        }
+        setProblemDetail(response.result.problemInfo);
       } catch (err) {
-        setError('An error occurred while fetching problem info.');
+        setError(getErrorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -56,6 +70,17 @@ const ProblemDetailPage: React.FC = () => {
 
     fetchProblemDetail();
   }, [id]);
+
+  useEffect(() => {
+    if (error) {
+      notify({
+        message: '문제 정보 로딩 실패',
+        description: error,
+        type: TOAST_TYPE.ERROR,
+      });
+      navigate('/problem');
+    }
+  }, [error, navigate, notify]);
 
   const handleSubmit = async () => {
     if (answer.trim() === '') {
@@ -87,26 +112,24 @@ const ProblemDetailPage: React.FC = () => {
 
   const handleClickFavorite = async () => {
     if (!isAuthenticated) {
-      showAlertPopup('로그인이 필요한 기능입니다.');
+      notify({
+        message: '즐겨찾기 추가 실패',
+        description: '로그인이 필요합니다.',
+        type: TOAST_TYPE.ERROR,
+      });
       return;
     }
+
     try {
-      if (!problemDetail) {
-        return;
-      }
-      await toggleFavorite(problemDetail.id, !problemDetail.isFavorite); // toggleFavorite 함수는 API 호출을 구현해야 합니다.
+      await toggleFavorite(problemDetail.id, !problemDetail.isFavorite);
       setProblemDetail({ ...problemDetail, isFavorite: !problemDetail.isFavorite });
     } catch (err) {
-      showAlertPopup('즐겨찾기 업데이트에 실패했습니다.');
+      setError('즐겨찾기 업데이트에 실패했습니다.');
     }
   };
 
   if (loading) {
     return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
   }
 
   return (
