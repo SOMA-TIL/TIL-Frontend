@@ -29,7 +29,7 @@ const Header: React.FC = () => {
     <HeaderArea>
       <Section pos="left">
         <Logo onClick={handleHomeButton}>
-          <img src="images/TIL_logo.png" alt="TIL_logo" />
+          <img src="/images/TIL_logo.png" alt="TIL_logo" />
         </Logo>
       </Section>
 

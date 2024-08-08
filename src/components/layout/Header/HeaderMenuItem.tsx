@@ -33,7 +33,7 @@ export const HeaderLogoutButton: React.FC<HeaderMenuButtonProps> = ({ title, pat
 
   return (
     <LogoutButton onClick={handleButton}>
-      <img src="images/logout_icon.png" alt="logout" /> {title}
+      <img src="/images/logout_icon.png" alt="logout" /> {title}
     </LogoutButton>
   );
 };
