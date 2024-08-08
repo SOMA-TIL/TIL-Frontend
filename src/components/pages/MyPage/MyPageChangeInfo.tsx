@@ -10,7 +10,7 @@ import { MyPageContainer, MyPageContent, MyPageContentTitle } from './MyPage.sty
 const MyPageChangeInfo: React.FC = () => (
   <BasicPageLayout>
     <MyPageContainer>
-      <MyPageMenu />
+      <MyPageMenu currMenu="mypage" />
       <MyPageContent>
         <MyPageContentTitle>내 정보 수정</MyPageContentTitle>
         <Form display="inline-block">

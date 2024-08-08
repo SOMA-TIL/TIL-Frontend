@@ -5,6 +5,7 @@ export const LIGHT_PURPLE = '#EADEF5';
 export const WHITE = '#FFFFFF';
 
 export const BLACK = '#111111';
+export const DARK_GREY = '#333333';
 export const GREY = '#999999';
 export const LIGHT_GREY = '#DDDDDD';
 export const LIGHT_GREY2 = '#CCCCCC';

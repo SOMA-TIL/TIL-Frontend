@@ -66,9 +66,9 @@ const MyPageChangePassword: React.FC = () => {
   return (
     <BasicPageLayout>
       <MyPageContainer>
-        <MyPageMenu />
+        <MyPageMenu currMenu="change-password" />
         <MyPageContent>
-          <MyPageContentTitle>비밀번호 변경</MyPageContentTitle>
+          <MyPageContentTitle>비밀번호 수정</MyPageContentTitle>
           <Form display="inline-block" onSubmit={handleSubmit(onSubmit)}>
             <FormSection alignItems="left">
               <FormSectionTitle>{PASSWORD.INPUT_TITLE}</FormSectionTitle>
