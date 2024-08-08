@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
-import { getProblemDetail, solveProblem } from '@services/api/problemService';
+import { getProblemDetail, solveProblem, toggleFavorite } from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
 import { Tabs, Modal } from 'antd';
 import { showAlertPopup } from '@utils/showPopup';
@@ -85,6 +85,22 @@ const ProblemDetailPage: React.FC = () => {
     navigate('/login');
   };
 
+  const handleClickFavorite = async () => {
+    if (!isAuthenticated) {
+      showAlertPopup('로그인이 필요한 기능입니다.');
+      return;
+    }
+    try {
+      if (!problemDetail) {
+        return;
+      }
+      await toggleFavorite(problemDetail.id, !problemDetail.isFavorite); // toggleFavorite 함수는 API 호출을 구현해야 합니다.
+      setProblemDetail({ ...problemDetail, isFavorite: !problemDetail.isFavorite });
+    } catch (err) {
+      showAlertPopup('즐겨찾기 업데이트에 실패했습니다.');
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -98,7 +114,10 @@ const ProblemDetailPage: React.FC = () => {
       {/* todo: 사이드바 사이즈 조절 가능허도록 수정 예정, 내 답변 기록 데이터 추가 예정 (API 필요), */}
       <ProblemDetailContainer>
         <ProblemInfoBar>
-          <BookMarkIcon isFavorite={problemDetail?.isFavorite ?? false} />
+          <BookMarkIcon
+            isFavorite={problemDetail?.isFavorite ?? false}
+            onClick={handleClickFavorite}
+          />
           <Title>{problemDetail && problemDetail.title}</Title>
           <Category>{problemDetail?.categoryList || 'None'}</Category>
           <ProblemInfo>난이도: {problemDetail?.level}</ProblemInfo>
