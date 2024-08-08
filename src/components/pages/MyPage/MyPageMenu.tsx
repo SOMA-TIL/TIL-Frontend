@@ -1,16 +1,32 @@
 import { useNavigate } from 'react-router-dom';
-import { MyPageMenuTab } from './MyPage.style';
+import { DARK_GREY, WHITE } from '@styles/pallete';
 
-const MyPageMenu: React.FC = () => {
+import { KeyIcon, MyPageMenuTab, MyPageMenuTabButton, UserIcon } from './MyPage.style';
+
+interface MyPageMenuProps {
+  currMenu: string;
+}
+
+const MyPageMenu: React.FC<MyPageMenuProps> = ({ currMenu }) => {
   const navigate = useNavigate();
+
   return (
     <MyPageMenuTab>
-      <button type="button" onClick={() => navigate('/mypage')}>
-        내 정보 수정
-      </button>
-      <button type="button" onClick={() => navigate('/mypage/change-password')}>
-        비밀번호 변경
-      </button>
+      <MyPageMenuTabButton
+        type="button"
+        isActive={currMenu === 'mypage'}
+        onClick={() => navigate('/mypage')}
+      >
+        <UserIcon color={currMenu === 'mypage' ? WHITE : DARK_GREY} />내 정보 수정
+      </MyPageMenuTabButton>
+      <MyPageMenuTabButton
+        type="button"
+        isActive={currMenu === 'change-password'}
+        onClick={() => navigate('/mypage/change-password')}
+      >
+        <KeyIcon color={currMenu === 'change-password' ? WHITE : DARK_GREY} />
+        비밀번호 수정
+      </MyPageMenuTabButton>
     </MyPageMenuTab>
   );
 };
