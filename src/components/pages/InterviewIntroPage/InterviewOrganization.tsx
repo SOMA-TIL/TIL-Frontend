@@ -1,12 +1,16 @@
 import { ChangeEvent, useState, useEffect } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 import { getCategoryList } from '@services/api/categoryService';
 import SelectBox from '@components/layout/SelectBox/SelectBox';
 
 import { Category } from '@type/category';
 import { showAlertPopup } from '@utils/showPopup';
 
+import { createInterview } from '@services/api/InterviewService';
+
 const InterviewOrganization = () => {
+  const navigate = useNavigate();
+
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({ id: -1, tag: '' });
   const [selectedCategoryList, setSelectedCategoryList] = useState<Category[]>([]);
@@ -60,11 +64,32 @@ const InterviewOrganization = () => {
   };
 
   const handleInterviewStartButton = () => {
-    // todo: selectedCategoryList 정보를 서버에 전달해서 모의 면접을 시작한다.
-    // const selectedCategoryIdList: number[] = selectedCategoryList.map((category) => category.id);
-    // 모의 면접을 생성하는 POST API
-    // 이후 해당 면접 화면으로 이동
-    // PGR 패턴
+    const selectedCategoryIdList: number[] = selectedCategoryList.map((category) => category.id);
+
+    if (!selectedCategoryIdList.length) {
+      showAlertPopup('카테고리를 최소 1개 이상 선택해주세요.');
+      return;
+    }
+
+    // todo: 카테고리 여러개 선택 가능하도록 구조 변경
+    if (selectedCategoryIdList.length > 1) {
+      showAlertPopup('베타 버전에서 카테고리는 1개만 선택 가능합니다.');
+      return;
+    }
+
+    const promise = createInterview({ categoryIdList: selectedCategoryIdList });
+    const postData = () => {
+      promise
+        .then((data) => {
+          const uuid = data.result?.interviewUuid.uuid;
+          return uuid;
+        })
+        .then((uuid) => {
+          navigate(`/interview/${uuid}`);
+        })
+        .catch((error) => showAlertPopup(error.message));
+    };
+    postData();
   };
 
   return (
