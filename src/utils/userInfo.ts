@@ -22,9 +22,24 @@ export const PASSWORD = {
   INPUT_PLACEHOLDER: '비밀번호를 입력하세요',
 };
 
+export const NEW_PASSWORD = {
+  INPUT_TITLE: '변경할 비밀번호',
+  REGEX: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$/,
+  ERROR_MESSAGE: '8~20자의 영문, 숫자 조합만 사용 가능합니다.',
+  REQUIRED_MESSAGE: '변경할 비밀번호 입력은 필수입니다.',
+  INPUT_PLACEHOLDER: '변경할 비밀번호를 입력하세요',
+};
+
 export const CONFIRM_PASSWORD = {
   INPUT_TITLE: '비밀번호 확인',
   ERROR_MESSAGE: '비밀번호가 일치하지 않습니다.',
+  REQUIRED_MESSAGE: '비밀번호 확인은 필수입니다.',
+  INPUT_PLACEHOLDER: '비밀번호를 확인해주세요',
+};
+
+export const CONFIRM_NEW_PASSWORD = {
+  INPUT_TITLE: '변경할 비밀번호 확인',
+  ERROR_MESSAGE: '변경할 비밀번호가 일치하지 않습니다.',
   REQUIRED_MESSAGE: '비밀번호 확인은 필수입니다.',
   INPUT_PLACEHOLDER: '비밀번호를 확인해주세요',
 };

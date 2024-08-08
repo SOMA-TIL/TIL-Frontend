@@ -32,3 +32,14 @@ export const logout = async (): Promise<ApiResponse> => {
   const response = await apiClient.get('/user/logout');
   return response.data;
 };
+
+export interface UpdatePasswordData {
+  password: string;
+  newPassword: string;
+  confirmNewPassword: string;
+}
+
+export const updatePassword = async (data: UpdatePasswordData): Promise<ApiResponse> => {
+  const response = await apiClient.patch('/user/change-password', data);
+  return response.data;
+};

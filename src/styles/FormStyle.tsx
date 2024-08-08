@@ -2,16 +2,16 @@ import styled from 'styled-components';
 import { PRIMARY_PURPLE } from './pallete';
 import { Input } from './InputStyle';
 
-const Form = styled.form`
-  display: flex;
+const Form = styled.form<{ display?: string }>`
+  display: ${(props) => props.display || 'flex'};
   flex-direction: column; /* 세로 방향으로 정렬 */
   align-items: center;
 `;
 
-export const FormSection = styled.section`
-  display: flex;
+export const FormSection = styled.section<{ display?: string; alignItems?: string }>`
+  display: ${(props) => props.display || 'flex'};
   flex-direction: column;
-  align-items: center;
+  align-items: ${(props) => props.alignItems || 'center'};
   margin-bottom: 10px;
 `;
 
@@ -29,7 +29,7 @@ export const FormTitle = styled.h2`
   font-weight: bold;
 `;
 
-export const FormInput = styled(Input)`
+export const FormInput = styled(Input)<{ alignItems?: string }>`
   margin-bottom: 5px;
 `;
 
