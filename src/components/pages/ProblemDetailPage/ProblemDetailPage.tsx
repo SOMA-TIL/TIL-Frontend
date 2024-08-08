@@ -22,6 +22,7 @@ import {
   StyledTextArea,
   TextDiv,
   ButtonGroup,
+  BookMarkIcon,
 } from './ProblemDetailPage.style';
 
 const { TabPane } = Tabs;
@@ -97,6 +98,7 @@ const ProblemDetailPage: React.FC = () => {
       {/* todo: 사이드바 사이즈 조절 가능허도록 수정 예정, 내 답변 기록 데이터 추가 예정 (API 필요), */}
       <ProblemDetailContainer>
         <ProblemInfoBar>
+          <BookMarkIcon isFavorite={problemDetail?.isFavorite ?? false} />
           <Title>{problemDetail && problemDetail.title}</Title>
           <Category>{problemDetail?.categoryList || 'None'}</Category>
           <ProblemInfo>난이도: {problemDetail?.level}</ProblemInfo>
