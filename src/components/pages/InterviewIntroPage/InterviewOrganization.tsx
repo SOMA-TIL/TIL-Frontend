@@ -80,12 +80,9 @@ const InterviewOrganization = () => {
     const promise = createInterview({ categoryIdList: selectedCategoryIdList });
     const postData = () => {
       promise
-        .then((data) => {
-          const uuid = data.result?.interviewUuid.uuid;
-          return uuid;
-        })
-        .then((uuid) => {
-          navigate(`/interview/${uuid}`);
+        .then((data) => data.result?.interviewCode.code)
+        .then((code) => {
+          navigate(`/interview/${code}`);
         })
         .catch((error) => showAlertPopup(error.message));
     };

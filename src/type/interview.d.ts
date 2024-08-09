@@ -1,3 +1,3 @@
-export interface InterviewUuid {
-  uuid: string;
+export interface InterviewCode {
+  code: string;
 }

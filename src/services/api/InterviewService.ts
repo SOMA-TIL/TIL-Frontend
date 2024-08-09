@@ -1,18 +1,18 @@
 import apiClient from '@services/api/axios';
 import { ApiResponse } from '@type/api';
-import { InterviewUuid } from '@type/interview';
+import { InterviewCode } from '@type/interview';
 
 export interface InterviewCreateData {
   categoryIdList: number[];
 }
 
-export interface InterviewUuidData {
-  interviewUuid: InterviewUuid;
+export interface InterviewCodeData {
+  interviewCode: InterviewCode;
 }
 
 export const createInterview = async (
   data: InterviewCreateData,
-): Promise<ApiResponse<InterviewUuidData>> => {
+): Promise<ApiResponse<InterviewCodeData>> => {
   const response = await apiClient.post('/interview/create', data);
   return response.data;
 };
