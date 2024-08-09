@@ -18,7 +18,14 @@ import { getErrorMessage } from '@utils/errorHandler';
 import { NICKNAME } from '@utils/userInfo';
 
 import MyPageMenu from './MyPageMenu';
-import { MyPageContainer, MyPageContent, MyPageContentTitle } from './MyPage.style';
+import {
+  MyPageContainer,
+  MyPageContent,
+  MyPageContentTitle,
+  ProfileImageContainer,
+  ProfileImageUpdateButton,
+  ImageUpdateIcon,
+} from './MyPage.style';
 
 const MyPageChangeInfo: React.FC = () => {
   const { notify } = useToast();
@@ -68,6 +75,13 @@ const MyPageChangeInfo: React.FC = () => {
         <MyPageMenu currMenu="mypage" />
         <MyPageContent>
           <MyPageContentTitle>내 정보 수정</MyPageContentTitle>
+          <ProfileImageContainer>
+            {/* todo : replace with real image */}
+            <img src="https://loremflickr.com/120/120" alt="profile" />{' '}
+            <ProfileImageUpdateButton>
+              <ImageUpdateIcon />
+            </ProfileImageUpdateButton>
+          </ProfileImageContainer>
           <Form display="inline-block" onSubmit={handleSubmit(onSubmit)}>
             <FormSection alignItems="left">
               <FormSectionTitle>아이디(이메일)</FormSectionTitle>
