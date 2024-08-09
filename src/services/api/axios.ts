@@ -19,7 +19,9 @@ apiClient.interceptors.request.use(
   (config) => {
     const newConfig = { ...config };
     const accessToken = useAuthStore.getState().getAccessToken();
-    newConfig.headers.Authorization = accessToken ? formatBearerToken(accessToken) : ''; // 헤더에 토큰 추가
+    if (accessToken) {
+      newConfig.headers.Authorization = formatBearerToken(accessToken); // 헤더에 토큰 추가
+    }
 
     return newConfig;
   },
