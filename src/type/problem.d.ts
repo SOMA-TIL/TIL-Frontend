@@ -13,4 +13,5 @@ export interface ProblemDetailInfo {
   grading: string;
   level: number;
   categoryList: Category[];
+  isFavorite: boolean;
 }

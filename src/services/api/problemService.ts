@@ -39,3 +39,8 @@ export const solveProblem = async (
   const response = await apiClient.post(`/problem/${id}/solve`, { answer });
   return response.data;
 };
+
+export const toggleFavorite = async (id: number, isFavorite: boolean): Promise<ApiResponse> => {
+  const response = await apiClient.post(`/problem/${id}/favorite`, { isFavorite });
+  return response.data;
+};
