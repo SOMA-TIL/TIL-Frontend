@@ -43,3 +43,12 @@ export const updatePassword = async (data: UpdatePasswordData): Promise<ApiRespo
   const response = await apiClient.patch('/user/change-password', data);
   return response.data;
 };
+
+export interface UpdateNicknameData {
+  nickname: string;
+}
+
+export const updateNickname = async (data: UpdateNicknameData): Promise<ApiResponse> => {
+  const response = await apiClient.patch('/user/change-nickname', data);
+  return response.data;
+};
