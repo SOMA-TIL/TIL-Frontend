@@ -19,6 +19,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+      - name: Set environment variables
+        run: |
+          echo "REACT_APP_PROFILE=dev" >> $GITHUB_ENV
+          echo "REACT_APP_TIL_API_URL=https://dev-api.soma-til.com" >> $GITHUB_ENV
+
       - name: Build project
         run: |
           yarn install
