@@ -21,8 +21,8 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "REACT_APP_PROFILE=dev" >> $GITHUB_ENV
-          echo "REACT_APP_TIL_API_URL=https://dev-api.soma-til.com" >> $GITHUB_ENV
+          echo ${{ secrets.REACT_APP_PROFILE_VALUE }} >> $GITHUB_ENV
+          echo ${{ secrets.REACT_APP_TIL_API_URL_VALUE }} >> $GITHUB_ENV
 
       - name: Build project
         run: |
