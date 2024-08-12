@@ -39,7 +39,7 @@ export const ProblemInfo = styled.div`
 export const ContentContainer = styled.div`
   display: flex;
   flex: 0.8;
-  overflow: auto;
+  overflow: hidden;
 `;
 
 export const QuestionSection = styled.div`
