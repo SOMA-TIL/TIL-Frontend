@@ -15,3 +15,11 @@ export interface ProblemDetailInfo {
   categoryList: Category[];
   isFavorite: boolean;
 }
+
+export interface ProblemHistoryInfo {
+  id: number;
+  answer: string;
+  feedback: string;
+  score: string;
+  created_date: string;
+}
