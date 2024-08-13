@@ -10,6 +10,7 @@ import { ProblemDetailInfo } from '@type/problem';
 import { showAlertPopup } from '@utils/showPopup';
 import { getErrorMessage } from '@utils/errorHandler';
 import useAuthStore from '@store/useAuthStore';
+import useCategoryStore from '@store/useCategoryStore';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,
@@ -45,6 +46,7 @@ const ProblemDetailPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isPassed, setIsPassed] = useState(false); // todo: API 연동 후 수정 필요
   const { isAuthenticated, checkAuthentication } = useAuthStore();
+  const { getCategoryList, transformCategoryTagList } = useCategoryStore();
 
   // Mock data for 내 답변 기록 -> API 연동 후, 삭제
   const ProblemHistoryMockData = [
@@ -126,6 +128,7 @@ const ProblemDetailPage: React.FC = () => {
 
     const fetchProblemDetail = async () => {
       try {
+        await getCategoryList();
         const response = await getProblemDetail(id);
         if (!response.result || !response.result.problemInfo) {
           throw new Error('문제 정보를 가져오는 중 오류가 발생했습니다.');
@@ -140,7 +143,7 @@ const ProblemDetailPage: React.FC = () => {
     };
 
     fetchProblemDetail();
-  }, [id]);
+  }, [getCategoryList, id]);
 
   useEffect(() => {
     if (error) {
@@ -213,7 +216,9 @@ const ProblemDetailPage: React.FC = () => {
             onClick={handleClickFavorite}
           />
           <Title>{problemDetail && problemDetail.title}</Title>
-          <Category>{problemDetail?.categoryList || 'None'}</Category>
+          <Category>
+            {problemDetail && transformCategoryTagList(problemDetail.categoryList).join(',')}
+          </Category>
           <ProblemInfo>난이도: {problemDetail?.level}</ProblemInfo>
           <ProblemInfo>완료한 사람: 0명</ProblemInfo>
           <ProblemInfo>정답률: 0%</ProblemInfo>
