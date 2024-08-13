@@ -15,9 +15,14 @@ export interface ProblemDetailInfo {
 }
 
 export interface ProblemHistoryInfo {
-  id: number;
+  submitId: number;
   answer: string;
-  feedback: string;
-  score: string;
-  created_date: string;
+  result: string;
+  comment: string;
+  submittedDate: string;
+}
+
+export interface ProblemSubmitHistoryInfo {
+  submitHistory: ProblemHistoryInfo[];
+  solution: string;
 }

@@ -1,57 +1,61 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
-import { ProblemHistoryInfo } from '@type/problem';
+import { useToast } from '@components/common/notification/ToastProvider';
+import { getProblemSubmitHistory } from '@services/api/problemService';
+import { TOAST_TYPE } from '@constants/toast';
+import { ProblemHistoryInfo, ProblemSubmitHistoryInfo } from '@type/problem';
+import formatDate from '@utils/time';
+import { getErrorMessage } from '@utils/errorHandler';
 import { Container, SolutionBox, StyledTable, SubTitleBox } from './ProblemHistoryTab.style';
 
-interface ProblemHistoryProps {
-  isPassed: boolean;
-  problemSolution: string;
-  historyData: ProblemHistoryInfo[];
-}
+const CAN_NOT_VIEW_SOLUTION = '문제를 PASS해야 솔루션을 볼 수 있습니다.';
+
+const createColumnSetting = (title: string, dataIndex: string, width: number) => ({
+  title,
+  dataIndex,
+  key: dataIndex,
+  width,
+});
 
 const columns: TableColumnsType<ProblemHistoryInfo> = [
-  {
-    title: '답변',
-    dataIndex: 'answer',
-    key: 'answer',
-    width: 300,
-  },
-  {
-    title: '피드백',
-    dataIndex: 'feedback',
-    key: 'feedback',
-    width: 300,
-  },
-  {
-    title: '제출 날짜',
-    dataIndex: 'created_date',
-    key: 'created_date',
-    width: 150,
-  },
-  {
-    title: '결과',
-    dataIndex: 'score',
-    key: 'score',
-    width: 100,
-  },
+  createColumnSetting('답변', 'answer', 300),
+  createColumnSetting('피드백', 'comment', 300),
+  createColumnSetting('제출 날짜', 'submittedDate', 150),
+  createColumnSetting('결과', 'result', 100),
 ];
 
-const ProblemHistory: React.FC<ProblemHistoryProps> = ({
-  problemSolution,
-  historyData,
-  isPassed,
-}) => {
-  const dataSource = historyData.map((item) => ({
-    key: item.id,
-    ...item,
+const ProblemHistory: React.FC<{ problemId: string }> = ({ problemId }) => {
+  const { notify } = useToast();
+  const [submitHistory, setSubmitHistory] = useState<ProblemSubmitHistoryInfo | null>(null);
+  useEffect(() => {
+    const fetchSubmitHistoryData = async () => {
+      try {
+        const response = await getProblemSubmitHistory(problemId);
+        setSubmitHistory(response.result || null);
+      } catch (err) {
+        notify({
+          message: '답변 기록 로딩 실패',
+          description: getErrorMessage(err),
+          type: TOAST_TYPE.ERROR,
+        });
+      }
+    };
+
+    fetchSubmitHistoryData();
+  }, [problemId, notify]);
+
+  const dataSource = (submitHistory?.submitHistory || []).map((history, index) => ({
+    ...history,
+    submittedDate: formatDate(history.submittedDate, 'YYYY-MM-DD'),
+    key: index,
   }));
 
   return (
     <Container>
       <SubTitleBox>모범 답안</SubTitleBox>
       <SolutionBox>
-        {isPassed ? <p>{problemSolution}</p> : <p>문제를 PASS해야 솔루션을 볼 수 있습니다.</p>}
+        <p>{submitHistory?.solution || CAN_NOT_VIEW_SOLUTION}</p>
       </SolutionBox>
       <SubTitleBox>답변 기록</SubTitleBox>
       <StyledTable>
