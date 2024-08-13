@@ -2,6 +2,7 @@ import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import BasicPageLayout from '@components/layout/BasicPageLayout';
+import { useToast } from '@components/common/notification/ToastProvider';
 import { LoginData, login } from '@services/api/userService';
 import useAuthStore from '@store/useAuthStore';
 import useUserInfoStore from '@store/useUserInfoStore';
@@ -12,15 +13,16 @@ import Form, { FormTitle } from '@styles/FormStyle';
 import { Button } from '@styles/ButtonStyle';
 import { Input } from '@styles/InputStyle';
 
-import { alertError } from '@utils/errorHandler';
-import { showAlertPopup } from '@utils/showPopup';
+import { getErrorMessage } from '@utils/errorHandler';
 import { Token } from '@type/auth';
 import { UserInfo } from '@type/user';
+import { TOAST_TYPE } from '@constants/toast';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const { notify } = useToast();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // 폼 제출 시 페이지 리로드 방지
@@ -33,10 +35,9 @@ const LoginPage: React.FC = () => {
       useAuthStore.getState().login(token);
       useUserInfoStore.getState().setNickname(user.nickname);
 
-      showAlertPopup('로그인 성공');
       navigate('/');
     } catch (err: unknown) {
-      alertError(err);
+      notify({ message: '로그인 실패', description: getErrorMessage(err), type: TOAST_TYPE.ERROR });
       setPassword('');
     }
   };
