@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
-import TabButton from '@components/layout/TabButton/TabButton';
 import InterviewOrganization from '@components/pages/InterviewIntroPage/InterviewOrganization';
 import InterviewHistory from '@components/pages/InterviewIntroPage/InterviewHistory';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 
-import './InterviewIntroPage.css';
+import SubHeader from './SubHeader';
+import { InterviewIntroContainer } from './InterviewIntroPage.style';
 
 interface Content {
   [key: string]: React.ReactElement;
@@ -27,23 +27,10 @@ const InterviewIntroPage = () => {
 
   return (
     <BasicPageLayout>
-      <div className="InterviewIntroPage">
-        <div>
-          <TabButton
-            name="InterviewOrganization"
-            text="모의 면접 구성하기"
-            selected={selectedTab}
-            onClick={handleClickTabButton}
-          />
-          <TabButton
-            name="InterviewHistory"
-            text="내 모의 면접 기록"
-            selected={selectedTab}
-            onClick={handleClickTabButton}
-          />
-        </div>
+      <InterviewIntroContainer>
+        <SubHeader selected={selectedTab} onClick={handleClickTabButton} />
         {contents[selectedTab]}
-      </div>
+      </InterviewIntroContainer>
     </BasicPageLayout>
   );
 };
