@@ -238,7 +238,7 @@ const ProblemDetailPage: React.FC = () => {
               </TabPane>
               <TabPane tab="내 답변 기록" key="2" disabled={!isAuthenticated}>
                 <ProblemHistory
-                  problemSolution={problemDetail?.solution || ''}
+                  problemSolution="모범답안입니다."
                   historyData={ProblemHistoryMockData}
                   isPassed={isPassed}
                 />

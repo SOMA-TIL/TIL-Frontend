@@ -1,18 +1,16 @@
-export interface ProblemListInfo {
+export interface ProblemOverviewInfo {
   id: number;
   title: string;
   level: number;
-  categoryList: Category[];
+  categoryList: number[];
 }
 
 export interface ProblemDetailInfo {
   id: number;
   title: string;
   question: string;
-  solution: string;
-  grading: string;
   level: number;
-  categoryList: Category[];
+  categoryList: number[];
   isFavorite: boolean;
 }
 
