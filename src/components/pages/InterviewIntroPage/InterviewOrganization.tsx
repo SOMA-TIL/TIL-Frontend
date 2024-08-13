@@ -1,15 +1,26 @@
 import { ChangeEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCategoryList } from '@services/api/categoryService';
-import SelectBox from '@components/layout/SelectBox/SelectBox';
 
 import { Category } from '@type/category';
-import { showAlertPopup } from '@utils/showPopup';
 
 import { createInterview } from '@services/api/InterviewService';
+import { useToast } from '@components/common/notification/ToastProvider';
+import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
+import {
+  InterviewContentContainer,
+  OrganizationSectionContainer,
+  OrganizationSectionContainerNoBorder,
+  OrganizationSectionDescription,
+  OrganizationSectionTitle,
+  SelectedCategoryButton,
+} from './InterviewIntroPage.style';
+import SelectBar from './SelectBar';
+import OrganizationFooter from './OrganizationFooter';
 
 const InterviewOrganization = () => {
   const navigate = useNavigate();
+  const { notify } = useToast();
 
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({ id: -1, tag: '' });
@@ -27,10 +38,17 @@ const InterviewOrganization = () => {
         .then((result) => {
           setSelectedCategory(result[0]);
         })
-        .catch((error) => showAlertPopup(error.message));
+        .catch((error) =>
+          notify({
+            message: '카테고리 데이터 로딩 실패',
+            description: error.message,
+            type: TOAST_TYPE.ERROR,
+            placement: TOAST_POS.TOP,
+          }),
+        );
     };
     getData();
-  }, []);
+  }, [notify]);
 
   const handleCategoryChange = (e: ChangeEvent) => {
     const { selectedOptions } = e.target as HTMLSelectElement;
@@ -67,13 +85,23 @@ const InterviewOrganization = () => {
     const selectedCategoryIdList: number[] = selectedCategoryList.map((category) => category.id);
 
     if (!selectedCategoryIdList.length) {
-      showAlertPopup('카테고리를 최소 1개 이상 선택해주세요.');
+      notify({
+        message: '면접 구성 실패',
+        description: '카테고리를 최소 1개 이상 선택해주세요.',
+        type: TOAST_TYPE.ERROR,
+        placement: TOAST_POS.TOP,
+      });
       return;
     }
 
     // todo: 카테고리 여러개 선택 가능하도록 구조 변경
     if (selectedCategoryIdList.length > 1) {
-      showAlertPopup('베타 버전에서 카테고리는 1개만 선택 가능합니다.');
+      notify({
+        message: '면접 구성 실패',
+        description: '현재 카테고리는 1개만 선택 가능합니다.',
+        type: TOAST_TYPE.ERROR,
+        placement: TOAST_POS.TOP,
+      });
       return;
     }
 
@@ -82,49 +110,75 @@ const InterviewOrganization = () => {
       promise
         .then((data) => data.result?.interviewCode.code)
         .then((code) => {
+          notify({
+            message: '면접 구성 성공',
+            description: '면접 페이지로 이동합니다.',
+            type: TOAST_TYPE.SUCCESS,
+            placement: TOAST_POS.TOP_RIGHT,
+          });
           navigate(`/interview/${code}`);
         })
-        .catch((error) => showAlertPopup(error.message));
+        .catch((error) =>
+          notify({
+            message: '모의면접 생성 실패',
+            description: error.message,
+            type: TOAST_TYPE.ERROR,
+            placement: TOAST_POS.TOP,
+          }),
+        );
     };
     postData();
   };
 
   return (
-    <div className="InterviewOrganization">
-      <br />
-      <h1>직접 선택하여 구성하기</h1>
-      <p>기술 카테고리를 선택하여 면접 내용을 직접 구성합니다.</p>
+    <InterviewContentContainer>
+      <OrganizationSectionContainer>
+        <OrganizationSectionTitle>포트폴리오로 구성하기</OrganizationSectionTitle>
+        <OrganizationSectionDescription>
+          포트폴리오를 업로드하여 면접 내용을 자동으로 구성합니다.
+        </OrganizationSectionDescription>
+        <SelectBar
+          optionList={[{ name: 'pdf, docx, hwp, txt', value: '' }]}
+          value="value"
+          onChange={() => null}
+          text="구성하기"
+          onClick={() => null}
+        />
+      </OrganizationSectionContainer>
+      <OrganizationSectionContainer>
+        <OrganizationSectionTitle>직접 선택하여 구성하기</OrganizationSectionTitle>
+        <OrganizationSectionDescription>
+          기술 카테고리를 선택하여 면접 내용을 직접 구성합니다.
+        </OrganizationSectionDescription>
 
-      <SelectBox
-        optionList={categoryList.map((category) => ({
-          name: category.tag,
-          value: String(category.id),
-        }))}
-        value={String(selectedCategory.id)}
-        onChange={handleCategoryChange}
-      />
-
-      <button type="button" onClick={handleCategoryAddButton}>
-        추가하기
-      </button>
-
-      <br />
-      <br />
-      <br />
-
-      <h1>현재 면접 구성</h1>
-      <p>모의 기술 면접에서 다음과 같은 내용들이 질문으로 나올 수 있습니다.</p>
-      <div className="CategoryList">
+        <SelectBar
+          optionList={categoryList.map((category) => ({
+            name: category.tag,
+            value: String(category.id),
+          }))}
+          value={String(selectedCategory.id)}
+          onChange={handleCategoryChange}
+          text="추가하기"
+          onClick={handleCategoryAddButton}
+        />
+      </OrganizationSectionContainer>
+      <OrganizationSectionContainerNoBorder>
+        <OrganizationSectionTitle>현재 면접 구성</OrganizationSectionTitle>
+        <OrganizationSectionDescription>
+          모의 기술 면접에서 다음과 같은 내용들이 질문으로 나올 수 있습니다.
+        </OrganizationSectionDescription>
         {selectedCategoryList.map((category) => (
-          <button type="button" value={category.id} onClick={handleCategoryDeleteButton}>
+          <SelectedCategoryButton
+            type="button"
+            value={category.id}
+            onClick={handleCategoryDeleteButton}
+          >
             {category.tag}
-          </button>
+          </SelectedCategoryButton>
         ))}
-      </div>
-      <button type="button" onClick={handleInterviewStartButton}>
-        모의 면접 시작하기
-      </button>
-    </div>
+      </OrganizationSectionContainerNoBorder>
+      <OrganizationFooter onClick={handleInterviewStartButton} />
+    </InterviewContentContainer>
   );
 };
 

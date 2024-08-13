@@ -1,5 +1,9 @@
+import { InterviewContentContainer, OrganizationSectionTitle } from './InterviewIntroPage.style';
+
 const InterviewHistory = () => (
-  <div className="InterviewHistory">내 모의 면접 기록을 확인하는 컴포넌트</div>
+  <InterviewContentContainer>
+    <OrganizationSectionTitle>면접 기록 확인하기</OrganizationSectionTitle>
+  </InterviewContentContainer>
 );
 
 export default InterviewHistory;

@@ -1,0 +1,71 @@
+import { DISPLAY_HEIGHT_WITHOUT_HEADER } from '@styles/length';
+import styled from 'styled-components';
+
+export const InterviewIntroContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: ${DISPLAY_HEIGHT_WITHOUT_HEADER};
+`;
+
+export const InterviewContentContainer = styled.div`
+  width: 100%;
+  height: calc(${DISPLAY_HEIGHT_WITHOUT_HEADER} - 60px);
+
+  padding: 3% 15%;
+
+  background-color: #f9fafc;
+
+  border-top: 1px solid #ddd;
+`;
+
+export const OrganizationSectionContainer = styled.div`
+  width: 100%;
+  height: calc(${DISPLAY_HEIGHT_WITHOUT_HEADER} / 4);
+
+  padding: 3% 0;
+
+  border-bottom: 1px solid #ddd;
+`;
+
+export const OrganizationSectionContainerNoBorder = styled.div`
+  width: 100%;
+  height: calc(${DISPLAY_HEIGHT_WITHOUT_HEADER} / 5);
+
+  padding: 3% 0;
+`;
+
+export const OrganizationSectionTitle = styled.h4`
+  color: #111;
+  font-size: 18px;
+  font-weight: bold;
+
+  margin-bottom: 10px;
+`;
+
+export const OrganizationSectionDescription = styled.p`
+  color: #555;
+  font-size: 14px;
+
+  margin-bottom: 20px;
+`;
+
+export const SelectedCategoryButton = styled.button`
+  color: #fff;
+  background-color: #555;
+
+  width: 120px;
+  height: 40px;
+
+  font-size: 14px;
+
+  border-radius: 7px;
+  cursor: pointer;
+
+  margin-right: 5px;
+
+  &:hover {
+    background-color: #F16060};
+  }
+`;
