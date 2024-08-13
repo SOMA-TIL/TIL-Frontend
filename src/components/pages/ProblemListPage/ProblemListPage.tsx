@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import BasicPageLayout from '@components/layout/BasicPageLayout';
+import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
 import { Pagination, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-
 import { ProblemPageContainer, SubTitle } from './ProblemListPage.style';
 import SearchBar from './SearchBar';
 
@@ -25,7 +24,10 @@ const columns: ColumnsType<ProblemOverviewInfo> = [
     title: '카테고리',
     dataIndex: 'categoryList',
     key: 'categoryList',
-    render: () => <span>None</span>,
+    render: (categoryIds) => {
+      const { transformCategoryTagList } = useCategoryStore.getState();
+      return <span>{transformCategoryTagList(categoryIds).join(',')}</span>;
+    },
   },
   {
     title: '난이도',
@@ -52,10 +54,12 @@ const ProblemListPage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { getCategoryList } = useCategoryStore();
 
   useEffect(() => {
     const fetchProblemList = async () => {
       try {
+        await getCategoryList();
         const response = await getProblemList();
         setProblemList(response.result?.problemList || []);
       } catch (err) {
@@ -66,20 +70,21 @@ const ProblemListPage: React.FC = () => {
     };
 
     fetchProblemList();
-  }, []);
+  }, [getCategoryList]);
 
   const onRowClick = (record: ProblemOverviewInfo) => {
     navigate(`/problem/${record.id}`);
   };
+
   if (loading) {
     return <div>Loading...</div>;
   }
   if (error) {
     return <div>{error}</div>;
   }
+
   return (
     <BasicPageLayout>
-      {/* todo: 검색, 페이징 기능 추가 예정 */}
       <ProblemPageContainer>
         <SubTitle>기술학습</SubTitle>
         <SearchBar />
