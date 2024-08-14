@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
+import Loading from '@components/common/loading/Loading';
+import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
@@ -51,33 +53,34 @@ const columns: ColumnsType<ProblemOverviewInfo> = [
 
 const ProblemListPage: React.FC = () => {
   const [problemList, setProblemList] = useState<ProblemOverviewInfo[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { getCategoryList } = useCategoryStore();
+  const { getIsLoading, setIsLoading } = useLoadingStore();
 
   useEffect(() => {
     const fetchProblemList = async () => {
       try {
+        setIsLoading(true);
         await getCategoryList();
         const response = await getProblemList();
         setProblemList(response.result?.problemList || []);
       } catch (err) {
         setError('An error occurred while fetching problems.');
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchProblemList();
-  }, [getCategoryList]);
+  }, [getCategoryList, setIsLoading]);
 
   const onRowClick = (record: ProblemOverviewInfo) => {
     navigate(`/problem/${record.id}`);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (getIsLoading()) {
+    return <Loading />;
   }
   if (error) {
     return <div>{error}</div>;
