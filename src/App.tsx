@@ -12,6 +12,7 @@ import MyPageChangePassword from '@components/pages/MyPage/MyPageChangePassword'
 import MyPageChangeInfo from '@components/pages/MyPage/MyPageChangeInfo';
 
 import GlobalStyle from '@styles/GlobalStyle';
+import InterviewPage from '@components/pages/InterviewPage/InterviewPage';
 import PrivateRoute from './route';
 
 const App: React.FC = () => (
@@ -27,6 +28,7 @@ const App: React.FC = () => (
         <Route path="/mypage" element={<MyPageChangeInfo />} />
         <Route path="/mypage/change-password" element={<MyPageChangePassword />} />
         <Route path="/interview" element={<InterviewIntroPage />} />
+        <Route path="/interview/:code" element={<InterviewPage />} />
       </Route>
       {/* 인증을 하지 않아야만 접속 가능한 페이지 정의 */}
       <Route element={<PrivateRoute authentication={false} />}>
