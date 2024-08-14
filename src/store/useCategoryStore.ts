@@ -22,6 +22,8 @@ const useCategoryStore = storeSupport<CategoryInfo>(
       return get().categoryList;
     },
     transformCategoryTagList: (categoryIds: number[]) => {
+      if (get().categoryList.length === 0) return [];
+
       const categoryNames = categoryIds.map((id: number) => {
         const category = get().categoryList.find((c) => c.id === id);
         return category ? category.tag : 'Unknown';

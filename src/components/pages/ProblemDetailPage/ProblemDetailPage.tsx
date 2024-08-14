@@ -147,7 +147,9 @@ const ProblemDetailPage: React.FC = () => {
           />
           <Title>{problemDetail && problemDetail.title}</Title>
           <Category>
-            {problemDetail && transformCategoryTagList(problemDetail.categoryList).join(',')}
+            {Array.isArray(problemDetail.categoryList)
+              ? transformCategoryTagList(problemDetail.categoryList).join(',')
+              : 'None'}
           </Category>
           <ProblemInfo>난이도: {problemDetail?.level}</ProblemInfo>
           <ProblemInfo>완료한 사람: 0명</ProblemInfo>
