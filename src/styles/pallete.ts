@@ -1,9 +1,12 @@
 // 자주 사용하는 색상을 상수로 정의
 export const PRIMARY_PURPLE = '#7434FF';
+export const PRIMARY_PURPLE_LIGHT = '#A27BF7';
+export const PRIMARY_PURPLE_LIGHT2 = '#F0EAFB';
 export const PRIMARY_PURPLE_BOLD = '#5929C1';
 export const LIGHT_PURPLE = '#EADEF5';
 
 export const WHITE = '#FFFFFF';
+export const WHITE2 = '#EEEEEE';
 
 export const BLACK = '#111111';
 export const DARK_GREY = '#333333';
