@@ -44,77 +44,8 @@ const ProblemDetailPage: React.FC = () => {
   const [answer, setAnswer] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isPassed, setIsPassed] = useState(false); // todo: API 연동 후 수정 필요
   const { isAuthenticated, checkAuthentication } = useAuthStore();
   const { getCategoryList, transformCategoryTagList } = useCategoryStore();
-
-  // Mock data for 내 답변 기록 -> API 연동 후, 삭제
-  const ProblemHistoryMockData = [
-    {
-      id: 1,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-    {
-      id: 2,
-      answer:
-        '배열은 메모리 상에 연속적으로 저장된 요소들의 집합으로, 인덱스를 통해 O(1) 시간 복잡도로 빠르게 접근할 수 있습니다.',
-      feedback: '연결리스트에 대한 추가적인 설명 필요함',
-      score: 'PASS',
-      created_date: '2024-08-09',
-    },
-  ];
 
   useEffect(() => {
     checkAuthentication();
@@ -134,7 +65,6 @@ const ProblemDetailPage: React.FC = () => {
           throw new Error('문제 정보를 가져오는 중 오류가 발생했습니다.');
         }
         setProblemDetail(response.result.problemInfo);
-        setIsPassed(true); // todo: API 연동 후 수정 필요
       } catch (err) {
         setError(getErrorMessage(err));
       } finally {
@@ -242,11 +172,7 @@ const ProblemDetailPage: React.FC = () => {
                 </TextDiv>
               </TabPane>
               <TabPane tab="내 답변 기록" key="2" disabled={!isAuthenticated}>
-                <ProblemHistory
-                  problemSolution="모범답안입니다."
-                  historyData={ProblemHistoryMockData}
-                  isPassed={isPassed}
-                />
+                {id && <ProblemHistory problemId={id} />}
               </TabPane>
             </Tabs>
           </AnswerSection>
