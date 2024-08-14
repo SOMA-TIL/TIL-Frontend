@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { Tabs, Modal } from 'antd';
+import Loading from '@components/common/loading/Loading';
 import { useToast } from '@components/common/notification/ToastProvider';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { TOAST_TYPE } from '@constants/toast';
@@ -10,6 +11,7 @@ import { ProblemDetailInfo } from '@type/problem';
 import { showAlertPopup } from '@utils/showPopup';
 import { getErrorMessage } from '@utils/errorHandler';
 import useAuthStore from '@store/useAuthStore';
+import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
 import {
   ProblemDetailContainer,
@@ -39,12 +41,12 @@ const ProblemDetailPage: React.FC = () => {
 
   const { id } = useParams<{ id: string }>();
   const [problemDetail, setProblemDetail] = useState<ProblemDetailInfo>({} as ProblemDetailInfo);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>();
   const [answer, setAnswer] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { isAuthenticated, checkAuthentication } = useAuthStore();
+  const { getIsLoading, setIsLoading } = useLoadingStore();
   const { getCategoryList, transformCategoryTagList } = useCategoryStore();
 
   useEffect(() => {
@@ -59,6 +61,7 @@ const ProblemDetailPage: React.FC = () => {
 
     const fetchProblemDetail = async () => {
       try {
+        setIsLoading(true);
         await getCategoryList();
         const response = await getProblemDetail(id);
         if (!response.result || !response.result.problemInfo) {
@@ -68,12 +71,12 @@ const ProblemDetailPage: React.FC = () => {
       } catch (err) {
         setError(getErrorMessage(err));
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchProblemDetail();
-  }, [getCategoryList, id]);
+  }, [getCategoryList, id, setIsLoading]);
 
   useEffect(() => {
     if (error) {
@@ -132,8 +135,8 @@ const ProblemDetailPage: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (getIsLoading()) {
+    return <Loading />;
   }
 
   return (
