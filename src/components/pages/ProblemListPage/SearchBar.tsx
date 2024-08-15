@@ -1,30 +1,108 @@
-// SearchBar.tsx
-import React from 'react';
-import { SearchBarContainer, SearchInput, Select, SearchButton } from './SearchBar.style';
+import React, { useEffect, useState } from 'react';
+import useAuthStore from '@store/useAuthStore';
+import { Category } from '@type/category';
+import { SearchOutlined } from '@ant-design/icons';
+import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
+import {
+  SearchBarContainer,
+  SearchInput,
+  StatusSelect,
+  LevelSelect,
+  CategorySelect,
+  SearchButton,
+} from './SearchBar.style';
 
-const SearchBar: React.FC = () => (
-  <SearchBarContainer>
-    <SearchInput type="text" placeholder="검색어를 입력해주세요" />
-    <Select>
-      <option value="">상태 선택</option>
-      <option value="pass">Pass</option>
-      <option value="fail">Fail</option>
-      <option value="incomplete">Incomplete</option>
-    </Select>
-    <Select>
-      <option value="">난이도 선택</option>
-      <option value="1">Lv.1</option>
-      <option value="2">Lv.2</option>
-      <option value="3">Lv.3</option>
-    </Select>
-    <Select>
-      <option value="">기술 카테고리 선택</option>
-      <option value="network">네트워크</option>
-      <option value="os">운영체제</option>
-      <option value="db">데이터베이스</option>
-    </Select>
-    <SearchButton>검색하기</SearchButton>
-  </SearchBarContainer>
-);
+const { Option } = StatusSelect;
+
+interface SearchBarProps {
+  onSearch: (keyword: string, status: string, level: number | '', category: number[]) => void;
+  levelList: number[];
+  categoryList: Category[];
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList }) => {
+  const [keyword, setKeyword] = useState('');
+  const [status, setStatus] = useState<string[] | undefined>(undefined);
+  const [selectedLevel, setSelectedLevel] = useState<number[] | undefined>(undefined);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<number[]>([]);
+  const { isAuthenticated, checkAuthentication } = useAuthStore();
+
+  useEffect(() => {
+    checkAuthentication();
+  }, [checkAuthentication]);
+
+  const handleSearch = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const params: any = { keyword, status, level: selectedLevel, category: selectedCategoryList };
+    onSearch(params.keyword, params.status, params.level, params.category);
+  };
+
+  const handleStatusChange = (value: unknown) => {
+    setStatus(value as string[]);
+  };
+
+  const handleLevelChange = (value: unknown) => {
+    setSelectedLevel(value as number[]);
+  };
+  const handleCategoryChange = (values: unknown) => {
+    setSelectedCategoryList(values as number[]);
+  };
+
+  return (
+    <StyledConfigProvider>
+      <SearchBarContainer>
+        <SearchInput
+          placeholder="풀고 싶은 문제의 제목을 검색하세요."
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          prefix={<SearchOutlined />}
+        />
+        {/* to-do. user 연동하여 값 받아오기 */}
+        {isAuthenticated && (
+          <StatusSelect
+            mode="multiple"
+            value={status}
+            onChange={handleStatusChange}
+            placeholder="상태 선택"
+          >
+            <Option value="pass">Pass</Option>
+            <Option value="fail">Fail</Option>
+            <Option value="incomplete">Incomplete</Option>
+          </StatusSelect>
+        )}
+        {/* to-do. level도 여러 개 선택 가능 하도록 바꾸기 */}
+        <LevelSelect
+          mode="multiple"
+          value={selectedLevel}
+          onChange={handleLevelChange}
+          placeholder="난이도 선택"
+          hasStatus={isAuthenticated}
+        >
+          {levelList.map((level) => (
+            <Option key={level} value={level}>
+              Lv.{level}
+            </Option>
+          ))}
+        </LevelSelect>
+        <CategorySelect
+          mode="multiple"
+          value={selectedCategoryList}
+          onChange={handleCategoryChange}
+          placeholder="기술 카테고리 선택"
+        >
+          {categoryList.map((category) => (
+            <Option key={category.id} value={category.id}>
+              {category.tag}
+            </Option>
+          ))}
+        </CategorySelect>
+        <SearchButton onClick={handleSearch}>
+          검색하기
+          <SearchOutlined className="icon" />
+        </SearchButton>
+      </SearchBarContainer>
+    </StyledConfigProvider>
+  );
+};
 
 export default SearchBar;

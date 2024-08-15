@@ -1,6 +1,7 @@
 import apiClient from '@services/api/axios';
 import { ApiResponse } from '@type/api';
 import { ProblemDetailInfo, ProblemOverviewInfo, ProblemSubmitHistoryInfo } from '@type/problem';
+import qs from 'qs';
 
 export interface ProblemListData {
   problemList: ProblemOverviewInfo[];
@@ -22,8 +23,24 @@ export interface SolveProblemData {
   };
 }
 
-export const getProblemList = async (): Promise<ApiResponse<ProblemListData>> => {
-  const response = await apiClient.get('/problem');
+export interface ProblemListParams {
+  page?: number;
+  size?: number;
+  sort?: string;
+  order?: string;
+  keyword?: string;
+  status?: string; // todo: 사용자 정보 받아오기
+  level?: number;
+  categoryList?: string[];
+}
+
+export const getProblemList = async (
+  params: ProblemListParams = {},
+): Promise<ApiResponse<ProblemListData>> => {
+  const response = await apiClient.get('/problem', {
+    params,
+    paramsSerializer: (queryParams) => qs.stringify(queryParams, { arrayFormat: 'repeat' }),
+  });
   return response.data;
 };
 

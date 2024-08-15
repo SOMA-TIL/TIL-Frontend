@@ -4,13 +4,14 @@ import BasicPageLayout from '@components/layout/BasicPageLayout';
 import Loading from '@components/common/loading/Loading';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
-import { getProblemList } from '@services/api/problemService';
+import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
-import { Pagination, Table } from 'antd';
-import { ColumnsType } from 'antd/es/table';
+import { Table } from 'antd';
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { ProblemPageContainer, SubTitle } from './ProblemListPage.style';
 import SearchBar from './SearchBar';
 
+// to-do. 페이징 & 검색 상태 저장
 const columns: ColumnsType<ProblemOverviewInfo> = [
   {
     title: '상태',
@@ -54,26 +55,55 @@ const columns: ColumnsType<ProblemOverviewInfo> = [
 const ProblemListPage: React.FC = () => {
   const [problemList, setProblemList] = useState<ProblemOverviewInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  const [levelList, setLevelList] = useState<number[]>([]);
   const navigate = useNavigate();
-  const { getCategoryList } = useCategoryStore();
+  const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
 
-  useEffect(() => {
-    const fetchProblemList = async () => {
-      try {
-        setIsLoading(true);
-        await getCategoryList();
-        const response = await getProblemList();
-        setProblemList(response.result?.problemList || []);
-      } catch (err) {
-        setError('An error occurred while fetching problems.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchProblemList = async (params: ProblemListParams = {}) => {
+    try {
+      setIsLoading(true);
+      await getCategoryList();
+      const response = await getProblemList({ ...params, page: currentPage, size: pageSize });
+      setProblemList(response.result?.problemList || []);
+      setTotalItems(response.result?.pageInfo.totalItems || 0);
+      const uniqueLevels = Array.from(
+        new Set(response.result?.problemList.map((problem) => problem.level)) || [],
+      );
+      setLevelList(uniqueLevels);
+    } catch (err) {
+      setError('An error occurred while fetching problems.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchProblemList();
-  }, [getCategoryList, setIsLoading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getCategoryList, setIsLoading, currentPage, pageSize]);
+
+  const handleSearch = (
+    keyword: string,
+    status: string,
+    level: number | '',
+    category: number[],
+  ) => {
+    const params: Partial<ProblemListParams> = { keyword, status };
+    if (level !== '') params.level = level;
+    if (category.length > 0) params.categoryList = category.map(String);
+
+    setCurrentPage(1);
+    fetchProblemList(params);
+  };
+
+  const handlePageChange = (pagination: TablePaginationConfig) => {
+    setCurrentPage(pagination.current || 1);
+    setPageSize(pagination.pageSize || 10);
+  };
 
   const onRowClick = (record: ProblemOverviewInfo) => {
     navigate(`/problem/${record.id}`);
@@ -90,22 +120,26 @@ const ProblemListPage: React.FC = () => {
     <BasicPageLayout>
       <ProblemPageContainer>
         <SubTitle>기술학습</SubTitle>
-        <SearchBar />
+        <SearchBar onSearch={handleSearch} levelList={levelList} categoryList={categoryList} />
         {problemList.length === 0 ? (
           <div>문제가 없습니다.</div>
         ) : (
-          <>
-            <Table
-              columns={columns}
-              dataSource={problemList}
-              rowKey="id"
-              pagination={false}
-              onRow={(record) => ({
-                onClick: () => onRowClick(record),
-              })}
-            />
-            <Pagination align="center" defaultCurrent={1} total={50} />
-          </>
+          <Table
+            columns={columns}
+            dataSource={problemList}
+            rowKey="id"
+            pagination={{
+              align: 'center',
+              current: currentPage,
+              pageSize,
+              total: totalItems,
+              showSizeChanger: true,
+            }}
+            onChange={(page) => handlePageChange(page)}
+            onRow={(record) => ({
+              onClick: () => onRowClick(record),
+            })}
+          />
         )}
       </ProblemPageContainer>
     </BasicPageLayout>
