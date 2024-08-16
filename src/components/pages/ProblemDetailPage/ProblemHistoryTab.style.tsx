@@ -4,14 +4,13 @@ import styled from 'styled-components';
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px;
-  background-color: #f9f9f9;
+  padding: 24px 10px 10px 10px;
   overflow: hidden;
 `;
 
 export const SolutionBox = styled.div`
   background-color: #ffffff;
-  padding: 16px;
+  padding: 12px 0px 12px 0px;
   border-radius: 8px;
   margin-bottom: 16px;
   flex: 0.3;
@@ -34,7 +33,7 @@ export const SubTitleBox = styled.div`
   font-weight: bold;
   margin-bottom: 8px;
   padding: 8px 16px;
-  border-radius: 10px;
+  border-radius: 6px;
   display: inline-block;
   width: fit-content;
 `;
