@@ -1,5 +1,6 @@
 import apiClient from '@services/api/axios';
 import { ApiResponse } from '@type/api';
+import { GradingResult } from '@type/grading';
 import { ProblemDetailInfo, ProblemOverviewInfo, ProblemSubmitHistoryInfo } from '@type/problem';
 import qs from 'qs';
 
@@ -17,10 +18,17 @@ export interface ProblemDetailData {
   problemInfo: ProblemDetailInfo;
 }
 
-export interface SolveProblemData {
-  problemResult: {
-    status: string;
-  };
+export interface SubmitInfo {
+  submitId: number;
+  status: string;
+}
+
+export interface SubmitProblemData {
+  submitInfo: SubmitInfo;
+}
+
+export interface SubmitGradingResult {
+  gradingResult: GradingResult;
 }
 
 export interface ProblemListParams {
@@ -49,10 +57,10 @@ export const getProblemDetail = async (id: string): Promise<ApiResponse<ProblemD
   return response.data;
 };
 
-export const solveProblem = async (
+export const submitProblem = async (
   id: string,
   answer: string,
-): Promise<ApiResponse<SolveProblemData>> => {
+): Promise<ApiResponse<SubmitProblemData>> => {
   const response = await apiClient.post(`/problem/${id}/solve`, { answer });
   return response.data;
 };
@@ -66,5 +74,13 @@ export const getProblemSubmitHistory = async (
   id: string,
 ): Promise<ApiResponse<ProblemSubmitHistoryInfo>> => {
   const response = await apiClient.get(`/problem/${id}/history`);
+  return response.data;
+};
+
+export const getSubmitResult = async (
+  id: string,
+  submitId: number,
+): Promise<ApiResponse<SubmitGradingResult>> => {
+  const response = await apiClient.get(`/problem/${id}/result?submitId=${submitId}`);
   return response.data;
 };

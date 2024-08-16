@@ -6,10 +6,18 @@ import Loading from '@components/common/loading/Loading';
 import { useToast } from '@components/common/notification/ToastProvider';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { TOAST_TYPE } from '@constants/toast';
-import { getProblemDetail, solveProblem, toggleFavorite } from '@services/api/problemService';
+import { GRADING_STATUS } from '@constants/grading';
+import {
+  SubmitInfo,
+  getProblemDetail,
+  getSubmitResult,
+  submitProblem,
+  toggleFavorite,
+} from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
 import { showAlertPopup } from '@utils/showPopup';
 import { getErrorMessage } from '@utils/errorHandler';
+import { GradingResult } from '@type/grading';
 import useAuthStore from '@store/useAuthStore';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
@@ -39,7 +47,7 @@ const ProblemDetailPage: React.FC = () => {
   const { notify } = useToast();
   const navigate = useNavigate();
 
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams() as { id: string };
   const [problemDetail, setProblemDetail] = useState<ProblemDetailInfo>({} as ProblemDetailInfo);
   const [error, setError] = useState<string | null>();
   const [answer, setAnswer] = useState<string>('');
@@ -48,6 +56,7 @@ const ProblemDetailPage: React.FC = () => {
   const { isAuthenticated, checkAuthentication } = useAuthStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const { getCategoryList, transformCategoryTagList } = useCategoryStore();
+  const INTERVAL_REFRESH_TIME = 1500;
 
   useEffect(() => {
     checkAuthentication();
@@ -58,7 +67,6 @@ const ProblemDetailPage: React.FC = () => {
       setError('문제 정보를 가져오는 중 오류가 발생했습니다.');
       return;
     }
-
     const fetchProblemDetail = async () => {
       try {
         setIsLoading(true);
@@ -96,11 +104,24 @@ const ProblemDetailPage: React.FC = () => {
     }
 
     try {
-      const response = await solveProblem(id ?? '', answer);
-      setResult(`Status: ${response.result?.problemResult?.status}`);
-      setIsModalVisible(true);
+      const response = await submitProblem(id, answer);
+      const submitInfo = response.result?.submitInfo as SubmitInfo;
+      const intervalId = setInterval(async () => {
+        const response2 = await getSubmitResult(id, submitInfo.submitId);
+        const gradingResult = response2.result?.gradingResult as GradingResult;
+
+        if (gradingResult.status === GRADING_STATUS.COMPLETED) {
+          setResult(`${gradingResult.result}`);
+          clearInterval(intervalId);
+          setIsModalVisible(true);
+        } else if (gradingResult.status === GRADING_STATUS.ERROR) {
+          setResult('채점 중 오류가 발생했습니다. 관리자에게 문의하세요.');
+          clearInterval(intervalId);
+          setIsModalVisible(true);
+        }
+      }, INTERVAL_REFRESH_TIME);
     } catch (err) {
-      setError('답변이 제출되지 않았습니다. 다시 시도해주세요.');
+      setError(getErrorMessage(err));
     }
   };
 
@@ -200,10 +221,10 @@ const ProblemDetailPage: React.FC = () => {
         </BottomBar>
         <Modal
           title="채점 결과"
-          visible={isModalVisible}
+          open={isModalVisible}
           footer={[
             <CustomButton key="back" onClick={handleModalClose}>
-              피드백 보러가기
+              {}
             </CustomButton>,
           ]}
           onCancel={handleModalClose}
