@@ -64,6 +64,7 @@ const ProblemDetailPage: React.FC = () => {
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(ANSWER);
+  const [loadingSubmitResult, setLoadingSubmitResult] = useState(false);
   const { isAuthenticated, checkAuthentication } = useAuthStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const { getCategoryList, transformCategoryTagList } = useCategoryStore();
@@ -109,7 +110,7 @@ const ProblemDetailPage: React.FC = () => {
   }, [error, navigate, notify]);
 
   const handleSubmit = async () => {
-    if (activeTab === HISTORY) {
+    if (activeTab === HISTORY || loadingSubmitResult) {
       return;
     }
 
@@ -125,6 +126,8 @@ const ProblemDetailPage: React.FC = () => {
     try {
       const response = await submitProblem(id, answer);
       const submitInfo = response.result?.submitInfo as SubmitInfo;
+
+      setLoadingSubmitResult(true);
       const intervalId = setInterval(async () => {
         const response2 = await getSubmitResult(id, submitInfo.submitId);
         const gradingResult = response2.result?.gradingResult as GradingResult;
@@ -133,14 +136,17 @@ const ProblemDetailPage: React.FC = () => {
           setResult(`${gradingResult.result}`);
           clearInterval(intervalId);
           setIsModalVisible(true);
+          setLoadingSubmitResult(false);
         } else if (gradingResult.status === GRADING_STATUS.ERROR) {
           setResult('채점 중 오류가 발생했습니다. 관리자에게 문의하세요.');
           clearInterval(intervalId);
           setIsModalVisible(true);
+          setLoadingSubmitResult(false);
         }
       }, INTERVAL_REFRESH_TIME);
     } catch (err) {
       setError(getErrorMessage(err));
+      setLoadingSubmitResult(false);
     }
   };
 
