@@ -51,6 +51,9 @@ import {
 } from './ProblemDetailPage.style';
 import ProblemHistory from './ProblemHistoryTab';
 
+const ANSWER = 'answer';
+const HISTORY = 'history';
+
 const ProblemDetailPage: React.FC = () => {
   const { notify } = useToast();
   const navigate = useNavigate();
@@ -61,7 +64,7 @@ const ProblemDetailPage: React.FC = () => {
   const [answer, setAnswer] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [activeTab, setActiveTab] = useState('answer');
+  const [activeTab, setActiveTab] = useState(ANSWER);
   const { isAuthenticated, checkAuthentication } = useAuthStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const { getCategoryList, transformCategoryTagList } = useCategoryStore();
@@ -136,7 +139,9 @@ const ProblemDetailPage: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalVisible(false);
+    setIsModalVisible(false);
     setResult(null);
+    setActiveTab(HISTORY);
   };
 
   const handleReset = () => {
@@ -201,19 +206,16 @@ const ProblemDetailPage: React.FC = () => {
           </QuestionSection>
           <AnswerSection>
             <TabMenu>
-              <TabMenuItem active={activeTab === 'answer'} onClick={() => setActiveTab('answer')}>
+              <TabMenuItem active={activeTab === ANSWER} onClick={() => setActiveTab(ANSWER)}>
                 답변
               </TabMenuItem>
               {isAuthenticated && (
-                <TabMenuItem
-                  active={activeTab === 'history'}
-                  onClick={() => setActiveTab('history')}
-                >
+                <TabMenuItem active={activeTab === HISTORY} onClick={() => setActiveTab(HISTORY)}>
                   내 답변 기록
                 </TabMenuItem>
               )}
             </TabMenu>
-            {activeTab === 'answer' && (
+            {activeTab === ANSWER && (
               <TextDiv
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
@@ -223,15 +225,15 @@ const ProblemDetailPage: React.FC = () => {
                 disabled={!isAuthenticated}
               />
             )}
-            {activeTab === 'history' && id && <ProblemHistory problemId={id} />}
+            {activeTab === HISTORY && id && <ProblemHistory problemId={id} />}
           </AnswerSection>
         </ContentContainer>
         <Modal
           title="채점 결과"
           open={isModalVisible}
           footer={[
-            <CustomButton key="back" onClick={handleModalClose}>
-              {}
+            <CustomButton key="back" onClick={handleMoveHistoryTab}>
+              피드백 보러가기
             </CustomButton>,
           ]}
           onCancel={handleModalClose}
