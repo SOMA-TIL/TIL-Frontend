@@ -15,7 +15,6 @@ import {
   toggleFavorite,
 } from '@services/api/problemService';
 import { ProblemDetailInfo } from '@type/problem';
-import { showAlertPopup } from '@utils/showPopup';
 import { getErrorMessage } from '@utils/errorHandler';
 import { GradingResult } from '@type/grading';
 import useAuthStore from '@store/useAuthStore';
@@ -110,8 +109,16 @@ const ProblemDetailPage: React.FC = () => {
   }, [error, navigate, notify]);
 
   const handleSubmit = async () => {
+    if (activeTab === HISTORY) {
+      return;
+    }
+
     if (answer.trim() === '') {
-      showAlertPopup('답변을 입력해주세요.');
+      notify({
+        message: '답변 제출 실패',
+        description: '답변을 입력해주세요.',
+        type: TOAST_TYPE.ERROR,
+      });
       return;
     }
 
@@ -139,6 +146,10 @@ const ProblemDetailPage: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalVisible(false);
+    setResult(null);
+  };
+
+  const handleMoveHistoryTab = () => {
     setIsModalVisible(false);
     setResult(null);
     setActiveTab(HISTORY);
