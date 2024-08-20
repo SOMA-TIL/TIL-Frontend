@@ -74,10 +74,10 @@ export const TableHeader = styled.thead`
   background-color: #ededff;
 `;
 
-export const TableHeaderCell = styled.th`
+export const TableHeaderCell = styled.th<{ align?: 'center' | 'left' | 'right' }>`
   padding: 12px 15px;
   font-weight: bold;
-  text-align: left;
+  text-align: ${(props) => props.align || 'center'};
   height: 60px;
 `;
 
@@ -96,13 +96,14 @@ export const TableRow = styled.tr`
   }
 `;
 
-export const TableCell = styled.td`
+export const TableCell = styled.td<{ align?: 'center' | 'left' | 'right' }>`
+  text-align: ${(props) => props.align || 'center'};
   padding: 12px 15px;
   height: 60px;
 `;
 
-export const StatusText = styled.span`
-  color: #5c7cfa;
+export const StatusText = styled.span<{ color: string }>`
+  color: ${(props) => props.color};
   font-weight: bold;
 `;
 

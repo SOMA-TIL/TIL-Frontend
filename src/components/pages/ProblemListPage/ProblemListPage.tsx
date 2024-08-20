@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import Loading from '@components/common/loading/Loading';
+import { getGradingResultColor } from '@constants/grading';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
@@ -114,8 +115,8 @@ const ProblemListPage: React.FC = () => {
               <CustomTable>
                 <TableHeader>
                   <TableHeaderCell>상태</TableHeaderCell>
-                  <TableHeaderCell>제목</TableHeaderCell>
-                  <TableHeaderCell>카테고리</TableHeaderCell>
+                  <TableHeaderCell align="left">제목</TableHeaderCell>
+                  <TableHeaderCell align="left">카테고리</TableHeaderCell>
                   <TableHeaderCell>난이도</TableHeaderCell>
                   <TableHeaderCell>완료한 사람</TableHeaderCell>
                   <TableHeaderCell>정답률</TableHeaderCell>
@@ -124,17 +125,26 @@ const ProblemListPage: React.FC = () => {
                   {problemList.map((problem) => (
                     <TableRow key={problem.id} onClick={() => onRowClick(problem)}>
                       <TableCell>
-                        <StatusText>Pass</StatusText>
+                        {problem.userStatus && problem.userStatus.isAttempted
+                          ? (() => {
+                              const gradingResult = problem.userStatus.isPassed ? 'PASS' : 'FAIL';
+                              return (
+                                <StatusText color={getGradingResultColor(gradingResult)}>
+                                  {gradingResult}
+                                </StatusText>
+                              );
+                            })()
+                          : null}
                       </TableCell>
-                      <TableCell>{problem.title}</TableCell>
-                      <TableCell>
+                      <TableCell align="left">{problem.title}</TableCell>
+                      <TableCell align="left">
                         {transformCategoryTagList(problem.categoryList).join(', ')}
                       </TableCell>
                       <TableCell>
                         <LevelText>{`Lv.${problem.level}`}</LevelText>
                       </TableCell>
-                      <TableCell>0명</TableCell>
-                      <TableCell>0%</TableCell>
+                      <TableCell>{problem.finishCount.toLocaleString('ko-KR')}명</TableCell>
+                      <TableCell>{problem.passRate}%</TableCell>
                     </TableRow>
                   ))}
                 </tbody>
