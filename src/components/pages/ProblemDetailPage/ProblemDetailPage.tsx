@@ -211,10 +211,10 @@ const ProblemDetailPage: React.FC = () => {
           <InfoGroup>
             <ProblemInfo>
               난이도
-              <LevelText>Lv.{problemDetail?.level}</LevelText>
+              <LevelText>Lv.{problemDetail.level}</LevelText>
             </ProblemInfo>
-            <ProblemInfo>완료한 사람 0명</ProblemInfo>
-            <ProblemInfo>정답률 0%</ProblemInfo>
+            <ProblemInfo>완료한 사람 {problemDetail.finishCount}명</ProblemInfo>
+            <ProblemInfo>정답률 {problemDetail.passRate}%</ProblemInfo>
           </InfoGroup>
         </ProblemInfoBar>
         <ContentContainer>
