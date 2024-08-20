@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { TableColumnsType } from 'antd';
+import { AlignType } from 'rc-table/lib/interface';
 import { useToast } from '@components/common/notification/ToastProvider';
 import { getProblemSubmitHistory } from '@services/api/problemService';
 import { TOAST_TYPE } from '@constants/toast';
+import { getGradingResultColor } from '@constants/grading';
 import { ProblemHistoryInfo, ProblemSubmitHistoryInfo } from '@type/problem';
 import formatDate from '@utils/time';
 import { getErrorMessage } from '@utils/errorHandler';
@@ -11,18 +13,34 @@ import { Container, SolutionBox, StyledTable, SubTitleBox } from './ProblemHisto
 
 const CAN_NOT_VIEW_SOLUTION = '문제를 PASS해야 솔루션을 볼 수 있습니다.';
 
-const createColumnSetting = (title: string, dataIndex: string, width: number) => ({
+const createColumnSetting = (
+  title: string,
+  dataIndex: string,
+  width: number,
+  render?: (text: string) => React.ReactNode,
+  align: AlignType = 'left',
+) => ({
   title,
   dataIndex,
   key: dataIndex,
   width,
+  align,
+  render: render || ((text: string) => text),
 });
 
 const columns: TableColumnsType<ProblemHistoryInfo> = [
+  createColumnSetting(
+    '결과',
+    'result',
+    80,
+    (text) => (
+      <span style={{ color: getGradingResultColor(text), fontWeight: 'bold' }}>{text}</span>
+    ),
+    'center',
+  ),
   createColumnSetting('답변', 'answer', 300),
   createColumnSetting('피드백', 'comment', 300),
   createColumnSetting('제출 날짜', 'submittedDate', 150),
-  createColumnSetting('결과', 'result', 100),
 ];
 
 const ProblemHistory: React.FC<{ problemId: string }> = ({ problemId }) => {
