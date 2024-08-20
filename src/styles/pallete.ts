@@ -20,3 +20,5 @@ export const BLUE = '#0589f5';
 
 export const LIGHT_RED = '#F16060';
 export const RED = '#c73232';
+export const RED2 = '#FF0000';
+export const GREEN = '#28c528';

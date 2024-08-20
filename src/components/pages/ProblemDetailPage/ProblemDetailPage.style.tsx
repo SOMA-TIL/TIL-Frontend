@@ -148,12 +148,6 @@ export const ButtonGroup = styled.div`
   gap: 10px;
 `;
 
-export const CustomButton = styled(Button)`
-  width: 150px;
-  height: 50px;
-  font-size: 14px;
-`;
-
 export const ProblemSolveFooterButton = styled.button<{ type: string }>`
   display: flex;
   gap: 8px;  
@@ -207,6 +201,20 @@ export const ProblemSolveFooterButton = styled.button<{ type: string }>`
           return '#eee';
       }
     }}
+`;
+
+export const ModalInnerButton = styled(Button)`
+  width: 120px;
+  height: 50px;
+  font-size: 14px;
+`;
+
+export const ModalInnerText = styled.p<{ color?: string }>`
+  margin: 15px 0;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: ${({ color }) => color || BLACK};
 `;
 
 export const BookMarkIcon = ({

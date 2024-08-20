@@ -6,7 +6,7 @@ import Loading from '@components/common/loading/Loading';
 import { useToast } from '@components/common/notification/ToastProvider';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import { TOAST_TYPE } from '@constants/toast';
-import { GRADING_STATUS } from '@constants/grading';
+import { getGradingResultColor, GRADING_STATUS } from '@constants/grading';
 import {
   SubmitInfo,
   getProblemDetail,
@@ -37,7 +37,8 @@ import {
   ContentContainer,
   QuestionSection,
   AnswerSection,
-  CustomButton,
+  ModalInnerButton,
+  ModalInnerText,
   TextDiv,
   ButtonGroup,
   BookMarkIcon,
@@ -61,7 +62,7 @@ const ProblemDetailPage: React.FC = () => {
   const [problemDetail, setProblemDetail] = useState<ProblemDetailInfo>({} as ProblemDetailInfo);
   const [error, setError] = useState<string | null>();
   const [answer, setAnswer] = useState<string>('');
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<string | undefined>(undefined);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState(ANSWER);
   const [loadingSubmitResult, setLoadingSubmitResult] = useState(false);
@@ -152,12 +153,12 @@ const ProblemDetailPage: React.FC = () => {
 
   const handleModalClose = () => {
     setIsModalVisible(false);
-    setResult(null);
+    setResult(undefined);
   };
 
   const handleMoveHistoryTab = () => {
     setIsModalVisible(false);
-    setResult(null);
+    setResult(undefined);
     setActiveTab(HISTORY);
   };
 
@@ -247,15 +248,17 @@ const ProblemDetailPage: React.FC = () => {
         </ContentContainer>
         <Modal
           title="채점 결과"
+          centered
+          width={300}
           open={isModalVisible}
           footer={[
-            <CustomButton key="back" onClick={handleMoveHistoryTab}>
+            <ModalInnerButton key="back" onClick={handleMoveHistoryTab}>
               피드백 보러가기
-            </CustomButton>,
+            </ModalInnerButton>,
           ]}
           onCancel={handleModalClose}
         >
-          <p>{result}</p>
+          <ModalInnerText color={getGradingResultColor(result)}>{result}</ModalInnerText>
         </Modal>
       </ProblemDetailContainer>
       <BottomBar>
