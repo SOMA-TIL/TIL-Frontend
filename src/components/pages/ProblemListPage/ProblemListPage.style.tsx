@@ -120,13 +120,3 @@ export const TitleWithTags = styled.div`
     margin-right: 10px; /* 제목과 태그 사이 간격 */
   }
 `;
-
-export const CategoryTag = styled.span`
-  display: inline-block;
-  background-color: #e0f7fa; /* 태그 배경색 */
-  color: #00796b; /* 태그 텍스트 색상 */
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  margin-right: 8px;
-`;
