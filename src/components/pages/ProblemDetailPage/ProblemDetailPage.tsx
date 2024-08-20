@@ -26,6 +26,7 @@ import {
   RedoOutlined,
   FileDoneOutlined,
 } from '@ant-design/icons';
+import { CategoryTag } from '@styles/TagSTyle';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,
@@ -68,7 +69,7 @@ const ProblemDetailPage: React.FC = () => {
   const [loadingSubmitResult, setLoadingSubmitResult] = useState(false);
   const { isAuthenticated, checkAuthentication } = useAuthStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
-  const { getCategoryList, transformCategoryTagList } = useCategoryStore();
+  const { categoryList, getCategoryList } = useCategoryStore();
   const INTERVAL_REFRESH_TIME = 1500;
 
   useEffect(() => {
@@ -204,8 +205,15 @@ const ProblemDetailPage: React.FC = () => {
             <Title>{problemDetail && problemDetail.title}</Title>
             <Category>
               {Array.isArray(problemDetail.categoryList)
-                ? transformCategoryTagList(problemDetail.categoryList).join(',')
-                : 'None'}
+                ? problemDetail.categoryList.map((categoryId) => {
+                    const category = categoryList.find((c) => c.id === categoryId);
+                    return category ? (
+                      <CategoryTag key={category.id} tagColor={category.color}>
+                        {category.tag}
+                      </CategoryTag>
+                    ) : null;
+                  })
+                : null}
             </Category>
           </InfoGroup>
           <InfoGroup>

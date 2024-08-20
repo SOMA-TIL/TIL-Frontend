@@ -71,6 +71,7 @@ export const QuestionTitle = styled.div`
 
 export const Question = styled.div`
   padding: 20px 10px 10px 10px;
+  line-height: 30px;
 `;
 
 export const AnswerSection = styled.div`

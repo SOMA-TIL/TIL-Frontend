@@ -1,6 +1,7 @@
 import { getCategoryList } from '@services/api/categoryService';
 import storeSupport from '@store/support';
 import { Category } from '@type/category';
+import { makeRandomColor } from '@utils/color';
 
 interface CategoryInfo {
   categoryList: Category[];
@@ -17,7 +18,11 @@ const useCategoryStore = storeSupport<CategoryInfo>(
       if (get().categoryList.length === 0) {
         const response = await getCategoryList();
         const categories = response.result?.categoryList || [];
-        set({ categoryList: categories });
+        const categoryList = categories.map((category) => {
+          const color = makeRandomColor();
+          return { ...category, color };
+        });
+        set({ categoryList });
       }
       return get().categoryList;
     },

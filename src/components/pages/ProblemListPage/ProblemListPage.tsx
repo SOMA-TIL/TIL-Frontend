@@ -7,6 +7,7 @@ import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
+import { CategoryTag } from '@styles/TagSTyle';
 import {
   ProblemListContainer,
   SubTitle,
@@ -35,7 +36,7 @@ const ProblemListPage: React.FC = () => {
   const [totalItems, setTotalItems] = useState<number>(0);
   const [levelList, setLevelList] = useState<number[]>([]);
   const navigate = useNavigate();
-  const { getCategoryList, categoryList, transformCategoryTagList } = useCategoryStore();
+  const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
 
   const fetchProblemList = async (params: ProblemListParams = {}) => {
@@ -116,7 +117,6 @@ const ProblemListPage: React.FC = () => {
                 <TableHeader>
                   <TableHeaderCell>상태</TableHeaderCell>
                   <TableHeaderCell align="left">제목</TableHeaderCell>
-                  <TableHeaderCell align="left">카테고리</TableHeaderCell>
                   <TableHeaderCell>난이도</TableHeaderCell>
                   <TableHeaderCell>완료한 사람</TableHeaderCell>
                   <TableHeaderCell>정답률</TableHeaderCell>
@@ -136,9 +136,16 @@ const ProblemListPage: React.FC = () => {
                             })()
                           : null}
                       </TableCell>
-                      <TableCell align="left">{problem.title}</TableCell>
                       <TableCell align="left">
-                        {transformCategoryTagList(problem.categoryList).join(', ')}
+                        {problem.title}
+                        {problem.categoryList.map((categoryId) => {
+                          const category = categoryList.find((c) => c.id === categoryId);
+                          return category ? (
+                            <CategoryTag key={category.id} tagColor={category.color}>
+                              {category.tag}
+                            </CategoryTag>
+                          ) : null;
+                        })}
                       </TableCell>
                       <TableCell>
                         <LevelText>{`Lv.${problem.level}`}</LevelText>
