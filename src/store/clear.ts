@@ -2,7 +2,7 @@ import useAuthStore from '@store/useAuthStore';
 import useUserInfoStore from '@store/useUserInfoStore';
 
 export const logoutClearStores = () => {
-  useAuthStore.getState().reset();
+  useAuthStore.getState().clearTokens();
   useUserInfoStore.getState().reset();
 };
 

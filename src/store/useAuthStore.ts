@@ -3,18 +3,18 @@ import { getCookie, removeCookie, setCookie } from '@services/cookie';
 import storeSupport from '@store/support';
 import { Token } from '@type/auth';
 
-interface AccessTokenInfo {
+interface TokenInfo {
   isAuthenticated: boolean;
   checkAuthentication: () => void;
   accessToken: string;
   setAccessToken: (accessToken: string) => void;
   getAccessToken: () => string;
   deleteAccessToken: () => void;
-  login: (token: Token) => void;
-  reset: () => void;
+  setTokens: (token: Token) => void;
+  clearTokens: () => void;
 }
 
-const useAuthStore = storeSupport<AccessTokenInfo>(
+const useAuthStore = storeSupport<TokenInfo>(
   (set, get) => ({
     accessToken: '',
     setAccessToken: (accessToken) => set({ accessToken }),
@@ -24,12 +24,12 @@ const useAuthStore = storeSupport<AccessTokenInfo>(
     checkAuthentication: () => {
       set({ isAuthenticated: Boolean(getCookie(REFRESH_TOKEN)) });
     },
-    login: (token) => {
+    setTokens: (token) => {
       setCookie(REFRESH_TOKEN, token.refreshToken);
       get().setAccessToken(token.accessToken);
       set({ isAuthenticated: true });
     },
-    reset: () => {
+    clearTokens: () => {
       removeCookie(REFRESH_TOKEN);
       get().deleteAccessToken();
       set({ isAuthenticated: false });
