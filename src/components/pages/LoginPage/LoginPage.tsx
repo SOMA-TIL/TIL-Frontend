@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
       const response = await login(loginData);
       const { token, user } = response.result as { token: Token; user: UserInfo };
 
-      useAuthStore.getState().login(token);
+      useAuthStore.getState().setTokens(token);
       useUserInfoStore.getState().setNickname(user.nickname);
 
       navigate('/');

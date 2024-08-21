@@ -49,6 +49,11 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config; // 실패한 요청 정보를 가져옴
 
+    // 인터셉터를 건너뛰기 위한 조건
+    if (originalRequest.skipInterceptor) {
+      return Promise.reject(error); // 요청이 인터셉터를 건너뛰도록 설정된 경우 에러 반환
+    }
+
     // 401 Unauthorized 에러가 발생하고, 아직 재시도를 하지 않은 경우
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true; // 재시도 플래그 설정
