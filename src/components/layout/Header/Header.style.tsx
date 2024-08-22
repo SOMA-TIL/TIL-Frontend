@@ -42,7 +42,7 @@ export const Logo = styled.button`
   color: ${BLACK};
 
   img {
-    width: 160px;
+    width: 180px;
   }
 
   &:hover {
