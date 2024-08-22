@@ -181,7 +181,12 @@ const ProblemListPage: React.FC = () => {
                       <TableCell>
                         <LevelText>{`Lv.${problem.level}`}</LevelText>
                       </TableCell>
-                      <TableCell>{problem.finishCount.toLocaleString('ko-KR')}명</TableCell>
+                      <TableCell>
+                        {problem.finishCount !== undefined
+                          ? problem.finishCount.toLocaleString('ko-KR')
+                          : '0'}
+                        명
+                      </TableCell>
                       <TableCell>{problem.passRate}%</TableCell>
                     </TableRow>
                   ))}
