@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Input as AntInput, Select as AntSelect, Button as AntButton } from 'antd';
-import { PRIMARY_PURPLE, PRIMARY_PURPLE_BOLD } from '@styles/pallete';
+import { PRIMARY_PURPLE, PRIMARY_PURPLE_BOLD, PRIMARY_PURPLE_LIGHT2 } from '@styles/pallete';
 
 export const SearchBarContainer = styled.div`
   display: flex;
@@ -75,5 +75,18 @@ export const SearchButton = styled(AntButton)`
   }
   .icon {
     margin-left: 8px;
+  }
+`;
+
+export const ResetButton = styled.button`
+  margin-left: 8px;
+  height: 48px;
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${PRIMARY_PURPLE_LIGHT2};
   }
 `;
