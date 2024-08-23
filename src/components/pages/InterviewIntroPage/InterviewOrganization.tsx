@@ -142,7 +142,14 @@ const InterviewOrganization = () => {
           value="value"
           onChange={() => null}
           text="구성하기"
-          onClick={() => null}
+          onClick={() => {
+            notify({
+              message: '포트폴리오 면접 구성',
+              description: '현재 버전에서 지원하지 않는 기능입니다.',
+              type: TOAST_TYPE.ERROR,
+              placement: TOAST_POS.TOP,
+            });
+          }}
         />
       </OrganizationSectionContainer>
       <OrganizationSectionContainer>
