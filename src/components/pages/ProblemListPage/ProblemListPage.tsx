@@ -81,7 +81,7 @@ const ProblemListPage: React.FC = () => {
     fetchProblemList();
   }, [currentPage, location.search, fetchProblemList]);
 
-  const handleSearch = (keyword: string, status: string[], level: number[], category: number[]) => {
+  const handleSearch = (keyword: string, status: string, level: number[], category: number[]) => {
     const params = new URLSearchParams();
 
     params.set('page', '1'); // 검색 시 항상 첫 페이지로 이동
@@ -90,9 +90,8 @@ const ProblemListPage: React.FC = () => {
       params.set('keyword', keyword);
     }
 
-    // 다중 검색을 위해 배열 처리
     if (status && status.length > 0) {
-      status.forEach((s) => params.append('status', s));
+      params.append('status', status);
     }
 
     if (level && level.length > 0) {
