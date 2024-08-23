@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { ToastProvider } from '@components/common/notification/ToastProvider';
@@ -11,6 +11,8 @@ import ProblemDetailPage from '@components/pages/ProblemDetailPage/ProblemDetail
 import MyPageChangePassword from '@components/pages/MyPage/MyPageChangePassword';
 import MyPageChangeInfo from '@components/pages/MyPage/MyPageChangeInfo';
 import InterviewPage from '@components/pages/InterviewPage/InterviewPage';
+import Loading from '@components/common/loading/Loading';
+
 import GlobalStyle from '@styles/GlobalStyle';
 import { getCookie } from '@services/cookie';
 import { REFRESH_TOKEN } from '@constants/auth';
@@ -19,14 +21,20 @@ import { initialSettingTokens } from '@services/api/authService';
 import PrivateRoute from './route';
 
 const App: React.FC = () => {
+  const [isInitialized, setIsInitialized] = useState(false);
+
   useEffect(() => {
     const initializeTokens = async () => {
       if (getCookie(REFRESH_TOKEN)) {
         await initialSettingTokens();
       }
+      setIsInitialized(true);
     };
     initializeTokens();
   }, []);
+  if (!isInitialized) {
+    return <Loading />;
+  }
 
   return (
     <ToastProvider>
