@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import useAuthStore from '@store/useAuthStore';
 import { Category } from '@type/category';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
+import { PROBLEM_LEVEL, PROBLEM_USER_STATUS } from '@constants/problem';
+import { ProblemListParams } from '@services/api/problemService';
 import {
   SearchBarContainer,
   SearchInput,
@@ -10,21 +12,24 @@ import {
   LevelSelect,
   CategorySelect,
   SearchButton,
+  ResetButton,
 } from './SearchBar.style';
 
 const { Option } = StatusSelect;
 
 interface SearchBarProps {
-  onSearch: (keyword: string, status: string, level: number | '', category: number[]) => void;
-  levelList: number[];
+  onSearch: (keyword: string, status: string, level: number[], category: number[]) => void;
   categoryList: Category[];
+  initSearchParam?: ProblemListParams;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList }) => {
-  const [keyword, setKeyword] = useState('');
-  const [status, setStatus] = useState<string[] | undefined>(undefined);
-  const [selectedLevel, setSelectedLevel] = useState<number[] | undefined>(undefined);
-  const [selectedCategoryList, setSelectedCategoryList] = useState<number[]>([]);
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList, initSearchParam }) => {
+  const [keyword, setKeyword] = useState<string>(initSearchParam?.keyword || '');
+  const [status, setStatus] = useState<string | undefined>(initSearchParam?.status);
+  const [selectedLevel, setSelectedLevel] = useState<number[]>(initSearchParam?.levelList || []);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<number[]>(
+    initSearchParam?.categoryList || [],
+  );
   const { isAuthenticated, checkAuthentication } = useAuthStore();
 
   useEffect(() => {
@@ -37,8 +42,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList
     onSearch(params.keyword, params.status, params.level, params.category);
   };
 
+  const handleReset = () => {
+    setKeyword('');
+    setStatus(undefined);
+    setSelectedLevel([]);
+    setSelectedCategoryList([]);
+    onSearch('', '', [], []); // 모든 검색 조건을 빈 값으로 전달하여 초기화
+  };
+
   const handleStatusChange = (value: unknown) => {
-    setStatus(value as string[]);
+    setStatus(value as string);
   };
 
   const handleLevelChange = (value: unknown) => {
@@ -57,28 +70,22 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList
           onChange={(e) => setKeyword(e.target.value)}
           prefix={<SearchOutlined />}
         />
-        {/* to-do. user 연동하여 값 받아오기 */}
         {isAuthenticated && (
-          <StatusSelect
-            mode="multiple"
-            value={status}
-            onChange={handleStatusChange}
-            placeholder="상태 선택"
-          >
-            <Option value="pass">Pass</Option>
-            <Option value="fail">Fail</Option>
-            <Option value="incomplete">Incomplete</Option>
+          <StatusSelect value={status} onChange={handleStatusChange} placeholder="상태 선택">
+            <Option value="">전체</Option>
+            <Option value={PROBLEM_USER_STATUS.PASS}>PASS</Option>
+            <Option value={PROBLEM_USER_STATUS.FAIL}>FAIL</Option>
+            <Option value={PROBLEM_USER_STATUS.NOT_ATTEMPTED}>시도하지 않은 문제</Option>
           </StatusSelect>
         )}
-        {/* to-do. level도 여러 개 선택 가능 하도록 바꾸기 */}
         <LevelSelect
           mode="multiple"
-          value={selectedLevel}
+          value={selectedLevel?.sort((a, b) => a - b)}
           onChange={handleLevelChange}
           placeholder="난이도 선택"
           hasStatus={isAuthenticated}
         >
-          {levelList.map((level) => (
+          {Object.values(PROBLEM_LEVEL).map((level) => (
             <Option key={level} value={level}>
               Lv.{level}
             </Option>
@@ -100,6 +107,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList
           검색하기
           <SearchOutlined className="icon" />
         </SearchButton>
+        <ResetButton onClick={handleReset}>
+          <ReloadOutlined />
+        </ResetButton>
       </SearchBarContainer>
     </StyledConfigProvider>
   );

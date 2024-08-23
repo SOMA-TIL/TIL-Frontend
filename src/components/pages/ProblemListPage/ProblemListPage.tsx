@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 import Loading from '@components/common/loading/Loading';
 import { getGradingResultColor } from '@constants/grading';
@@ -8,6 +8,7 @@ import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
 import { CategoryTag } from '@styles/TagSTyle';
+import Pagination from '@components/common/pagination/Pagination';
 import {
   ProblemListContainer,
   SubTitle,
@@ -31,55 +32,82 @@ import SearchBar from './SearchBar';
 const ProblemListPage: React.FC = () => {
   const [problemList, setProblemList] = useState<ProblemOverviewInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  // const [pageSize, setPageSize] = useState<number>(10);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize] = useState<number>(7);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [levelList, setLevelList] = useState<number[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
   const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
+  const [initSearchParam, setInitSearchParam] = useState<ProblemListParams | null>();
 
-  const fetchProblemList = async (params: ProblemListParams = {}) => {
+  const fetchProblemList = useCallback(async () => {
     try {
       setIsLoading(true);
       await getCategoryList();
-      const response = await getProblemList({ ...params, page: currentPage });
+
+      const params = new URLSearchParams(location.search);
+      const searchParams: ProblemListParams = {
+        keyword: params.get('keyword') || undefined,
+        status: params.get('status') || undefined,
+        levelList: params.getAll('level').map(Number),
+        categoryList: params.getAll('category').map(Number),
+        page: parseInt(params.get('page') || '1', 10) - 1,
+        size: pageSize,
+      };
+
+      setInitSearchParam(searchParams);
+
+      const response = await getProblemList(searchParams);
+
       setProblemList(response.result?.problemList || []);
       setTotalItems(response.result?.pageInfo.totalItems || 0);
-      const uniqueLevels = Array.from(
-        new Set(response.result?.problemList.map((problem) => problem.level)) || [],
-      );
-      setLevelList(uniqueLevels);
     } catch (err) {
       setError('An error occurred while fetching problems.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [location.search, pageSize, getCategoryList, setIsLoading]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const page = parseInt(params.get('page') || '1', 10);
+    setCurrentPage(page);
+  }, [location.search]);
 
   useEffect(() => {
     fetchProblemList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getCategoryList, setIsLoading, currentPage]);
+  }, [currentPage, location.search, fetchProblemList]);
 
-  const handleSearch = (
-    keyword: string,
-    status: string,
-    level: number | '',
-    category: number[],
-  ) => {
-    const params: Partial<ProblemListParams> = { keyword, status };
-    if (level !== '') params.level = level;
-    if (category.length > 0) params.categoryList = category.map(String);
+  const handleSearch = (keyword: string, status: string, level: number[], category: number[]) => {
+    const params = new URLSearchParams();
 
-    setCurrentPage(1);
-    fetchProblemList(params);
+    params.set('page', '1'); // 검색 시 항상 첫 페이지로 이동
+
+    if (keyword) {
+      params.set('keyword', keyword);
+    }
+
+    if (status && status.length > 0) {
+      params.append('status', status);
+    }
+
+    if (level && level.length > 0) {
+      level.forEach((l) => params.append('level', l.toString()));
+    }
+
+    if (category && category.length > 0) {
+      category.forEach((c) => params.append('category', c.toString()));
+    }
+
+    navigate(`?${params.toString()}`);
   };
 
-  // const handlePageChange = (pagination: TablePaginationConfig) => {
-  //   setCurrentPage(pagination.current || 1);
-  //   setPageSize(pagination.pageSize || 10);
-  // };
+  const handlePageChange = (page: number) => {
+    const params = new URLSearchParams(location.search);
+    params.set('page', page.toString());
+    navigate(`?${params.toString()}`);
+  };
 
   const onRowClick = (record: ProblemOverviewInfo) => {
     navigate(`/problem/${record.id}`);
@@ -97,7 +125,11 @@ const ProblemListPage: React.FC = () => {
       <ProblemListContainer>
         <SearchBarContainer>
           <SubTitle>기술 학습</SubTitle>
-          <SearchBar onSearch={handleSearch} levelList={levelList} categoryList={categoryList} />
+          <SearchBar
+            onSearch={handleSearch}
+            categoryList={categoryList}
+            initSearchParam={initSearchParam || undefined}
+          />
         </SearchBarContainer>
         <TableContentContainer>
           <TableOptionContainer>
@@ -150,18 +182,23 @@ const ProblemListPage: React.FC = () => {
                       <TableCell>
                         <LevelText>{`Lv.${problem.level}`}</LevelText>
                       </TableCell>
-                      <TableCell>{problem.finishCount.toLocaleString('ko-KR')}명</TableCell>
+                      <TableCell>
+                        {problem.finishCount !== undefined
+                          ? problem.finishCount.toLocaleString('ko-KR')
+                          : '0'}
+                        명
+                      </TableCell>
                       <TableCell>{problem.passRate}%</TableCell>
                     </TableRow>
                   ))}
                 </tbody>
               </CustomTable>
-              {/* //todo: pagination 추가 예정 */}
-              {/* <PaginationContainer> */}
-              {/* <button>이전</button>
-              <span>1</span>
-              <button>다음</button> */}
-              {/* </PaginationContainer> */}
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalItems}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
+              />
             </>
           )}
         </TableContentContainer>

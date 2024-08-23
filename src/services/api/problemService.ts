@@ -37,9 +37,9 @@ export interface ProblemListParams {
   sort?: string;
   order?: string;
   keyword?: string;
-  status?: string; // todo: 사용자 정보 받아오기
-  level?: number;
-  categoryList?: string[];
+  status?: string;
+  levelList?: number[];
+  categoryList?: number[];
 }
 
 export const getProblemList = async (
