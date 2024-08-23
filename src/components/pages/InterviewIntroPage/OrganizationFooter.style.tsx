@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const OrganizationFooterContainer = styled.div`
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: transformY(100%);
 
   background-color: #fff;
 
