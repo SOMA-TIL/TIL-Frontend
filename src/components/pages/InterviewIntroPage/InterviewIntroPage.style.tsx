@@ -7,6 +7,7 @@ export const InterviewIntroContainer = styled.div`
 
   width: 100%;
   height: ${DISPLAY_HEIGHT_WITHOUT_HEADER};
+  background-color: #f9fafc;
 `;
 
 export const InterviewContentContainer = styled.div`
@@ -16,15 +17,13 @@ export const InterviewContentContainer = styled.div`
 
   padding: 3% 15%;
 
-  background-color: #f9fafc;
-
   border-top: 1px solid #ddd;
 `;
 
 export const OrganizationSectionContainer = styled.div`
   width: 100%;
   min-height: 150px;
-  height: calc(${DISPLAY_HEIGHT_WITHOUT_HEADER} / 4);
+  height: 250px;
 
   padding: 10px 0;
 
@@ -43,7 +42,7 @@ export const OrganizationSectionTitle = styled.h4`
   color: #111;
   font-size: 18px;
   font-weight: bold;
-
+  padding-top: 50px;
   margin-bottom: 10px;
 `;
 

@@ -3,14 +3,15 @@ import styled from 'styled-components';
 export const OrganizationFooterContainer = styled.div`
   position: absolute;
   left: 0;
-  bottom: transformY(100%);
+  bottom: 0;
 
   background-color: #fff;
 
   width: 100%;
-  height: 60px;
+  height: 80px;
 
   display: flex;
+  align-items: center;
 
   padding: 10px 15%;
 
@@ -30,7 +31,7 @@ export const OrganizationFooterDescription = styled.p`
 export const OrganizationFooterButton = styled.button`
   align-items: center;
   position: absolute;
-  right: 33%;
+  right: 15%;
 
   cursor: pointer;
 
