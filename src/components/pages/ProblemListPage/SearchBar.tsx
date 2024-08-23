@@ -3,7 +3,7 @@ import useAuthStore from '@store/useAuthStore';
 import { Category } from '@type/category';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
-import { PROBLEM_USER_STATUS } from '@constants/problem';
+import { PROBLEM_LEVEL, PROBLEM_USER_STATUS } from '@constants/problem';
 import {
   SearchBarContainer,
   SearchInput,
@@ -18,11 +18,10 @@ const { Option } = StatusSelect;
 
 interface SearchBarProps {
   onSearch: (keyword: string, status: string, level: number[], category: number[]) => void;
-  levelList: number[];
   categoryList: Category[];
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList }) => {
   const [keyword, setKeyword] = useState('');
   const [status, setStatus] = useState<string | undefined>(undefined);
   const [selectedLevel, setSelectedLevel] = useState<number[] | undefined>(undefined);
@@ -76,12 +75,12 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, levelList, categoryList
         )}
         <LevelSelect
           mode="multiple"
-          value={selectedLevel}
+          value={selectedLevel?.sort((a, b) => a - b)}
           onChange={handleLevelChange}
           placeholder="난이도 선택"
           hasStatus={isAuthenticated}
         >
-          {levelList.map((level) => (
+          {Object.values(PROBLEM_LEVEL).map((level) => (
             <Option key={level} value={level}>
               Lv.{level}
             </Option>
