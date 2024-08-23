@@ -39,6 +39,7 @@ const ProblemListPage: React.FC = () => {
   const location = useLocation();
   const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
+  const [initSearchParam, setInitSearchParam] = useState<ProblemListParams | null>();
 
   const fetchProblemList = useCallback(async () => {
     try {
@@ -48,12 +49,14 @@ const ProblemListPage: React.FC = () => {
       const params = new URLSearchParams(location.search);
       const searchParams: ProblemListParams = {
         keyword: params.get('keyword') || undefined,
-        status: params.getAll('status'),
+        status: params.get('status') || undefined,
         levelList: params.getAll('level').map(Number),
-        categoryList: params.getAll('category'),
+        categoryList: params.getAll('category').map(Number),
         page: parseInt(params.get('page') || '1', 10) - 1,
         size: pageSize,
       };
+
+      setInitSearchParam(searchParams);
 
       const response = await getProblemList(searchParams);
 
@@ -122,7 +125,11 @@ const ProblemListPage: React.FC = () => {
       <ProblemListContainer>
         <SearchBarContainer>
           <SubTitle>기술 학습</SubTitle>
-          <SearchBar onSearch={handleSearch} categoryList={categoryList} />
+          <SearchBar
+            onSearch={handleSearch}
+            categoryList={categoryList}
+            initSearchParam={initSearchParam || undefined}
+          />
         </SearchBarContainer>
         <TableContentContainer>
           <TableOptionContainer>

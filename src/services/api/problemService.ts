@@ -37,9 +37,9 @@ export interface ProblemListParams {
   sort?: string;
   order?: string;
   keyword?: string;
-  status?: string[];
+  status?: string;
   levelList?: number[];
-  categoryList?: string[];
+  categoryList?: number[];
 }
 
 export const getProblemList = async (
