@@ -13,14 +13,16 @@ interface InterviewMainProps {
   solvedProblemList: InterviewProblemInfo[];
   unSolvedProblemList: InterviewProblemInfo[];
   currentSequence: number;
+  currentAnswer: string;
+  handleTextArea: React.ChangeEventHandler;
 }
 
 const InterviewMain: React.FC<InterviewMainProps> = ({
   solvedProblemList,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   unSolvedProblemList,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   currentSequence,
+  currentAnswer,
+  handleTextArea,
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -45,10 +47,23 @@ const InterviewMain: React.FC<InterviewMainProps> = ({
               ''
             ),
           )}
+          {unSolvedProblemList.length === 0 ? (
+            <InterviewMessageBox
+              type="interviewer"
+              text="모든 면접 문제를 풀었습니다. 우측 상단의 면접 종료 버튼을 클릭해주세요."
+              time=""
+            />
+          ) : (
+            ''
+          )}
           <div ref={scrollRef} />
         </InterviewMessageContainer>
         <InterviewInputContainer>
-          <InterviewInputTextArea placeholder="답변을 입력하세요." />
+          <InterviewInputTextArea
+            value={currentAnswer}
+            placeholder="답변을 입력하세요."
+            onChange={handleTextArea}
+          />
         </InterviewInputContainer>
       </InterviewContentContainer>
     </InterviewMainContainer>

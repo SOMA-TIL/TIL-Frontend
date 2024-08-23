@@ -3,7 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useToast } from '@components/common/notification/ToastProvider';
 import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
-import { getInterviewInfo } from '@services/api/InterviewService';
+import {
+  getInterviewInfo,
+  solveInterviewProblem,
+  submitInterview,
+} from '@services/api/InterviewService';
 import { InterviewProblemInfo } from '@type/interview';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
@@ -30,6 +34,7 @@ const InterviewPage: React.FC = () => {
   const [unsolvedProblemList, setUnsolvedProblemList] = useState<InterviewProblemInfo[]>([]);
 
   const [currentSequence, setCurrentSequence] = useState<number>(1);
+  const [currentAnswer, setCurrentAnswer] = useState<string>('');
 
   const fetchCategoryList = async () => {
     try {
@@ -59,7 +64,6 @@ const InterviewPage: React.FC = () => {
           setCreatedDate(slicedCreatedDate);
           setCategoryIdList(data.result?.categoryIdList as number[]);
 
-          // 3. problemInfo를 세팅한다.
           const tempProblemList = data.result?.problemList as InterviewProblemInfo[];
           const sortedProblemList = tempProblemList.sort((a, b) => a.sequence - b.sequence);
           return sortedProblemList;
@@ -99,14 +103,39 @@ const InterviewPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code, navigate, notify]);
 
-  const handleAnswerSkip = () => {
-    // todo: 답변 Skip POST 메소드 연결하기
+  const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCurrentAnswer(e.currentTarget.value);
   };
+
+  const handleAnswerSkip = async () => {
+    if (unsolvedProblemList.length === 0) return;
+
+    const ans = 'SKIP';
+    const seq = currentSequence;
+
+    const newSolvedProblem = unsolvedProblemList.find(
+      (problem) => problem.sequence === seq,
+    ) as InterviewProblemInfo;
+    newSolvedProblem.answer = ans;
+    newSolvedProblem.status = INTERVIEW_PROBLEM_STATUS.SOLVED;
+
+    await solveInterviewProblem(code as string, {
+      sequence: seq,
+      answer: ans,
+    });
+
+    setSolvedProblemList([...solvedProblemList, newSolvedProblem]);
+    setUnsolvedProblemList(unsolvedProblemList.filter((problem) => problem.sequence !== seq));
+    setCurrentSequence(seq + 1);
+    setCurrentAnswer('');
+  };
+
   const handleAnswerRefresh = () => {
-    // todo: 작성 칸 초기화하기
+    setCurrentAnswer('');
   };
-  const handleAnswerSubmit = () => {
-    if ('작성내용'.length === 0) return;
+
+  const handleAnswerSubmit = async () => {
+    if (currentAnswer.length === 0) return;
     if (unsolvedProblemList.length === 0) return;
 
     const seq = currentSequence;
@@ -114,13 +143,42 @@ const InterviewPage: React.FC = () => {
     const newSolvedProblem = unsolvedProblemList.find(
       (problem) => problem.sequence === seq,
     ) as InterviewProblemInfo;
-    newSolvedProblem.answer = '작성한 응답'; // todo: 실제로 작성한 답변 붙이기
+    newSolvedProblem.answer = currentAnswer;
+    newSolvedProblem.status = INTERVIEW_PROBLEM_STATUS.SOLVED;
 
-    // todo: 답변 POST 메소드 연결하기
+    await solveInterviewProblem(code as string, {
+      sequence: currentSequence,
+      answer: currentAnswer,
+    });
 
     setSolvedProblemList([...solvedProblemList, newSolvedProblem]);
     setUnsolvedProblemList(unsolvedProblemList.filter((problem) => problem.sequence !== seq));
     setCurrentSequence(seq + 1);
+    setCurrentAnswer('');
+  };
+
+  const handleInterviewSubmit = async () => {
+    if (unsolvedProblemList.length !== 0) {
+      notify({
+        message: '모의면접 종료 실패',
+        description: '답변하지 않은 질문이 있습니다!',
+        type: TOAST_TYPE.ERROR,
+        placement: TOAST_POS.TOP,
+      });
+
+      return;
+    }
+
+    await submitInterview(code as string);
+
+    notify({
+      message: '모의면접 종료',
+      description: '면접이 성공적으로 종료되었습니다!',
+      type: TOAST_TYPE.SUCCESS,
+      placement: TOAST_POS.TOP,
+    });
+
+    // todo: !!! 면접 채점 결과 관련 로직 !!
   };
 
   if (getIsLoading()) {
@@ -129,7 +187,7 @@ const InterviewPage: React.FC = () => {
 
   return (
     <MinimalPageLayout>
-      <InterviewHeader />
+      <InterviewHeader handleInterviewSubmit={handleInterviewSubmit} />
       <InterviewInfo
         code={code as string}
         createdDate={createdDate as string}
@@ -140,6 +198,8 @@ const InterviewPage: React.FC = () => {
         solvedProblemList={solvedProblemList}
         unSolvedProblemList={unsolvedProblemList}
         currentSequence={currentSequence}
+        currentAnswer={currentAnswer}
+        handleTextArea={handleTextArea}
       />
       <InterviewFooter
         skipEvent={handleAnswerSkip}
