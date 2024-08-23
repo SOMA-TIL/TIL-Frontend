@@ -35,7 +35,6 @@ const ProblemListPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize] = useState<number>(7);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const [levelList, setLevelList] = useState<number[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
   const { getCategoryList, categoryList } = useCategoryStore();
@@ -50,8 +49,8 @@ const ProblemListPage: React.FC = () => {
       const searchParams: ProblemListParams = {
         keyword: params.get('keyword') || undefined,
         status: params.getAll('status'),
-        level: params.getAll('level').map(Number),
-        categoryList: params.getAll('categoryList'),
+        levelList: params.getAll('level').map(Number),
+        categoryList: params.getAll('category'),
         page: parseInt(params.get('page') || '1', 10) - 1,
         size: pageSize,
       };
@@ -60,10 +59,6 @@ const ProblemListPage: React.FC = () => {
 
       setProblemList(response.result?.problemList || []);
       setTotalItems(response.result?.pageInfo.totalItems || 0);
-      const uniqueLevels = Array.from(
-        new Set(response.result?.problemList.map((problem) => problem.level)) || [],
-      );
-      setLevelList(uniqueLevels);
     } catch (err) {
       setError('An error occurred while fetching problems.');
     } finally {
@@ -99,7 +94,7 @@ const ProblemListPage: React.FC = () => {
     }
 
     if (category && category.length > 0) {
-      category.forEach((c) => params.append('categoryList', c.toString()));
+      category.forEach((c) => params.append('category', c.toString()));
     }
 
     navigate(`?${params.toString()}`);
@@ -127,7 +122,7 @@ const ProblemListPage: React.FC = () => {
       <ProblemListContainer>
         <SearchBarContainer>
           <SubTitle>기술 학습</SubTitle>
-          <SearchBar onSearch={handleSearch} levelList={levelList} categoryList={categoryList} />
+          <SearchBar onSearch={handleSearch} categoryList={categoryList} />
         </SearchBarContainer>
         <TableContentContainer>
           <TableOptionContainer>

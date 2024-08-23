@@ -38,7 +38,7 @@ export interface ProblemListParams {
   order?: string;
   keyword?: string;
   status?: string[];
-  level?: number[];
+  levelList?: number[];
   categoryList?: string[];
 }
 
