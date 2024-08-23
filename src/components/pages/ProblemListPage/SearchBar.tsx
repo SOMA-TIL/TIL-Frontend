@@ -4,6 +4,7 @@ import { Category } from '@type/category';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
 import { PROBLEM_LEVEL, PROBLEM_USER_STATUS } from '@constants/problem';
+import { ProblemListParams } from '@services/api/problemService';
 import {
   SearchBarContainer,
   SearchInput,
@@ -19,13 +20,16 @@ const { Option } = StatusSelect;
 interface SearchBarProps {
   onSearch: (keyword: string, status: string, level: number[], category: number[]) => void;
   categoryList: Category[];
+  initSearchParam?: ProblemListParams;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList }) => {
-  const [keyword, setKeyword] = useState('');
-  const [status, setStatus] = useState<string | undefined>(undefined);
-  const [selectedLevel, setSelectedLevel] = useState<number[] | undefined>(undefined);
-  const [selectedCategoryList, setSelectedCategoryList] = useState<number[]>([]);
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList, initSearchParam }) => {
+  const [keyword, setKeyword] = useState<string>(initSearchParam?.keyword || '');
+  const [status, setStatus] = useState<string | undefined>(initSearchParam?.status);
+  const [selectedLevel, setSelectedLevel] = useState<number[]>(initSearchParam?.levelList || []);
+  const [selectedCategoryList, setSelectedCategoryList] = useState<number[]>(
+    initSearchParam?.categoryList || [],
+  );
   const { isAuthenticated, checkAuthentication } = useAuthStore();
 
   useEffect(() => {
@@ -68,6 +72,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList }) => {
         />
         {isAuthenticated && (
           <StatusSelect value={status} onChange={handleStatusChange} placeholder="상태 선택">
+            <Option value="">전체</Option>
             <Option value={PROBLEM_USER_STATUS.PASS}>PASS</Option>
             <Option value={PROBLEM_USER_STATUS.FAIL}>FAIL</Option>
             <Option value={PROBLEM_USER_STATUS.NOT_ATTEMPTED}>시도하지 않은 문제</Option>
