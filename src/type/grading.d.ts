@@ -8,3 +8,10 @@ export interface GradingResult {
   result: GradingResultType;
   comment: string;
 }
+
+export interface GradingResultWithProblemInfo {
+  question: string;
+  userAnswer: string;
+  result: GradingResultType;
+  comment: string;
+}

@@ -178,7 +178,7 @@ const InterviewPage: React.FC = () => {
       placement: TOAST_POS.TOP,
     });
 
-    // todo: !!! 면접 채점 결과 관련 로직 !!
+    navigate(`/interview/${code}/result`);
   };
 
   if (getIsLoading()) {

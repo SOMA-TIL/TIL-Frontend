@@ -1,6 +1,7 @@
 import apiClient from '@services/api/axios';
 import { ApiResponse } from '@type/api';
-import { InterviewCode, InterviewProblemInfo } from '@type/interview';
+import { GradingResultWithProblemInfo } from '@type/grading';
+import { InterviewCode, InterviewProblemInfo, InterviewStatus } from '@type/interview';
 
 export interface InterviewCreateData {
   categoryIdList: number[];
@@ -19,6 +20,15 @@ export interface InterviewInfoData {
 export interface InterviewProblemSolveData {
   sequence: number;
   answer: string;
+}
+
+export interface InterviewStatusData {
+  status: InterviewStatus;
+}
+
+export interface InterviewResultData {
+  interviewStatus: InterviewStatus;
+  gradingResult?: GradingResultWithProblemInfo[];
 }
 
 export const createInterview = async (
@@ -43,5 +53,19 @@ export const solveInterviewProblem = async (
 
 export const submitInterview = async (code: string): Promise<ApiResponse> => {
   const response = await apiClient.post(`/interview/${code}/submit`);
+  return response.data;
+};
+
+export const getIntreviewStatus = async (
+  code: string,
+): Promise<ApiResponse<InterviewStatusData>> => {
+  const response = await apiClient.get(`/interview/${code}/status`);
+  return response.data;
+};
+
+export const getInterviewResult = async (
+  code: string,
+): Promise<ApiResponse<InterviewResultData>> => {
+  const response = await apiClient.get(`/interview/${code}/result`);
   return response.data;
 };
