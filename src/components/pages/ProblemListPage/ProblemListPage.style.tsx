@@ -74,9 +74,10 @@ export const TableHeader = styled.thead`
   background-color: #ededff;
 `;
 
-export const TableHeaderCell = styled.th<{ align?: 'center' | 'left' | 'right' }>`
+export const TableHeaderCell = styled.th<{ align?: 'center' | 'left' | 'right'; width?: string }>`
   padding: 12px 15px;
   font-weight: bold;
+  width: ${(props) => props.width || 'auto'};
   text-align: ${(props) => props.align || 'center'};
   height: 60px;
 `;
