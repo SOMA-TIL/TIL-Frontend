@@ -1,4 +1,4 @@
-import { BLACK, PRIMARY_PURPLE } from './pallete';
+import { BLACK, DARK_GREY2, LIGHT_GREY, PRIMARY_PURPLE } from './pallete';
 
 export const BookMarkIcon = ({
   isFavorite,
@@ -32,26 +32,39 @@ export const BookMarkIcon = ({
 
 export const BookMarkSmallIcon = ({
   isFavorite,
-  disabled,
+  disable,
 }: {
   isFavorite: boolean;
-  disabled?: boolean;
-}) => (
-  <button type="button" aria-label="즐겨찾기" disabled={disabled}>
+  disable?: boolean;
+}) => {
+  let strokeColor;
+  let fillColor;
+  if (disable === true) {
+    strokeColor = LIGHT_GREY;
+    fillColor = 'none';
+  } else if (isFavorite) {
+    strokeColor = PRIMARY_PURPLE;
+    fillColor = PRIMARY_PURPLE;
+  } else {
+    strokeColor = DARK_GREY2;
+    fillColor = 'none';
+  }
+
+  return (
     <svg
       width="15"
       height="17"
       viewBox="0 0 15 17"
-      fill={isFavorite ? PRIMARY_PURPLE : 'none'}
+      fill={fillColor}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
         d="M1.95837 5.175C1.95837 3.84488 1.95837 3.17981 2.21723 2.67177C2.44493 2.22489 2.80826 1.86156 3.25515 1.63386C3.76319 1.375 4.42825 1.375 5.75837 1.375H9.24171C10.5718 1.375 11.2369 1.375 11.7449 1.63386C12.1918 1.86156 12.5551 2.22489 12.7828 2.67177C13.0417 3.17981 13.0417 3.84488 13.0417 5.175V15.625L7.50004 12.4583L1.95837 15.625V5.175Z"
-        stroke={isFavorite ? PRIMARY_PURPLE : BLACK}
+        stroke={strokeColor}
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
-  </button>
-);
+  );
+};
