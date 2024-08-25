@@ -20,6 +20,7 @@ import { GradingResult } from '@type/grading';
 import useAuthStore from '@store/useAuthStore';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
+import { BookMarkIcon } from '@styles/IconSvgStyle';
 import {
   QuestionCircleOutlined,
   MessageOutlined,
@@ -42,7 +43,6 @@ import {
   ModalInnerText,
   TextDiv,
   ButtonGroup,
-  BookMarkIcon,
   InfoGroup,
   QuestionTitle,
   TabMenuItem,

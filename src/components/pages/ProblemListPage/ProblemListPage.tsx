@@ -8,6 +8,7 @@ import useCategoryStore from '@store/useCategoryStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
 import { CategoryTag } from '@styles/TagSTyle';
+import { BookMarkSmallIcon } from '@styles/IconSvgStyle';
 import Pagination from '@components/common/pagination/Pagination';
 import {
   ProblemListContainer,
@@ -147,11 +148,12 @@ const ProblemListPage: React.FC = () => {
             <>
               <CustomTable>
                 <TableHeader>
-                  <TableHeaderCell>상태</TableHeaderCell>
+                  <TableHeaderCell width="100px">상태</TableHeaderCell>
+                  <TableHeaderCell width="15px" style={{ padding: 0 }} />
                   <TableHeaderCell align="left">제목</TableHeaderCell>
-                  <TableHeaderCell>난이도</TableHeaderCell>
-                  <TableHeaderCell>완료한 사람</TableHeaderCell>
-                  <TableHeaderCell>정답률</TableHeaderCell>
+                  <TableHeaderCell width="180px">난이도</TableHeaderCell>
+                  <TableHeaderCell width="180px">완료한 사람</TableHeaderCell>
+                  <TableHeaderCell width="180px">정답률</TableHeaderCell>
                 </TableHeader>
                 <tbody>
                   {problemList.map((problem) => (
@@ -167,6 +169,11 @@ const ProblemListPage: React.FC = () => {
                               );
                             })()
                           : null}
+                      </TableCell>
+                      <TableCell style={{ padding: 0 }}>
+                        {problem.userStatus?.isFavorite ? (
+                          <BookMarkSmallIcon isFavorite={problem.userStatus.isFavorite} disabled />
+                        ) : null}
                       </TableCell>
                       <TableCell align="left">
                         {problem.title}
