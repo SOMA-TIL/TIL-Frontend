@@ -40,6 +40,7 @@ export interface ProblemListParams {
   status?: string;
   levelList?: number[];
   categoryList?: number[];
+  isFavorite?: boolean;
 }
 
 export const getProblemList = async (

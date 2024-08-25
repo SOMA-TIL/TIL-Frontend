@@ -1,3 +1,4 @@
+import { BLACK, LIGHT_GREY, WHITE } from '@styles/pallete';
 import styled from 'styled-components';
 
 export const ProblemListContainer = styled.div`
@@ -47,10 +48,22 @@ export const TotalItems = styled.div`
 
 export const FavoriteButton = styled.button`
   border-radius: 5px;
-  border: 1px solid #bbb;
-  padding: 5px 10px;
+  border: 1px solid ${LIGHT_GREY};
+  background-color: ${WHITE};
+  color: ${BLACK};
+  padding: 6px 10px;
   font-size: 15px;
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  align-items: center;
+
+  &:disabled {
+    cursor: not-allowed;
+    color: ${LIGHT_GREY};
+    background-color: transparent;
+  }
 `;
 
 export const OrderOptionDropDown = styled.select`

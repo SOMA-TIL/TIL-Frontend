@@ -5,6 +5,7 @@ import Loading from '@components/common/loading/Loading';
 import { getGradingResultColor } from '@constants/grading';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
+import useAuthStore from '@store/useAuthStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
 import { CategoryTag } from '@styles/TagSTyle';
@@ -31,6 +32,7 @@ import {
 import SearchBar from './SearchBar';
 
 const ProblemListPage: React.FC = () => {
+  const { isAuthenticated } = useAuthStore();
   const [problemList, setProblemList] = useState<ProblemOverviewInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -41,6 +43,11 @@ const ProblemListPage: React.FC = () => {
   const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const [initSearchParam, setInitSearchParam] = useState<ProblemListParams | null>();
+
+  const getFavoriteParam = () => {
+    const params = new URLSearchParams(location.search);
+    return Boolean(params.get('isFavorite'));
+  };
 
   const fetchProblemList = useCallback(async () => {
     try {
@@ -55,6 +62,7 @@ const ProblemListPage: React.FC = () => {
         categoryList: params.getAll('category').map(Number),
         page: parseInt(params.get('page') || '1', 10) - 1,
         size: pageSize,
+        isFavorite: Boolean(params.get('isFavorite')) || undefined,
       };
 
       setInitSearchParam(searchParams);
@@ -86,6 +94,20 @@ const ProblemListPage: React.FC = () => {
     navigate(`?${params.toString()}`);
   };
 
+  const handleClickFavorite = () => {
+    if (!isAuthenticated) {
+      return;
+    }
+
+    const params = new URLSearchParams(location.search);
+    if (params.get('isFavorite') === 'true') {
+      params.delete('isFavorite');
+    } else {
+      params.set('isFavorite', 'true');
+    }
+    navigate(`?${params.toString()}`);
+  };
+
   const onRowClick = (record: ProblemOverviewInfo) => {
     navigate(`/problem/${record.id}`);
   };
@@ -108,7 +130,10 @@ const ProblemListPage: React.FC = () => {
           <TableOptionContainer>
             <OptionGroup>
               <TotalItems>{totalItems} 문제</TotalItems>
-              <FavoriteButton>즐겨찾기</FavoriteButton>
+              <FavoriteButton disabled={!isAuthenticated} onClick={handleClickFavorite}>
+                <BookMarkSmallIcon isFavorite={getFavoriteParam()} disable={!isAuthenticated} />{' '}
+                즐겨찾기
+              </FavoriteButton>
             </OptionGroup>
             <OptionGroup>
               <OrderOptionDropDown> </OrderOptionDropDown>
@@ -144,7 +169,7 @@ const ProblemListPage: React.FC = () => {
                       </TableCell>
                       <TableCell style={{ padding: 0 }}>
                         {problem.userStatus?.isFavorite ? (
-                          <BookMarkSmallIcon isFavorite={problem.userStatus.isFavorite} disabled />
+                          <BookMarkSmallIcon isFavorite={problem.userStatus.isFavorite} />
                         ) : null}
                       </TableCell>
                       <TableCell align="left">

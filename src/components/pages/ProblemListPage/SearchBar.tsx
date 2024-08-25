@@ -54,6 +54,9 @@ const SearchBar: React.FC<SearchBarProps> = ({ categoryList, initSearchParam }) 
     if (selectedCategoryList && selectedCategoryList.length > 0) {
       selectedCategoryList.forEach((c) => params.append('category', c.toString()));
     }
+    if (initSearchParam?.isFavorite) {
+      params.set('isFavorite', 'true');
+    }
 
     navigate(`?${params.toString()}`);
   };
