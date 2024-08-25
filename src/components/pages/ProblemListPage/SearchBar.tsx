@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import useAuthStore from '@store/useAuthStore';
 import { Category } from '@type/category';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
@@ -18,12 +20,12 @@ import {
 const { Option } = StatusSelect;
 
 interface SearchBarProps {
-  onSearch: (keyword: string, status: string, level: number[], category: number[]) => void;
   categoryList: Category[];
   initSearchParam?: ProblemListParams;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList, initSearchParam }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ categoryList, initSearchParam }) => {
+  const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>(initSearchParam?.keyword || '');
   const [status, setStatus] = useState<string | undefined>(initSearchParam?.status);
   const [selectedLevel, setSelectedLevel] = useState<number[]>(initSearchParam?.levelList || []);
@@ -32,22 +34,40 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, categoryList, initSearc
   );
   const { isAuthenticated, checkAuthentication } = useAuthStore();
 
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+
+    params.set('page', '1'); // 검색 시 항상 첫 페이지로 이동
+
+    if (keyword) {
+      params.set('keyword', keyword);
+    }
+
+    if (status && status.length > 0) {
+      params.append('status', status);
+    }
+
+    if (selectedLevel && selectedLevel.length > 0) {
+      selectedLevel.forEach((l) => params.append('level', l.toString()));
+    }
+
+    if (selectedCategoryList && selectedCategoryList.length > 0) {
+      selectedCategoryList.forEach((c) => params.append('category', c.toString()));
+    }
+
+    navigate(`?${params.toString()}`);
+  };
+
   useEffect(() => {
     checkAuthentication();
   }, [checkAuthentication]);
-
-  const handleSearch = () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const params: any = { keyword, status, level: selectedLevel, category: selectedCategoryList };
-    onSearch(params.keyword, params.status, params.level, params.category);
-  };
 
   const handleReset = () => {
     setKeyword('');
     setStatus(undefined);
     setSelectedLevel([]);
     setSelectedCategoryList([]);
-    onSearch('', '', [], []); // 모든 검색 조건을 빈 값으로 전달하여 초기화
+    handleSearch();
   };
 
   const handleStatusChange = (value: unknown) => {

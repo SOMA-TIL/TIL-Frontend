@@ -80,30 +80,6 @@ const ProblemListPage: React.FC = () => {
     fetchProblemList();
   }, [currentPage, location.search, fetchProblemList]);
 
-  const handleSearch = (keyword: string, status: string, level: number[], category: number[]) => {
-    const params = new URLSearchParams();
-
-    params.set('page', '1'); // 검색 시 항상 첫 페이지로 이동
-
-    if (keyword) {
-      params.set('keyword', keyword);
-    }
-
-    if (status && status.length > 0) {
-      params.append('status', status);
-    }
-
-    if (level && level.length > 0) {
-      level.forEach((l) => params.append('level', l.toString()));
-    }
-
-    if (category && category.length > 0) {
-      category.forEach((c) => params.append('category', c.toString()));
-    }
-
-    navigate(`?${params.toString()}`);
-  };
-
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(location.search);
     params.set('page', page.toString());
@@ -126,11 +102,7 @@ const ProblemListPage: React.FC = () => {
       <ProblemListContainer>
         <SearchBarContainer>
           <SubTitle>기술 학습</SubTitle>
-          <SearchBar
-            onSearch={handleSearch}
-            categoryList={categoryList}
-            initSearchParam={initSearchParam || undefined}
-          />
+          <SearchBar categoryList={categoryList} initSearchParam={initSearchParam || undefined} />
         </SearchBarContainer>
         <TableContentContainer>
           <TableOptionContainer>
