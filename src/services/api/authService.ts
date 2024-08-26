@@ -2,6 +2,7 @@
 import { formatBearerToken, REFRESH_TOKEN } from '@constants/auth';
 import apiClient from '@services/api/axios';
 import { getCookie } from '@services/cookie';
+import { logoutClearStores } from '@store/clear';
 import useAuthStore from '@store/useAuthStore';
 import { ApiResponse } from '@type/api';
 import { Token } from '@type/auth';
@@ -36,6 +37,6 @@ export const initialSettingTokens = async (): Promise<void> => {
     useAuthStore.getState().setTokens(token);
   } catch (error) {
     console.error('Failed to set initial tokens:', error);
-    useAuthStore.getState().clearTokens();
+    logoutClearStores();
   }
 };
