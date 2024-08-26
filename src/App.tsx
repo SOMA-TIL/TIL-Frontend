@@ -13,26 +13,38 @@ import MyPageChangeInfo from '@components/pages/MyPage/MyPageChangeInfo';
 import InterviewPage from '@components/pages/InterviewPage/InterviewPage';
 import InterviewResultPage from '@components/pages/InterviewPage/InterviewResultPage';
 import Loading from '@components/common/loading/Loading';
-
+import { REFRESH_TOKEN } from '@constants/auth';
 import GlobalStyle from '@styles/GlobalStyle';
 import { getCookie } from '@services/cookie';
-import { REFRESH_TOKEN } from '@constants/auth';
+import useAuthStore from '@store/useAuthStore';
 import { initialSettingTokens } from '@services/api/authService';
 
 import PrivateRoute from './route';
 
 const App: React.FC = () => {
   const [isInitialized, setIsInitialized] = useState(false);
+  const { accessToken } = useAuthStore();
+
+  const initializeTokens = async () => {
+    if (getCookie(REFRESH_TOKEN)) {
+      await initialSettingTokens();
+    }
+    setIsInitialized(true);
+  };
 
   useEffect(() => {
-    const initializeTokens = async () => {
-      if (getCookie(REFRESH_TOKEN)) {
-        await initialSettingTokens();
+    if (accessToken || !getCookie(REFRESH_TOKEN)) {
+      return;
+    }
+
+    if (getCookie(REFRESH_TOKEN)) {
+      initializeTokens();
+      if (!getCookie(REFRESH_TOKEN) && !accessToken) {
+        window.location.replace('/');
       }
-      setIsInitialized(true);
-    };
-    initializeTokens();
-  }, []);
+    }
+  }, [accessToken]);
+
   if (!isInitialized) {
     return <Loading />;
   }

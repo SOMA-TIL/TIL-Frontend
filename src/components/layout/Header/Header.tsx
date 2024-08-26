@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import HeaderMenuItem, { HeaderLogoutButton } from '@components/layout/Header/HeaderMenuItem';
@@ -9,11 +8,7 @@ import HeaderArea, { Hr, Logo, Section } from './Header.style';
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, checkAuthentication } = useAuthStore();
-
-  useEffect(() => {
-    checkAuthentication();
-  }, [checkAuthentication]);
+  const { isAuthenticated } = useAuthStore();
 
   const handleHomeButton = () => {
     navigate('/');
