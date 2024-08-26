@@ -20,9 +20,15 @@ const Header: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
-    logoutClearStores();
-    window.location.replace('/');
+    try {
+      await logout();
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error(e);
+    } finally {
+      logoutClearStores();
+      window.location.replace('/');
+    }
   };
 
   return (
