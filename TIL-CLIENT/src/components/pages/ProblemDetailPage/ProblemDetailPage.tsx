@@ -27,7 +27,7 @@ import {
   RedoOutlined,
   FileDoneOutlined,
 } from '@ant-design/icons';
-import { CategoryTag } from '@styles/TagSTyle';
+import { CategoryTag } from '@styles/TagStyle';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,

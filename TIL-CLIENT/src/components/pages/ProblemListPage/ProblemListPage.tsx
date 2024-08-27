@@ -8,7 +8,7 @@ import useCategoryStore from '@store/useCategoryStore';
 import useAuthStore from '@store/useAuthStore';
 import { getProblemList, ProblemListParams } from '@services/api/problemService';
 import { ProblemOverviewInfo } from '@type/problem';
-import { CategoryTag } from '@styles/TagSTyle';
+import { CategoryTag } from '@styles/TagStyle';
 import { BookMarkSmallIcon } from '@styles/IconSvgStyle';
 import Pagination from '@components/common/pagination/Pagination';
 import {
