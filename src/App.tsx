@@ -33,6 +33,10 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    initializeTokens();
+  }, []);
+
+  useEffect(() => {
     if (accessToken || !getCookie(REFRESH_TOKEN)) {
       return;
     }
