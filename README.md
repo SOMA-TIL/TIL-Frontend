@@ -6,8 +6,9 @@
 > - **React**: 18.3.1
 > - **React DOM**: 18.3.1
 > - **Redux**: 5.0.1
-> - **React Redux**: ^9.1.2
+> - **React Redux**: 9.1.2
 > - **TypeScript**: 5.1.6
+> - **Zustand**: 4.5.4
 > - **Babel**: 7.24.7
 > - **ESLint**: 8.57.0
 > - **Prettier**: 3.3.2
@@ -61,18 +62,18 @@ npm install --global yarn
 
 프로젝트 디렉토리에 들어가서 의존성을 설치한다.
 
-```
-cd TIL-Frontend
+```bash
+cd TIL-CLIENT # or cd TIL-ADMIN
 yarn install
 ```
 
 #### 3. 개발 서버 실행
 
-개발 서버 실행한다. 
+개발 서버 실행한다.
 
-| ❗️주의❗️ 서버 실행 전 [.env.template](./.env.template) 파일을 참고하여 .env 파일을 생성하고 환경 변수를 설정해야 함  
+| ❗️주의❗️ 서버 실행 전 [.env.template](./.env.template) 파일을 참고하여 .env 파일을 생성하고 환경 변수를 설정해야 함
 
-```
+```bash
 yarn start
 ```
 
@@ -81,5 +82,6 @@ http://localhost:3000 에 접속한다.
 ---
 
 ### git hook 설정 적용
+
 - `yarn start` 명령어에 git hook 관련 설정을 최신화할 수 있도록 `yarn run copy-hooks`를 먼저 실행하도록 구성됨  
   (별도 설정없이 자동 적용 가능)

@@ -1,12 +1,12 @@
 #!/bin/sh
 
-yarn format
+yarn --cwd TIL-CLIENT format # && yarn --cwd TIL-ADMIN format
 if [ $? -ne 0 ]; then
   echo "format failed. Please check the error message."
   exit 1
 fi
 
-yarn lint
+yarn --cwd TIL-CLIENT lint # && yarn --cwd TIL-ADMIN lint
 if [ $? -ne 0 ]; then
   echo "lint failed. Please check the error message."
   exit 1

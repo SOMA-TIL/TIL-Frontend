@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import useAuthStore from '@store/useAuthStore';
+import { PROD_PROFILE } from '@constants/env';
 
 interface PrivateRouteProps {
   authentication?: boolean;
@@ -9,7 +10,7 @@ const PrivateRoute = ({ authentication = true }: PrivateRouteProps): React.React
   const { isAuthenticated } = useAuthStore();
 
   if (
-    process.env.REACT_APP_PROFILE !== 'prod' &&
+    process.env.REACT_APP_PROFILE !== PROD_PROFILE &&
     process.env.REACT_APP_AUTH_MODE_DISABLED === 'true'
   ) {
     return <Outlet />;

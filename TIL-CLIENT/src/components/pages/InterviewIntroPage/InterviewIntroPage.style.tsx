@@ -68,6 +68,6 @@ export const SelectedCategoryButton = styled.button`
   margin: 5px;
 
   &:hover {
-    background-color: #F16060};
+    background-color: #f16060;
   }
 `;
