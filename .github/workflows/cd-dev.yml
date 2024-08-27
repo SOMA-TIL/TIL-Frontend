@@ -5,9 +5,31 @@ on:
     branches: [dev]
 
 jobs:
-  deploy:
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
+    outputs:
+      client: ${{steps.filter.outputs.client}}
+      admin: ${{steps.filter.outputs.admin}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          token: ${{ secrets.TOKEN }}
+          filters: |
+            client:
+              - 'TIL-CLIENT/**'
+            admin:
+              - 'TIL-ADMIN/**'
 
+  til-client-deploy:
+    needs: changes
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TIL-CLIENT
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,3 +56,14 @@ jobs:
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+
+  til-admin-deploy:
+    needs: changes
+    if: ${{ needs.changes.outputs.admin == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TIL-ADMIN
+    steps:
+      - name: TEMP echo
+        run: echo 'til-admin todo'
