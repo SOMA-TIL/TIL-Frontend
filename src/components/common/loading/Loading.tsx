@@ -2,7 +2,7 @@ import { LoadingContainer, LoadingIcon } from './Loading.style';
 
 const Loading = () => (
   <LoadingContainer>
-    <LoadingIcon />
+    <LoadingIcon src="/images/loading.gif" alt="logo" style={{ width: '100px' }} />
   </LoadingContainer>
 );
 
