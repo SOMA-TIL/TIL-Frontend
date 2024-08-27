@@ -2,32 +2,43 @@ name: CI
 
 on:
   pull_request:
-    branches: [dev]
+    branches: [ dev ]
+
+permissions:
+  contents: write
 
 jobs:
-  build-test-lint-format:
+  changes:
+    name: Check for changes
     runs-on: ubuntu-latest
-
+    outputs:
+      client: ${{steps.filter.outputs.client}}
+      admin: ${{steps.filter.outputs.admin}}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
         with:
-          node-version: '18'
+          token: ${{ secrets.TOKEN }}
+          filters: |
+            client:
+              - 'TIL-CLIENT/**'
+            admin:
+              - 'TIL-ADMIN/**'
 
-      - name: Install dependencies
-        run: yarn install
+  til-client-check:
+    needs: changes
+    if: ${{ needs.changes.outputs.client == 'true' }}
+    uses: ./.github/workflows/ci-build-test-lint-format.yml
+    with:
+      working_dir: TIL-CLIENT
 
-      - name: Build the project
-        run: yarn build
-
-      - name: Run tests
-        run: yarn test --passWithNoTests
-
-      - name: Run formatter check
-        run: yarn format
-
-      - name: Run linter
-        run: yarn lint
+  til-admin-check:
+    needs: changes
+    if: ${{ needs.changes.outputs.admin == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: TEMP echo
+        run: echo 'til-admin todo'
+#    uses: ./.github/workflows/ci-build-test-lint-format.yml
+#    with:
+#      working_dir: TIL-ADMIN
