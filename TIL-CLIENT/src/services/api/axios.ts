@@ -8,7 +8,7 @@ import axios, { AxiosResponse } from 'axios';
 
 // axios 인스턴스 생성
 const apiClient = axios.create({
-  baseURL: process.env.REACT_APP_TIL_API_URL, // 기본 URL 설정
+  baseURL: import.meta.env.VITE_TIL_API_URL, // 기본 URL 설정
   headers: {
     'Content-Type': 'application/json',
   },
@@ -105,7 +105,7 @@ apiClient.interceptors.response.use(
 const refreshToken = async (): Promise<ApiResponse> => {
   try {
     const refreshToken = getCookie(REFRESH_TOKEN);
-    const response = await axios.get(`${process.env.REACT_APP_TIL_API_URL}/auth/reissue`, {
+    const response = await axios.get(`${import.meta.env.VITE_TIL_API_URL}/auth/reissue`, {
       headers: {
         Authorization: formatBearerToken(refreshToken),
         'Content-Type': 'application/json',

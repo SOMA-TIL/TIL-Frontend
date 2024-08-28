@@ -6,7 +6,7 @@ import { LOCAL_PROFILE } from '@constants/env';
 const cookies = new Cookies();
 
 const defaultOptions: CookieSetOptions = {
-  secure: process.env.REACT_APP_PROFILE !== LOCAL_PROFILE, // HTTPS 프로토콜에서만 전송
+  secure: import.meta.env.VITE_PROFILE !== LOCAL_PROFILE, // HTTPS 프로토콜에서만 전송
 };
 
 export const setCookie = (name: string, value: string, options?: CookieSetOptions) => {
