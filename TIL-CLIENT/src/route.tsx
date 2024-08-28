@@ -10,8 +10,8 @@ const PrivateRoute = ({ authentication = true }: PrivateRouteProps): React.React
   const { isAuthenticated } = useAuthStore();
 
   if (
-    process.env.REACT_APP_PROFILE !== PROD_PROFILE &&
-    process.env.REACT_APP_AUTH_MODE_DISABLED === 'true'
+    import.meta.env.VITE_PROFILE !== PROD_PROFILE &&
+    import.meta.env.VITE_AUTH_MODE_DISABLED === 'true'
   ) {
     return <Outlet />;
   }

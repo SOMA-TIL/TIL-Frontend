@@ -1,4 +1,4 @@
-name: '[CD] Deploy to Dev Server'
+name: "[CD] Deploy to Dev Server"
 
 on:
   push:
@@ -43,8 +43,8 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo ${{ secrets.REACT_APP_PROFILE_VALUE }} >> $GITHUB_ENV
-          echo ${{ secrets.REACT_APP_TIL_API_URL_VALUE }} >> $GITHUB_ENV
+          echo ${{ secrets.VITE_PROFILE_VALUE }} >> $GITHUB_ENV
+          echo ${{ secrets.VITE_TIL_API_URL_VALUE }} >> $GITHUB_ENV
 
       - name: Build project
         run: |
