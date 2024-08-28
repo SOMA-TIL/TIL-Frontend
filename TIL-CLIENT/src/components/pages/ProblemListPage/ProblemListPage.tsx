@@ -11,6 +11,7 @@ import { ProblemOverviewInfo } from '@type/problem';
 import { CategoryTag } from '@styles/TagStyle';
 import { BookMarkSmallIcon } from '@styles/IconSvgStyle';
 import Pagination from '@components/common/pagination/Pagination';
+import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
 import {
   ProblemListContainer,
   SubTitle,
@@ -31,15 +32,19 @@ import {
 } from './ProblemListPage.style';
 import SearchBar from './SearchBar';
 
+const { Option } = OrderOptionDropDown;
+
 const ProblemListPage: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuthStore();
   const [problemList, setProblemList] = useState<ProblemOverviewInfo[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize] = useState<number>(7);
   const [totalItems, setTotalItems] = useState<number>(0);
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [sort, setSort] = useState<string>('id');
+  const [order, setOrder] = useState<string>('asc');
   const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const [initSearchParam, setInitSearchParam] = useState<ProblemListParams | null>();
@@ -63,6 +68,8 @@ const ProblemListPage: React.FC = () => {
         page: parseInt(params.get('page') || '1', 10) - 1,
         size: pageSize,
         isFavorite: Boolean(params.get('isFavorite')) || undefined,
+        sort,
+        order,
       };
 
       setInitSearchParam(searchParams);
@@ -76,7 +83,7 @@ const ProblemListPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [location.search, pageSize, getCategoryList, setIsLoading]);
+  }, [location.search, pageSize, getCategoryList, setIsLoading, sort, order]);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -87,6 +94,34 @@ const ProblemListPage: React.FC = () => {
   useEffect(() => {
     fetchProblemList();
   }, [currentPage, location.search, fetchProblemList]);
+
+  const handleSortChange = (value: unknown) => {
+    if (typeof value !== 'string') {
+      return;
+    }
+
+    if (!value) {
+      setSort('id');
+      setOrder('asc');
+      return;
+    }
+
+    if (value.endsWith('_desc')) {
+      setSort(value.replace('_desc', ''));
+      setOrder('desc');
+    } else {
+      setSort(value.replace('_asc', ''));
+      setOrder('asc');
+    }
+
+    const params = new URLSearchParams(location.search);
+    params.set(
+      'sort',
+      value.includes('_desc') ? value.replace('_desc', '') : value.replace('_asc', ''),
+    );
+    params.set('order', value.includes('_desc') ? 'desc' : 'asc');
+    navigate(`?${params.toString()}`);
+  };
 
   const handlePageChange = (page: number) => {
     const params = new URLSearchParams(location.search);
@@ -121,92 +156,103 @@ const ProblemListPage: React.FC = () => {
 
   return (
     <BasicPageLayout>
-      <ProblemListContainer>
-        <SearchBarContainer>
-          <SubTitle>기술 학습</SubTitle>
-          <SearchBar categoryList={categoryList} initSearchParam={initSearchParam || undefined} />
-        </SearchBarContainer>
-        <TableContentContainer>
-          <TableOptionContainer>
-            <OptionGroup>
-              <TotalItems>{totalItems} 문제</TotalItems>
-              <FavoriteButton disabled={!isAuthenticated} onClick={handleClickFavorite}>
-                <BookMarkSmallIcon isFavorite={getFavoriteParam()} disable={!isAuthenticated} />{' '}
-                즐겨찾기
-              </FavoriteButton>
-            </OptionGroup>
-            <OptionGroup>
-              <OrderOptionDropDown> </OrderOptionDropDown>
-            </OptionGroup>
-          </TableOptionContainer>
-          {problemList.length === 0 ? (
-            <div>문제가 없습니다.</div>
-          ) : (
-            <>
-              <CustomTable>
-                <TableHeader>
-                  <TableHeaderCell width="100px">상태</TableHeaderCell>
-                  <TableHeaderCell width="15px" style={{ padding: 0 }} />
-                  <TableHeaderCell align="left">제목</TableHeaderCell>
-                  <TableHeaderCell width="180px">난이도</TableHeaderCell>
-                  <TableHeaderCell width="180px">완료한 사람</TableHeaderCell>
-                  <TableHeaderCell width="180px">정답률</TableHeaderCell>
-                </TableHeader>
-                <tbody>
-                  {problemList.map((problem) => (
-                    <TableRow key={problem.id} onClick={() => onRowClick(problem)}>
-                      <TableCell>
-                        {problem.userStatus && problem.userStatus.isAttempted
-                          ? (() => {
-                              const gradingResult = problem.userStatus.isPassed ? 'PASS' : 'FAIL';
-                              return (
-                                <StatusText color={getGradingResultColor(gradingResult)}>
-                                  {gradingResult}
-                                </StatusText>
-                              );
-                            })()
-                          : null}
-                      </TableCell>
-                      <TableCell style={{ padding: 0 }}>
-                        {problem.userStatus?.isFavorite ? (
-                          <BookMarkSmallIcon isFavorite={problem.userStatus.isFavorite} />
-                        ) : null}
-                      </TableCell>
-                      <TableCell align="left">
-                        {problem.title}
-                        {problem.categoryList.map((categoryId) => {
-                          const category = categoryList.find((c) => c.id === categoryId);
-                          return category ? (
-                            <CategoryTag key={category.id} tagColor={category.color}>
-                              {category.tag}
-                            </CategoryTag>
-                          ) : null;
-                        })}
-                      </TableCell>
-                      <TableCell>
-                        <LevelText>{`Lv.${problem.level}`}</LevelText>
-                      </TableCell>
-                      <TableCell>
-                        {problem.finishCount !== undefined
-                          ? problem.finishCount.toLocaleString('ko-KR')
-                          : '0'}
-                        명
-                      </TableCell>
-                      <TableCell>{problem.passRate}%</TableCell>
-                    </TableRow>
-                  ))}
-                </tbody>
-              </CustomTable>
-              <Pagination
-                currentPage={currentPage}
-                totalItems={totalItems}
-                pageSize={pageSize}
-                onPageChange={handlePageChange}
-              />
-            </>
-          )}
-        </TableContentContainer>
-      </ProblemListContainer>
+      <StyledConfigProvider>
+        <ProblemListContainer>
+          <SearchBarContainer>
+            <SubTitle>기술 학습</SubTitle>
+            <SearchBar categoryList={categoryList} initSearchParam={initSearchParam || undefined} />
+          </SearchBarContainer>
+          <TableContentContainer>
+            <TableOptionContainer>
+              <OptionGroup>
+                <TotalItems>{totalItems} 문제</TotalItems>
+                <FavoriteButton disabled={!isAuthenticated} onClick={handleClickFavorite}>
+                  <BookMarkSmallIcon isFavorite={getFavoriteParam()} disable={!isAuthenticated} />{' '}
+                  즐겨찾기
+                </FavoriteButton>
+              </OptionGroup>
+              <OptionGroup>
+                <OrderOptionDropDown value={`${sort}_${order}`} onChange={handleSortChange}>
+                  <Option value="id_asc">최신순</Option>
+                  <Option value="id_desc">오래된 순</Option>
+                  <Option value="level_asc">난이도 낮은 순</Option>
+                  <Option value="level_desc">난이도 높은 순</Option>
+                  <Option value="passedCount_desc">완료한 사람 많은 순</Option>
+                  <Option value="passedCount_asc">완료한 사람 적은 순</Option>
+                  <Option value="passRate_desc">정답률 높은 순</Option>
+                  <Option value="passRate_asc">정답률 낮은 순</Option>
+                </OrderOptionDropDown>
+              </OptionGroup>
+            </TableOptionContainer>
+            {problemList.length === 0 ? (
+              <div>문제가 없습니다.</div>
+            ) : (
+              <>
+                <CustomTable>
+                  <TableHeader>
+                    <TableHeaderCell width="100px">상태</TableHeaderCell>
+                    <TableHeaderCell width="15px" style={{ padding: 0 }} />
+                    <TableHeaderCell align="left">제목</TableHeaderCell>
+                    <TableHeaderCell width="180px">난이도</TableHeaderCell>
+                    <TableHeaderCell width="180px">완료한 사람</TableHeaderCell>
+                    <TableHeaderCell width="180px">정답률</TableHeaderCell>
+                  </TableHeader>
+                  <tbody>
+                    {problemList.map((problem) => (
+                      <TableRow key={problem.id} onClick={() => onRowClick(problem)}>
+                        <TableCell>
+                          {problem.userStatus && problem.userStatus.isAttempted
+                            ? (() => {
+                                const gradingResult = problem.userStatus.isPassed ? 'PASS' : 'FAIL';
+                                return (
+                                  <StatusText color={getGradingResultColor(gradingResult)}>
+                                    {gradingResult}
+                                  </StatusText>
+                                );
+                              })()
+                            : null}
+                        </TableCell>
+                        <TableCell style={{ padding: 0 }}>
+                          {problem.userStatus?.isFavorite ? (
+                            <BookMarkSmallIcon isFavorite={problem.userStatus.isFavorite} />
+                          ) : null}
+                        </TableCell>
+                        <TableCell align="left">
+                          {problem.title}
+                          {problem.categoryList.map((categoryId) => {
+                            const category = categoryList.find((c) => c.id === categoryId);
+                            return category ? (
+                              <CategoryTag key={category.id} tagColor={category.color}>
+                                {category.tag}
+                              </CategoryTag>
+                            ) : null;
+                          })}
+                        </TableCell>
+                        <TableCell>
+                          <LevelText>{`Lv.${problem.level}`}</LevelText>
+                        </TableCell>
+                        <TableCell>
+                          {problem.finishCount !== undefined
+                            ? problem.finishCount.toLocaleString('ko-KR')
+                            : '0'}
+                          명
+                        </TableCell>
+                        <TableCell>{problem.passRate}%</TableCell>
+                      </TableRow>
+                    ))}
+                  </tbody>
+                </CustomTable>
+                <Pagination
+                  currentPage={currentPage}
+                  totalItems={totalItems}
+                  pageSize={pageSize}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
+          </TableContentContainer>
+        </ProblemListContainer>
+      </StyledConfigProvider>
     </BasicPageLayout>
   );
 };

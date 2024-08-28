@@ -1,4 +1,5 @@
 import { BLACK, LIGHT_GREY, WHITE } from '@styles/pallete';
+import { Select as AntSelect } from 'antd';
 import styled from 'styled-components';
 
 export const ProblemListContainer = styled.div`
@@ -66,12 +67,15 @@ export const FavoriteButton = styled.button`
   }
 `;
 
-export const OrderOptionDropDown = styled.select`
-  border-radius: 5px;
-  border: 1px solid #bbb;
-  padding: 5px 10px;
-  font-size: 15px;
-  cursor: pointer;
+export const OrderOptionDropDown = styled(AntSelect)`
+  width: 200px;
+
+  .ant-select-selector {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    border-radius: 5px;
+  }
 `;
 
 export const CustomTable = styled.table`
