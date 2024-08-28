@@ -3,12 +3,12 @@
 ### 사용 기술 스택 및 버전
 
 > - **React**: 18.3.1
-> - **React**: 18.3.1
 > - **React DOM**: 18.3.1
 > - **Redux**: 5.0.1
 > - **React Redux**: 9.1.2
 > - **TypeScript**: 5.1.6
 > - **Zustand**: 4.5.4
+> - **Vite**: 5.4.2
 > - **Babel**: 7.24.7
 > - **ESLint**: 8.57.0
 > - **Prettier**: 3.3.2
