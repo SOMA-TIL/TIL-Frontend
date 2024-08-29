@@ -1,0 +1,17 @@
+// 절대경로 설정을 위한 tsconfig.paths.json 파일
+// tsconfig.json 파일에서 extends로 추가하여 사용
+
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
+      "@services/*": ["src/services/*"],
+      "@store/*": ["src/store/*"],
+      "@styles/*": ["src/styles/*"],
+      "@type/*": ["src/type/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  }
+}
