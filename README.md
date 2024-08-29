@@ -71,13 +71,14 @@ yarn install
 
 개발 서버 실행한다.
 
-| ❗️주의❗️ 서버 실행 전 [.env.template](./.env.template) 파일을 참고하여 .env 파일을 생성하고 환경 변수를 설정해야 함
+| ❗️주의❗️ 서버 실행 전 .env.template 파일을 참고하여 .env 파일을 생성하고 환경 변수를 설정해야 함
 
 ```bash
 yarn start
 ```
 
-http://localhost:3000 에 접속한다.
+- TIL-CLIENT : http://localhost:3000
+- TIL-ADMIN : http://localhost:5000
 
 ---
 
