@@ -44,7 +44,7 @@ const ProblemListPage: React.FC = () => {
   const [pageSize] = useState<number>(7);
   const [totalItems, setTotalItems] = useState<number>(0);
   const [sort, setSort] = useState<string>('id');
-  const [order, setOrder] = useState<string>('asc');
+  const [order, setOrder] = useState<string>('desc');
   const { getCategoryList, categoryList } = useCategoryStore();
   const { getIsLoading, setIsLoading } = useLoadingStore();
   const [initSearchParam, setInitSearchParam] = useState<ProblemListParams | null>();
@@ -102,7 +102,7 @@ const ProblemListPage: React.FC = () => {
 
     if (!value) {
       setSort('id');
-      setOrder('asc');
+      setOrder('desc');
       return;
     }
 
@@ -173,8 +173,8 @@ const ProblemListPage: React.FC = () => {
               </OptionGroup>
               <OptionGroup>
                 <OrderOptionDropDown value={`${sort}_${order}`} onChange={handleSortChange}>
-                  <Option value="id_asc">최신순</Option>
-                  <Option value="id_desc">오래된 순</Option>
+                  <Option value="id_desc">최신순</Option>
+                  <Option value="id_asc">오래된 순</Option>
                   <Option value="level_asc">난이도 낮은 순</Option>
                   <Option value="level_desc">난이도 높은 순</Option>
                   <Option value="passedCount_desc">완료한 사람 많은 순</Option>
