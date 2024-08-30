@@ -4,6 +4,9 @@ on:
   push:
     branches: [dev]
 
+permissions:
+  contents: write
+
 jobs:
   changes:
     name: Check for changes
@@ -26,44 +29,25 @@ jobs:
   til-client-deploy:
     needs: changes
     if: ${{ needs.changes.outputs.client == 'true' }}
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: TIL-CLIENT
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: Set environment variables
-        run: |
-          echo ${{ secrets.VITE_PROFILE_VALUE }} >> $GITHUB_ENV
-          echo ${{ secrets.VITE_TIL_API_URL_VALUE }} >> $GITHUB_ENV
-
-      - name: Build project
-        run: |
-          yarn install
-          yarn build
-      - name: Sync S3 bucket
-        run: aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }} --delete
-
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
+    uses: ./.github/workflows/cd-s3-deploy.yml
+    secrets: inherit
+    with:
+      working_dir: TIL-CLIENT
+      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
+      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
+    env:
+      VITE_PROFILE: dev
+      VITE_TIL_API_URL: ${{ secrets.DEV_TIL_API_URL }}
 
   til-admin-deploy:
     needs: changes
     if: ${{ needs.changes.outputs.admin == 'true' }}
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: TIL-ADMIN
-    steps:
-      - name: TEMP echo
-        run: echo 'til-admin todo'
+    uses: ./.github/workflows/cd-s3-deploy.yml
+    secrets: inherit
+    with:
+      working_dir: TIL-ADMIN
+      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
+      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
+    env:
+      VITE_PROFILE: dev
+      VITE_TIL_ADMIN_API_URL: ${{ secrets.DEV_TIL_ADMIN_API_URL }}
