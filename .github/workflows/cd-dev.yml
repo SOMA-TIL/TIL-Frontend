@@ -30,12 +30,13 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.client == 'true' }}
     uses: ./.github/workflows/cd-s3-deploy.yml
-    secrets: inherit
     with:
       working_dir: TIL-CLIENT
-      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
-      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
-    env:
+    secrets:
+      s3_bucket: ${{ secrets.DEV_S3_CLIENT_BUCKET_NAME }}
+      cloudfront: ${{ secrets.DEV_CLOUDFRONT_CLIENT_DISTRIBUTION_ID }}
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       VITE_PROFILE: dev
       VITE_TIL_API_URL: ${{ secrets.DEV_TIL_API_URL }}
 
@@ -43,11 +44,12 @@ jobs:
     needs: changes
     if: ${{ needs.changes.outputs.admin == 'true' }}
     uses: ./.github/workflows/cd-s3-deploy.yml
-    secrets: inherit
     with:
       working_dir: TIL-ADMIN
-      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
-      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
-    env:
+    secrets:
+      s3_bucket: ${{ secrets.DEV_S3_ADMIN_BUCKET_NAME }}
+      cloudfront: ${{ secrets.DEV_CLOUDFRONT_ADMIN_DISTRIBUTION_ID }}
+      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       VITE_PROFILE: dev
       VITE_TIL_ADMIN_API_URL: ${{ secrets.DEV_TIL_ADMIN_API_URL }}

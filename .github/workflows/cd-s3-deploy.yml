@@ -6,16 +6,29 @@ on:
       working_dir:
         required: true
         type: string
+    secrets:
       s3_bucket:
         required: true
-        type: string
       cloudfront:
         required: true
-        type: string
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+      VITE_PROFILE:
+        required: true
+      VITE_TIL_API_URL:
+        required: false
+      VITE_TIL_ADMIN_API_URL:
+        required: false
 
 jobs:
   s3-deploy:
     runs-on: ubuntu-latest
+    env:
+      VITE_PROFILE: ${{ secrets.VITE_PROFILE }}
+      VITE_TIL_API_URL: ${{ secrets.VITE_TIL_API_URL }}
+      VITE_TIL_ADMIN_API_URL: ${{ secrets.VITE_TIL_ADMIN_API_URL }}
     defaults:
       run:
         working-directory: ${{ inputs.working_dir }}
@@ -26,8 +39,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{ secrets.aws_access_key_id }}
+          aws-secret-access-key: ${{ secrets.aws_secret_access_key }}
           aws-region: ap-northeast-2
 
       - name: Build project
@@ -36,8 +49,8 @@ jobs:
           yarn build
 
       - name: Sync S3 bucket
-        run: aws s3 sync ./dist s3://${{ inputs.s3_bucket }} --delete
+        run: aws s3 sync ./dist s3://${{ secrets.s3_bucket }} --delete
 
       - name: Invalidate CloudFront cache
         run: |
-          aws cloudfront create-invalidation --distribution-id ${{ inputs.cloudfront }} --paths "/*"
+          aws cloudfront create-invalidation --distribution-id ${{ secrets.cloudfront }} --paths "/*"
