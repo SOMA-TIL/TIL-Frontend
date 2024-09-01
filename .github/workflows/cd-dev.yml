@@ -33,8 +33,8 @@ jobs:
     secrets: inherit
     with:
       working_dir: TIL-CLIENT
-      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
-      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
+      s3_bucket: ${{ secrets.DEV_S3_CLIENT_BUCKET_NAME }} 
+      cloudfront: ${{ secrets.DEV_CLOUDFRONT_CLIENT_DISTRIBUTION_ID }} 
     env:
       VITE_PROFILE: dev
       VITE_TIL_API_URL: ${{ secrets.DEV_TIL_API_URL }}
@@ -46,8 +46,8 @@ jobs:
     secrets: inherit
     with:
       working_dir: TIL-ADMIN
-      s3_bucket: ${{ secrets.S3_BUCKET_NAME }} # TODO: Dev Admin S3 Bucket 정보 변경
-      cloudfront: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} # TODO: Dev Admin CloudFront Distribution ID 변경
+      s3_bucket: ${{ secrets.DEV_S3_ADMIN_BUCKET_NAME }} 
+      cloudfront: ${{ secrets.DEV_CLOUDFRONT_ADMIN_DISTRIBUTION_ID }} 
     env:
       VITE_PROFILE: dev
       VITE_TIL_ADMIN_API_URL: ${{ secrets.DEV_TIL_ADMIN_API_URL }}
