@@ -171,6 +171,10 @@ const ProblemDetailPage: React.FC = () => {
     navigate('/login');
   };
 
+  const handleViewOtherAnswers = () => {
+    navigate(`/problem/${id}/answers`);
+  };
+
   const handleClickFavorite = async () => {
     if (!isAuthenticated) {
       notify({
@@ -281,7 +285,7 @@ const ProblemDetailPage: React.FC = () => {
                 <QuestionCircleOutlined />
                 질문하기
               </ProblemSolveFooterButton>
-              <ProblemSolveFooterButton type="">
+              <ProblemSolveFooterButton type="" onClick={handleViewOtherAnswers}>
                 <MessageOutlined />
                 다른 사람의 답변
               </ProblemSolveFooterButton>
