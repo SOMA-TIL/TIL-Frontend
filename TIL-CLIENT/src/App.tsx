@@ -12,13 +12,13 @@ import MyPageChangePassword from '@components/pages/MyPage/MyPageChangePassword'
 import MyPageChangeInfo from '@components/pages/MyPage/MyPageChangeInfo';
 import InterviewPage from '@components/pages/InterviewPage/InterviewPage';
 import InterviewResultPage from '@components/pages/InterviewPage/InterviewResultPage';
+import OthersAnswerPage from '@components/pages/OthersAnswerPage/OthersAnswerPage';
 import Loading from '@components/common/loading/Loading';
 import { REFRESH_TOKEN } from '@constants/auth';
 import GlobalStyle from '@styles/GlobalStyle';
 import { getCookie } from '@services/cookie';
 import useAuthStore from '@store/useAuthStore';
 import { initialSettingTokens } from '@services/api/authService';
-
 import PrivateRoute from './route';
 
 const App: React.FC = () => {
@@ -61,6 +61,7 @@ const App: React.FC = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/problem" element={<ProblemListPage />} />
         <Route path="/problem/:id" element={<ProblemDetailPage />} />
+        <Route path="/problem/:id/othersAnswer" element={<OthersAnswerPage />} />
         {/* 인증이 필요한 페이지 정의 */}
         <Route element={<PrivateRoute />}>
           <Route path="/mypage" element={<MyPageChangeInfo />} />
