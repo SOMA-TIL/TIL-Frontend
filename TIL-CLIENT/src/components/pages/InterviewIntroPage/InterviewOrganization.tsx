@@ -17,12 +17,14 @@ import {
 } from './InterviewIntroPage.style';
 import SelectBar from './SelectBar';
 import OrganizationFooter from './OrganizationFooter';
+import SelectBox from './SelectBox';
 
 const InterviewOrganization = () => {
   const navigate = useNavigate();
   const { notify } = useToast();
 
   const [categoryList, setCategoryList] = useState<Category[]>([]);
+  const [questionSize, setQuestionSize] = useState<number>(3);
   const [selectedCategory, setSelectedCategory] = useState<Category>({ id: -1, tag: '' });
   const [selectedCategoryList, setSelectedCategoryList] = useState<Category[]>([]);
 
@@ -70,6 +72,11 @@ const InterviewOrganization = () => {
     setSelectedCategoryList([...selectedCategoryList, newCategory]);
   };
 
+  const handleQuestionSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const val = parseInt(e.target.value, 10);
+    setQuestionSize(val);
+  };
+
   const handleCategoryDeleteButton = (e: React.MouseEvent) => {
     const { value, innerText } = e.target as HTMLButtonElement;
     const deleteCategory: Category = { id: Number(value), tag: innerText };
@@ -94,18 +101,23 @@ const InterviewOrganization = () => {
       return;
     }
 
-    // todo: 카테고리 여러개 선택 가능하도록 구조 변경
-    if (selectedCategoryIdList.length > 1) {
+    // 카테고리 개수 선택 제한
+    if (selectedCategoryIdList.length > 3) {
       notify({
         message: '면접 구성 실패',
-        description: '현재 카테고리는 1개만 선택 가능합니다.',
+        description: '현재 카테고리는 3개 이하로만 선택 가능합니다.',
         type: TOAST_TYPE.ERROR,
         placement: TOAST_POS.TOP,
       });
       return;
     }
 
-    const promise = createInterview({ categoryIdList: selectedCategoryIdList });
+    const promise = createInterview({
+      interviewType: 'NORMAL',
+      categoryIdList: selectedCategoryIdList,
+      questionSize,
+      portfolio: '',
+    });
     const postData = () => {
       promise
         .then((data) => data.result?.interviewCode.code)
@@ -133,27 +145,7 @@ const InterviewOrganization = () => {
   return (
     <InterviewContentContainer>
       <OrganizationSectionContainer>
-        <OrganizationSectionTitle>포트폴리오로 구성하기</OrganizationSectionTitle>
-        <OrganizationSectionDescription>
-          포트폴리오를 업로드하여 면접 내용을 자동으로 구성합니다.
-        </OrganizationSectionDescription>
-        <SelectBar
-          optionList={[{ name: 'pdf, docx, hwp, txt', value: '' }]}
-          value="value"
-          onChange={() => null}
-          text="구성하기"
-          onClick={() => {
-            notify({
-              message: '포트폴리오 면접 구성',
-              description: '현재 버전에서 지원하지 않는 기능입니다.',
-              type: TOAST_TYPE.ERROR,
-              placement: TOAST_POS.TOP,
-            });
-          }}
-        />
-      </OrganizationSectionContainer>
-      <OrganizationSectionContainer>
-        <OrganizationSectionTitle>직접 선택하여 구성하기</OrganizationSectionTitle>
+        <OrganizationSectionTitle>카테고리 선택하기</OrganizationSectionTitle>
         <OrganizationSectionDescription>
           기술 카테고리를 선택하여 면접 내용을 직접 구성합니다.
         </OrganizationSectionDescription>
@@ -169,10 +161,24 @@ const InterviewOrganization = () => {
           onClick={handleCategoryAddButton}
         />
       </OrganizationSectionContainer>
+      <OrganizationSectionContainer>
+        <OrganizationSectionTitle>질문 개수 선택하기</OrganizationSectionTitle>
+        <OrganizationSectionDescription>
+          모의 면접의 질문 개수를 결정합니다.
+        </OrganizationSectionDescription>
+        <SelectBox
+          optionList={Array.from({ length: 8 }, (v, i) => ({
+            name: String(i + 3),
+            value: String(i + 3),
+          }))}
+          value={String(questionSize)}
+          onChange={handleQuestionSizeChange}
+        />
+      </OrganizationSectionContainer>
       <OrganizationSectionContainerNoBorder>
         <OrganizationSectionTitle>현재 면접 구성</OrganizationSectionTitle>
         <OrganizationSectionDescription>
-          모의 기술 면접에서 다음과 같은 내용들이 질문으로 나올 수 있습니다.
+          모의 기술 면접에서 해당 카테고리와 연관된 질문들이 출제됩니다.
         </OrganizationSectionDescription>
         {selectedCategoryList.map((category) => (
           <SelectedCategoryButton

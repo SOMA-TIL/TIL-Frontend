@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import InterviewOrganization from '@components/pages/InterviewIntroPage/InterviewOrganization';
-import InterviewHistory from '@components/pages/InterviewIntroPage/InterviewHistory';
+import InterviewExOrganization from '@components/pages/InterviewIntroPage/InterviewExOrganization';
 import BasicPageLayout from '@components/layout/BasicPageLayout';
 
 import SubHeader from './SubHeader';
@@ -22,7 +22,7 @@ const InterviewIntroPage = () => {
   const contents: Content = {
     // 전환할 탭에서 보여줄 콘텐츠 컴포넌트 목록
     InterviewOrganization: <InterviewOrganization />,
-    InterviewHistory: <InterviewHistory />,
+    InterviewExOrganization: <InterviewExOrganization />,
   };
 
   return (

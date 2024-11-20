@@ -5,6 +5,7 @@ import { useToast } from '@components/common/notification/ToastProvider';
 import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
 import {
   getInterviewInfo,
+  getIntreviewStatus,
   solveInterviewProblem,
   submitInterview,
 } from '@services/api/InterviewService';
@@ -12,13 +13,15 @@ import { InterviewProblemInfo } from '@type/interview';
 import useLoadingStore from '@store/useLoadingStore';
 import useCategoryStore from '@store/useCategoryStore';
 import Loading from '@components/common/loading/Loading';
-import { INTERVIEW_PROBLEM_STATUS } from '@constants/interview';
+import { INTERVIEW_PROBLEM_STATUS, INTERVIEW_STATUS } from '@constants/interview';
 import InterviewHeader from './InterviewHeader';
 import InterviewFooter from './InterviewFooter';
 import InterviewMain from './InterviewMain';
 import InterviewInfo from './InterviewInfo';
 
 const InterviewPage: React.FC = () => {
+  const INTERVAL_REFRESH_TIME = 1500;
+
   const navigate = useNavigate();
   const { notify } = useToast();
 
@@ -35,6 +38,24 @@ const InterviewPage: React.FC = () => {
 
   const [currentSequence, setCurrentSequence] = useState<number>(1);
   const [currentAnswer, setCurrentAnswer] = useState<string>('');
+
+  const [loadingStatus, setLoadingStatus] = useState(true);
+
+  useEffect(() => {
+    const intervalStatusCheck = setInterval(async () => {
+      if (loadingStatus) {
+        const response = await getIntreviewStatus(code as string);
+
+        if (response.result?.status === INTERVIEW_STATUS.PROCESSING) {
+          setLoadingStatus(false);
+          clearInterval(intervalStatusCheck);
+        }
+      }
+    }, INTERVAL_REFRESH_TIME);
+    return () => {
+      clearInterval(intervalStatusCheck);
+    };
+  }, [code, loadingStatus]);
 
   const fetchCategoryList = async () => {
     try {
@@ -99,9 +120,11 @@ const InterviewPage: React.FC = () => {
           navigate(`/interview`);
         });
     };
-    getData();
+    if (!loadingStatus) {
+      getData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [code, navigate, notify]);
+  }, [loadingStatus, navigate, notify]);
 
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentAnswer(e.currentTarget.value);
@@ -181,7 +204,7 @@ const InterviewPage: React.FC = () => {
     navigate(`/interview/${code}/result`);
   };
 
-  if (getIsLoading()) {
+  if (loadingStatus || getIsLoading()) {
     return <Loading />;
   }
 
