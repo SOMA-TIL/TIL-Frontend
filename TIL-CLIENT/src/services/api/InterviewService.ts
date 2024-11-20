@@ -4,7 +4,10 @@ import { GradingResultWithProblemInfo } from '@type/grading';
 import { InterviewCode, InterviewProblemInfo, InterviewStatus } from '@type/interview';
 
 export interface InterviewCreateData {
+  interviewType: string;
   categoryIdList: number[];
+  questionSize: number;
+  portfolio: string;
 }
 
 export interface InterviewCodeData {
@@ -12,6 +15,7 @@ export interface InterviewCodeData {
 }
 
 export interface InterviewInfoData {
+  type: string;
   createdDate: string;
   categoryIdList: number[];
   problemList: InterviewProblemInfo[];

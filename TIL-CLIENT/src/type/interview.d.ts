@@ -9,10 +9,8 @@ export interface InterviewCode {
 }
 
 export interface InterviewProblemInfo {
-  id: number;
   answer: string;
   sequence: number;
   status: InterviewProblemStatus;
-  problemId: number;
   question: string;
 }

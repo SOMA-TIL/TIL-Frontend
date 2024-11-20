@@ -12,14 +12,14 @@ const SubHeader: React.FC<SubHeaderButtonProps> = ({ selected, onClick }) => (
       onClick={onClick}
       isSelected={selected === 'InterviewOrganization'}
     >
-      면접 구성하기
+      기술 기반 면접 구성하기
     </SubHeaderButton>
     <SubHeaderButton
-      name="InterviewHistory"
+      name="InterviewExOrganization"
       onClick={onClick}
-      isSelected={selected === 'InterviewHistory'}
+      isSelected={selected === 'InterviewExOrganization'}
     >
-      기록 확인하기
+      경험 기반 면접 구성하기
     </SubHeaderButton>
   </SubHeaderContainer>
 );

@@ -22,6 +22,7 @@ apiClient.interceptors.request.use(
     if (accessToken) {
       newConfig.headers.Authorization = formatBearerToken(accessToken); // 헤더에 토큰 추가
     }
+    // newConfig.headers['X-USER-ID'] = 2;
 
     return newConfig;
   },
