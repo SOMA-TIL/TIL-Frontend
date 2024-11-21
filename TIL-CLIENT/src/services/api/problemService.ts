@@ -31,6 +31,24 @@ export interface SubmitGradingResult {
   gradingResult: GradingResult;
 }
 
+export interface OthersAnswer {
+  solvedId: number;
+  problemId: number;
+  nickname: string;
+  answer: string;
+  initialLikes?: number;
+}
+
+interface OthersAnswerResponse {
+  answerList: OthersAnswer[];
+  pageInfo: {
+    currentPage: number;
+    pageSize: number;
+    totalItems: number;
+    totalPages: number;
+  };
+}
+
 export interface ProblemListParams {
   page?: number;
   size?: number;
@@ -83,5 +101,10 @@ export const getSubmitResult = async (
   submitId: number,
 ): Promise<ApiResponse<SubmitGradingResult>> => {
   const response = await apiClient.get(`/problem/${id}/result?submitId=${submitId}`);
+  return response.data;
+};
+
+export const getOthersAnswers = async (id: string): Promise<ApiResponse<OthersAnswerResponse>> => {
+  const response = await apiClient.get(`/problem/${id}/othersAnswer`);
   return response.data;
 };
