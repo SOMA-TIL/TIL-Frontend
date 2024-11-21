@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useToast } from '@components/common/notification/ToastProvider';
 import { TOAST_POS, TOAST_TYPE } from '@constants/toast';
+import { useSpeechRecognition } from 'react-speech-kit';
+
 import {
   getInterviewInfo,
   getIntreviewStatus,
@@ -40,6 +42,19 @@ const InterviewPage: React.FC = () => {
   const [currentAnswer, setCurrentAnswer] = useState<string>('');
 
   const [loadingStatus, setLoadingStatus] = useState(true);
+  const [transcript, setTranscript] = useState('');
+
+  const { listen, listening, stop } = useSpeechRecognition({
+    onResult: (result: string) => {
+      // 음성인식 결과 = transcript에 저장
+      setTranscript(result);
+    },
+  });
+
+  useEffect(() => {
+    // 음성 인식을 진행할 때 마다 transcript 반영
+    setCurrentAnswer((c) => `${c} ${transcript}`);
+  }, [transcript]);
 
   useEffect(() => {
     const intervalStatusCheck = setInterval(async () => {
@@ -125,6 +140,14 @@ const InterviewPage: React.FC = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingStatus, navigate, notify]);
+
+  const handleSttEvent = () => {
+    if (listening) {
+      stop();
+    } else {
+      listen({ interimResults: false });
+    }
+  };
 
   const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCurrentAnswer(e.currentTarget.value);
@@ -228,6 +251,8 @@ const InterviewPage: React.FC = () => {
         skipEvent={handleAnswerSkip}
         refreshEvent={handleAnswerRefresh}
         submitEvent={handleAnswerSubmit}
+        sttEvent={handleSttEvent}
+        listening={listening}
       />
     </MinimalPageLayout>
   );

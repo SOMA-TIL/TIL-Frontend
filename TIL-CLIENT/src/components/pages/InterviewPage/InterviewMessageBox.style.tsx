@@ -98,3 +98,17 @@ export const InterviewMessageTime = styled.p<{ type: string }>`
 
   position: relative;
 `;
+
+export const TtsPlayButton = styled.button`
+  align-items: center;
+  cursor: pointer;
+
+  width: max-content;
+
+  font-size: 20px;
+  color: #5929c1;
+
+  margin-left: 5px;
+
+  position: relative;
+`;
