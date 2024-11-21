@@ -1,4 +1,3 @@
-import { PRIMARY_PURPLE } from '@styles/pallete';
 import styled from 'styled-components';
 
 export const OthersAnswerContainer = styled.div`
@@ -54,45 +53,30 @@ export const QuestionContent = styled.div`
 export const AnswerListSection = styled.div`
   background: white;
   border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0px 1px 1px rgba(9, 9, 9, 0.15);
   height: calc(100vh - 360px);
   display: flex;
   flex-direction: column;
+  padding: 20px;
+  box-shadow: 0px 1px 1px rgba(9, 9, 9, 0.15);
 `;
 
 export const TabMenu = styled.div`
   display: flex;
-  border-bottom: 1px solid #e0e0e0;
-  gap: 10px;
-  margin-bottom: 24px;
+  flex-shrink: 0;
+  padding-bottom: 12px;
+  width: 100%;
 `;
 
-export const TabMenuItem = styled.div.attrs<{ active: boolean; disabled?: boolean }>((props) => ({
-  active: props.active,
-  disabled: props.disabled,
-}))`
-  padding: 7px 22px;
-  cursor: pointer;
+export const TabMenuItem = styled.div`
   font-size: 18px;
-  font-weight: ${({ active }) => (active ? 'bold' : 'normal')};
-  color: ${({ active }) => (active ? PRIMARY_PURPLE : '#555555')};
-  border-bottom: ${({ active }) => (active ? `2px solid ${PRIMARY_PURPLE}` : 'none')};
-
-  &:hover {
-    color: ${PRIMARY_PURPLE};
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    color: #c0c0c0;
-  }
+  font-weight: bold;
+  padding: 5px 0px 10px 10px;
 `;
 
 export const AnswerList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
   overflow-y: auto;
   padding-right: 10px;
 
@@ -120,6 +104,7 @@ export const AnswerItem = styled.div`
   padding: 20px;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
+  position: relative;
 
   &:hover {
     border-color: #7434ff;
@@ -142,20 +127,25 @@ export const UserName = styled.span`
 export const Content = styled.p`
   white-space: pre-wrap;
   margin: 0;
-  margin-bottom: 12px;
+  padding-right: 60px;
   line-height: 1.6;
 `;
 
 export const LikeButton = styled.div<{ isLiked: boolean }>`
+  position: absolute;
+  top: 20px;
+  right: 20px;
   display: flex;
   align-items: center;
   gap: 6px;
   color: ${({ isLiked }) => (isLiked ? '#7434FF' : '#666')};
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 4px 8px;
+  border-radius: 4px;
 
   &:hover {
-    color: #7434ff;
+    background: ${({ isLiked }) => (isLiked ? '#f3f0ff' : '#f5f5f5')};
   }
 
   .anticon {
@@ -165,4 +155,79 @@ export const LikeButton = styled.div<{ isLiked: boolean }>`
 
 export const LikeCount = styled.span`
   font-size: 14px;
+  min-width: 20px;
+`;
+
+export const EmptyMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: #666;
+  font-size: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`;
+
+export const SubmitHistoryList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 10px;
+`;
+
+export const SubmitHistoryItem = styled.div`
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+`;
+
+export const SubmitInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+`;
+
+export const SubmitTime = styled.span`
+  color: #666;
+  font-size: 14px;
+`;
+
+export const GradingStatus = styled.span<{ status: string }>`
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  background: ${({ status }) => {
+    switch (status) {
+      case 'PASS':
+        return '#e6f7e6';
+      case 'FAIL':
+        return '#ffe6e6';
+      default:
+        return '#f0f0f0';
+    }
+  }};
+  color: ${({ status }) => {
+    switch (status) {
+      case 'PASS':
+        return '#52c41a';
+      case 'FAIL':
+        return '#ff4d4f';
+      default:
+        return '#666';
+    }
+  }};
+`;
+
+export const SubmitContent = styled.pre`
+  white-space: pre-wrap;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
 `;
