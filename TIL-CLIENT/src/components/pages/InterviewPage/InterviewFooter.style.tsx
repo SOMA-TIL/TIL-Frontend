@@ -96,3 +96,53 @@ export const InterviewFooterButton = styled.button<{ type: string }>`
       }
     }}
 `;
+
+export const SttButton = styled.button<{ active: boolean }>`
+  align-items: center;
+
+  cursor: pointer;
+  position: absolute;
+
+  width: max-content;
+  width: 100px;
+  padding: 0 20px;
+  height: 40px;
+
+  border-radius: 7px;
+  margin-right: 5px;
+
+  font-size: 20px;
+
+  left: 16%;
+
+  border: ${({ active }) => {
+    if (active) {
+      return '1px solid ';
+    }
+    return '1px solid #333';
+  }};
+
+  color: ${({ active }) => {
+    if (active) {
+      return '#fff';
+    }
+    return '#333';
+  }};
+
+  background-color: ${({ active }) => {
+    if (active) {
+      return '#A27BF7';
+    }
+    return '#fff';
+  }};
+
+  &:hover {
+    background-color:
+    ${({ active }) => {
+      if (active) {
+        return '#5929C1';
+      }
+      return '#eee';
+    }}
+
+`;
