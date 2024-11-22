@@ -270,7 +270,9 @@ const ProblemDetailPage: React.FC = () => {
           ]}
           onCancel={handleModalClose}
         >
-          <ModalInnerText color={getGradingResultColor(result)}>{result}</ModalInnerText>
+          <ModalInnerText color={getGradingResultColor(result)}>
+            {result === 'PASS' ? '🥰' : '😓'}
+          </ModalInnerText>
         </Modal>
       </ProblemDetailContainer>
       <BottomBar>

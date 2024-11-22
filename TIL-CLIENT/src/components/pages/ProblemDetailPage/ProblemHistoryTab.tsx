@@ -34,7 +34,9 @@ const columns: TableColumnsType<ProblemHistoryInfo> = [
     'result',
     80,
     (text) => (
-      <span style={{ color: getGradingResultColor(text), fontWeight: 'bold' }}>{text}</span>
+      <span style={{ color: getGradingResultColor(text), fontWeight: 'bold', fontSize: '30px' }}>
+        {text === 'PASS' ? '🥰' : '😓'}
+      </span>
     ),
     'center',
   ),

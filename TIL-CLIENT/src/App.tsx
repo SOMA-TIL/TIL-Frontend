@@ -61,7 +61,6 @@ const App: React.FC = () => {
         <Route path="/" element={<MainPage />} />
         <Route path="/problem" element={<ProblemListPage />} />
         <Route path="/problem/:id" element={<ProblemDetailPage />} />
-        <Route path="/problem/:id/othersAnswer" element={<OthersAnswerPage />} />
         {/* 인증이 필요한 페이지 정의 */}
         <Route element={<PrivateRoute />}>
           <Route path="/mypage" element={<MyPageChangeInfo />} />
@@ -69,6 +68,7 @@ const App: React.FC = () => {
           <Route path="/interview" element={<InterviewIntroPage />} />
           <Route path="/interview/:code" element={<InterviewPage />} />
           <Route path="/interview/:code/result" element={<InterviewResultPage />} />
+          <Route path="/problem/:id/answers" element={<OthersAnswerPage />} />
         </Route>
         {/* 인증을 하지 않아야만 접속 가능한 페이지 정의 */}
         <Route element={<PrivateRoute authentication={false} />}>

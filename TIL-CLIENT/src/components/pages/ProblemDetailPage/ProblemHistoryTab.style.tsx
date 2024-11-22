@@ -6,6 +6,8 @@ export const Container = styled.div`
   flex-direction: column;
   padding: 24px 10px 10px 10px;
   overflow: hidden;
+
+  overflow-y: auto;
 `;
 
 export const SolutionBox = styled.div`
