@@ -203,7 +203,7 @@ const ProblemListPage: React.FC = () => {
                         <TableCell>
                           {problem.userStatus && problem.userStatus.isAttempted
                             ? (() => {
-                                const gradingResult = problem.userStatus.isPassed ? 'PASS' : 'FAIL';
+                                const gradingResult = problem.userStatus.isPassed ? '🥰' : '😓';
                                 return (
                                   <StatusText color={getGradingResultColor(gradingResult)}>
                                     {gradingResult}

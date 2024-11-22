@@ -123,6 +123,8 @@ export const TableCell = styled.td<{ align?: 'center' | 'left' | 'right' }>`
 export const StatusText = styled.span<{ color: string }>`
   color: ${(props) => props.color};
   font-weight: bold;
+
+  font-size: 25px;
 `;
 
 export const LevelText = styled.span`

@@ -208,12 +208,14 @@ export const ModalInnerButton = styled(Button)`
   width: 120px;
   height: 50px;
   font-size: 14px;
+
+  cursor: pointer;
 `;
 
 export const ModalInnerText = styled.p<{ color?: string }>`
   margin: 15px 0;
   text-align: center;
-  font-size: 18px;
+  font-size: 50px;
   font-weight: bold;
   color: ${({ color }) => color || BLACK};
 `;

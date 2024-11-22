@@ -40,7 +40,9 @@ const columns: TableColumnsType<{ result: string; info: string }> = [
     'result',
     80,
     (text) => (
-      <span style={{ color: getGradingResultColor(text), fontWeight: 'bold' }}>{text}</span>
+      <span style={{ color: getGradingResultColor(text), fontWeight: 'bold', fontSize: '50px' }}>
+        {text}
+      </span>
     ),
     'center',
   ),
@@ -50,11 +52,11 @@ const columns: TableColumnsType<{ result: string; info: string }> = [
   )),
 ];
 
-const countingResult = (data: GradingResultWithProblemInfo[], result: string) =>
-  data.filter((r) => r.result === result).length;
+// const countingResult = (data: GradingResultWithProblemInfo[], result: string) =>
+//   data.filter((r) => r.result === result).length;
 
-const accracyRate = (data: GradingResultWithProblemInfo[]) =>
-  (countingResult(data, 'PASS') / data.length) * 100;
+// const accracyRate = (data: GradingResultWithProblemInfo[]) =>
+//   (countingResult(data, 'PASS') / data.length) * 100;
 
 const InterviewResultPage: React.FC = () => {
   const INTERVAL_REFRESH_TIME = 1500;
@@ -103,7 +105,7 @@ const InterviewResultPage: React.FC = () => {
 
   const dataSource = (gradingResult || []).map((data, index) => ({
     key: index + 1,
-    result: data.result,
+    result: data.result === 'PASS' ? '🥰' : '😓',
     info: `질문 : ${data.question}\n제출 : ${data.userAnswer}\n피드백 : ${data.comment}`,
   }));
 
@@ -125,11 +127,11 @@ const InterviewResultPage: React.FC = () => {
                 fontSize: '18px',
               }}
             >
-              정답률 :{' '}
+              {/* 정답률 :{' '}
               {accracyRate(gradingResult) % 1 === 0
                 ? accracyRate(gradingResult).toFixed(0)
                 : accracyRate(gradingResult).toFixed(1)}
-              %
+              % */}
             </span>
           )}
         </SubTitle>
