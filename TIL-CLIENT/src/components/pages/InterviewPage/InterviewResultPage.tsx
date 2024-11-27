@@ -13,6 +13,7 @@ import { TOAST_TYPE } from '@constants/toast';
 import { getGradingResultColor } from '@constants/grading';
 import { GradingResultWithProblemInfo } from '@type/grading';
 import { PRIMARY_PURPLE } from '@styles/pallete';
+import { getResultEmoji } from '@utils/resultEmoji';
 import {
   InterviewResultContainer,
   TableContentContainer,
@@ -105,7 +106,7 @@ const InterviewResultPage: React.FC = () => {
 
   const dataSource = (gradingResult || []).map((data, index) => ({
     key: index + 1,
-    result: data.result === 'PASS' ? '🥰' : '😓',
+    result: getResultEmoji(data.result),
     info: `질문 : ${data.question}\n제출 : ${data.userAnswer}\n피드백 : ${data.comment}`,
   }));
 

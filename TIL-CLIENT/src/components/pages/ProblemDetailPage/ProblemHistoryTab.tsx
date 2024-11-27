@@ -9,6 +9,7 @@ import { getGradingResultColor } from '@constants/grading';
 import { ProblemHistoryInfo, ProblemSubmitHistoryInfo } from '@type/problem';
 import formatDate from '@utils/time';
 import { getErrorMessage } from '@utils/errorHandler';
+import { getResultEmoji } from '@utils/resultEmoji';
 import { Container, SolutionBox, StyledTable, SubTitleBox } from './ProblemHistoryTab.style';
 
 const CAN_NOT_VIEW_SOLUTION = '문제를 PASS해야 솔루션을 볼 수 있습니다.';
@@ -35,7 +36,7 @@ const columns: TableColumnsType<ProblemHistoryInfo> = [
     80,
     (text) => (
       <span style={{ color: getGradingResultColor(text), fontWeight: 'bold', fontSize: '30px' }}>
-        {text === 'PASS' ? '🥰' : '😓'}
+        {getResultEmoji(text)}
       </span>
     ),
     'center',

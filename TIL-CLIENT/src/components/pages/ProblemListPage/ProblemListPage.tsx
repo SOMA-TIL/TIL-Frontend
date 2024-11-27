@@ -12,6 +12,7 @@ import { CategoryTag } from '@styles/TagStyle';
 import { BookMarkSmallIcon } from '@styles/IconSvgStyle';
 import Pagination from '@components/common/pagination/Pagination';
 import StyledConfigProvider from '@components/common/ant/AntStyleProvider';
+import { getResultEmoji } from '@utils/resultEmoji';
 import {
   ProblemListContainer,
   SubTitle,
@@ -203,7 +204,7 @@ const ProblemListPage: React.FC = () => {
                         <TableCell>
                           {problem.userStatus && problem.userStatus.isAttempted
                             ? (() => {
-                                const gradingResult = problem.userStatus.isPassed ? '🥰' : '😓';
+                                const gradingResult = getResultEmoji(problem.userStatus.isPassed);
                                 return (
                                   <StatusText color={getGradingResultColor(gradingResult)}>
                                     {gradingResult}

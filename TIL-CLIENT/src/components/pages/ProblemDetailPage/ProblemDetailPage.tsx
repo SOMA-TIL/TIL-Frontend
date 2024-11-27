@@ -28,6 +28,7 @@ import {
   FileDoneOutlined,
 } from '@ant-design/icons';
 import { CategoryTag } from '@styles/TagStyle';
+import { getResultEmoji } from '@utils/resultEmoji';
 import {
   ProblemDetailContainer,
   ProblemInfoBar,
@@ -271,7 +272,7 @@ const ProblemDetailPage: React.FC = () => {
           onCancel={handleModalClose}
         >
           <ModalInnerText color={getGradingResultColor(result)}>
-            {result === 'PASS' ? '🥰' : '😓'}
+            {getResultEmoji(result)}
           </ModalInnerText>
         </Modal>
       </ProblemDetailContainer>
